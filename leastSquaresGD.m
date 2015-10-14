@@ -3,23 +3,23 @@
 
 function [beta] = leastSquaresGD(y, tX, alpha)
     % algorithm parameters
-    maxIters = 100000;
+    maxIters = 35000;
     epsilon_convergence = 1e-6;
 
     % initialize beta
-    D = size(tX,2);
-    beta = randn(D,1);
-    steps = 0;
+    D = size(tX,2)-1;
+    beta = zeros(D+1,1);
+    steps = maxIters;
     
     for k = 1:maxIters
         % Compute gradient
         g = computeGradient(y, tX, beta);
         
-        %Update beta
+        % Update beta
         beta = beta - alpha*g;
 
         % Check convergence
-        if(g'*g < epsilon_convergence)
+        if(norm(g) < epsilon_convergence)
             steps = k;
             break;
         end

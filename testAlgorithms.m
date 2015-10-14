@@ -3,16 +3,19 @@
 clear all;
 
 % generating dummy dataset. regression
-beta = [1:1:50]';
-N = 1000;
-D = length(beta);
+beta = [1:1:77]';
+N = 2800;
+D = length(beta)-1;
 tX = ones(N,D);
-for i = 2:D
+for i = 1:D
    tX(:,i) = randn(1,N) * i;
 end
 
 tXNorm=tX-mean(tX(:));
-tXNorm=tXNorm/std(tXNorm(:));
+tXNorm=tXNorm./std(tXNorm(:));
+
+tX = [ones(N,1) tX];
+tXNorm = [ones(N,1) tXNorm];
 
 yNorm = tXNorm * beta;
 y = tX * beta;
@@ -22,7 +25,7 @@ eps = 1e-2;
 
 % test least squares via gradient descent
 disp('least squares via gradient descent...');
-alpha = 0.01;
+alpha = 0.33;
 tic
 tBeta = leastSquaresGD(yNorm, tXNorm, alpha);
 toc
