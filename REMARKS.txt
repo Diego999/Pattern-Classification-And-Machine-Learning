@@ -24,3 +24,7 @@ It seems that we feature 2 and 16, we can choose the right Gaussian function.
 
 
 Each continuous features seem to have been generated also from a gaussian distribution
+
+
+With the correlation between the features and the ouput, we can distinguish some features which
+are highly correlated and some where the correlation is near 0. Maybe we can remove them from the model.

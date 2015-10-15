@@ -65,3 +65,14 @@ N = length(y);
 %     ylabel('Count');
 %     saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
 % end
+
+% Show correlation between feature X to Y
+% f = figure;
+% corr_features = corr(X,y);
+% x_domain = 1:1:size(X,2);
+% plot(x_domain, corr_features, 'ob');
+% hold on
+% plot(x_domain, x_domain*0, '-r');
+% xlabel('Feature i');
+% ylabel('Correlation between feature i and y');
+% saveas(f, sprintf('plots/features/featuresCorrelationOutput.jpg'));
