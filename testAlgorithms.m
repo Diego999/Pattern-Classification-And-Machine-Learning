@@ -3,7 +3,7 @@
 clear all;
 
 % generating dummy dataset. regression
-beta = [1:1:77]';
+beta = [1:1:80]';
 N = 2800;
 D = length(beta)-1;
 tX = ones(N,D);
@@ -11,8 +11,7 @@ for i = 1:D
    tX(:,i) = randn(1,N) * i;
 end
 
-tXNorm=tX-mean(tX(:));
-tXNorm=tXNorm./std(tXNorm(:));
+tXNorm = normalizedData(tX);
 
 tX = [ones(N,1) tX];
 tXNorm = [ones(N,1) tXNorm];
@@ -48,27 +47,32 @@ tBeta = ridgeRegression(y, tX, lambda);
 toc
 assert(all(abs(tBeta - beta) < eps));
 disp('OK!');
-% 
-% % generate binary data
-% y = (y>0);
-% 
-% % testing logistic regression
-% disp('logistic regression...');
-% alpha = 1e-3;
-% tBeta = logisticRegression(y,tX,alpha);
-% tY = 1.0 ./ (1.0 + exp(-tX * tBeta)) > 0.5;
-% assert(sum(tY ~= y) / size(y,1) < 0.2);
-% disp('OK!');
-% 
+
+% generate binary data
+y = (y>0);
+yNorm = (yNorm>0);
+
+% testing logistic regression
+disp('logistic regression...');
+alpha = 1e-5;
+tBeta = logisticRegression(yNorm,tXNorm,alpha);
+tic
+tY = 1.0 ./ (1.0 + exp(-tXNorm * tBeta)) > 0.5;
+toc
+assert(sum(tY ~= yNorm) / size(y,1) < 0.2);
+disp('OK!');
+
 % % testing penalize logistic regression
-% disp('penalized logistic regression...');
-% alpha = 1e-3;
-% lambda = 1e-2;
-% tBeta = penLogisticRegression(y,tX,alpha,lambda);
-% tY = 1.0 ./ (1.0 + exp(-tX * tBeta)) > 0.5;
-% assert(sum(tY ~= y) / size(y,1) < 0.2);
-% disp('OK!');
-% 
+disp('penalized logistic regression...');
+alpha = 1e-5;
+lambda = 0.5;
+tic
+tBeta2 = penLogisticRegression(yNorm,tXNorm,alpha,lambda);
+toc
+tY = 1.0 ./ (1.0 + exp(-tXNorm * tBeta2)) > 0.5;
+assert(sum(tY ~= yNorm) / size(y,1) < 0.2);
+disp('OK!');
+
 % % code for writing csv files
 % tY = 1.0 ./ (1.0 + exp(-tX * tBeta));
 % csvwrite('predictions_classification.csv', tY);

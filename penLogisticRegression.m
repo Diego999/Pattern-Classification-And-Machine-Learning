@@ -1,7 +1,7 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
-function [beta] = leastSquaresGD(y, tX, alpha)
+function [beta] = penLogisticRegression(y, tX, alpha, lambda)
     % algorithm parameters
     maxIters = 35000;
     epsilon_convergence = 1e-6;
@@ -13,7 +13,7 @@ function [beta] = leastSquaresGD(y, tX, alpha)
     
     for k = 1:maxIters
         % Compute gradient
-        g = computeGradient(y, tX, beta);
+        g = computeGradient(y, tX, beta, lambda);
         
         % Cost function
         % L(k) = computeCost(y, tX, beta);
@@ -35,14 +35,21 @@ function [beta] = leastSquaresGD(y, tX, alpha)
     %fprintf('K : %d \n Beta : %s\n Compute Cost : %.4f', steps, sprintf('%.4f ', beta), L);
 end
 
-function [gradient] = computeGradient(y, tX, beta)
-    N = length(y);
-    e = y - tX*beta;
-    gradient = -(1.0/N)*tX'*e;
+function [gradient] = computeGradient(y, tX, beta, lambda)
+    penalized_term = 2*lambda*beta;
+    
+    % We don't penalized beta zero
+    penalized_term(1,1) = 0;
+    
+    gradient = tX'*(sigmoid(tX*beta) - y) + penalized_term;
 end
 
-function [e] = computeCost(y, tX, beta)
-    N = length(y);
-    e = y - tX*beta;
-    e = e'*e/(2.0*N);
+function [res] = sigmoid(x)
+    ex = exp(x);
+    res = ex./(1 + ex);
+end
+
+function [res] = computeCost(y, tX, beta)
+    tXBeta = tX*beta;
+    res = -sum(y.*tXBeta - log(1 + exp(tXBeta)));
 end

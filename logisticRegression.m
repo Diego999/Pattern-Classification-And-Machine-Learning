@@ -1,7 +1,7 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
-function [beta] = leastSquaresGD(y, tX, alpha)
+function [beta] = logisticRegression(y, tX, alpha)
     % algorithm parameters
     maxIters = 35000;
     epsilon_convergence = 1e-6;
@@ -36,13 +36,15 @@ function [beta] = leastSquaresGD(y, tX, alpha)
 end
 
 function [gradient] = computeGradient(y, tX, beta)
-    N = length(y);
-    e = y - tX*beta;
-    gradient = -(1.0/N)*tX'*e;
+    gradient = tX'*(sigmoid(tX*beta) - y);
 end
 
-function [e] = computeCost(y, tX, beta)
-    N = length(y);
-    e = y - tX*beta;
-    e = e'*e/(2.0*N);
+function [res] = sigmoid(x)
+    ex = exp(x);
+    res = ex./(1 + ex);
+end
+
+function [res] = computeCost(y, tX, beta)
+    tXBeta = tX*beta;
+    res = -sum(y.*tXBeta - log(1 + exp(tXBeta)));
 end
