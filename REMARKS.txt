@@ -1,0 +1,22 @@
+Boxplot
+
+It seems that we have unnormalized data, we should normalized them.
+
+Histogram
+
+We can observe that our data may have been generated from 3 gaussian distributions. Moreover, we can see some outliers on the right.
+
+Features
+
+There are some discrete features : 3, 11, 18, 22, 28, 29, 38, 42, 45, 46, 56, 59, 73, 
+
+In general, we have 3 seperatas cloud points, center in the middle of the x axis, and at 3 different y.
+
+Features where cloud points are not aligned : 2, 16
+
+It seems that we feature 2 and 16, we can choose the right Gaussian function.
+
+1) Check feature 2, if the value in X is < 6 -> First Gaussian, otherwise Gaussian 2 or 3
+2) Check feature 16, if the value in X is > 6 -> Third Gaussian, otherwise Gaussian 2.
+
+6 is not the real threshold. It will be defined in a way to minimize misclassified points.
