@@ -38,7 +38,7 @@ N = length(y);
 %     plot(X(:,feature),y,'ob');
 %     ylabel('y');
 %     xlabel(sprintf('Values of feature %d', feature));
-%     saveas(f, sprintf('plots/features/feature%d.jpg', feature));
+%     saveas(f, sprintf('plots/features/featuresVSOutput/feature%d.jpg', feature));
 % end
 
 % Plot feature2 and 16 against others
@@ -55,4 +55,13 @@ N = length(y);
 %         xlabel(sprintf('Values of feature %d', x_f));
 %         saveas(f, sprintf('plots/features/feature%dVSAll/feature%d.jpg', x_f, feature));
 %     end
+% end
+
+% Plot histogram of each feature
+% for feature=1:size(X,2)
+%     f = figure;
+%     histogram(X(:,feature));
+%     xlabel(sprintf('Feature %d', feature));
+%     ylabel('Count');
+%     saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
 % end

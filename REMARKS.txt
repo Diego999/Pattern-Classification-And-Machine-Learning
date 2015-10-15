@@ -14,9 +14,13 @@ In general, we have 3 seperatas cloud points, center in the middle of the x axis
 
 Features where cloud points are not aligned : 2, 16
 
+
 It seems that we feature 2 and 16, we can choose the right Gaussian function.
 
 1) Check feature 2, if the value in X is < 6 -> First Gaussian, otherwise Gaussian 2 or 3
 2) Check feature 16, if the value in X is > 6 -> Third Gaussian, otherwise Gaussian 2.
 
 6 is not the real threshold. It will be defined in a way to minimize misclassified points.
+
+
+Each continuous features seem to have been generated also from a gaussian distribution
