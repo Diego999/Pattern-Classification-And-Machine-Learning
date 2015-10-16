@@ -81,11 +81,6 @@ N = length(y);
 % XN = normalizedData(X);
 % yN = normalizedData(y);
 % 
-% % Find first separation of cluster using feature 2
-% tX = [ones(length(y), 1) XN(:,2)];
-% beta = [0 0]';
-% f = tX*beta;
-% 
 % idx_cluster1 = find(yN < 0);
 % X_cluster1 = XN(idx_cluster1,:);
 % y_cluster1 = yN(idx_cluster1);
@@ -113,9 +108,6 @@ N = length(y);
 % 
 % % Find second separation of cluster using feature 16
 % tX = [ones(length(X_others_clusters), 1) X_others_clusters(:,16)];
-% 
-% beta = [0 0]';
-% f = tX*beta;
 % 
 % idx_cluster2 = find(yN < 1.65);
 % X_cluster2 = XN(idx_cluster2,:);
