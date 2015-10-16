@@ -28,7 +28,7 @@ function [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X)
     idx_cluster2 = find(yN < 1.65);
     idx_cluster3 = setdiff(idx_others_clusters, idx_cluster2);
 
-    % There are 2 outliers here !
+    % There are 2 outliers here ! (there is 2 times the number 653)
     outliers_cluster3 = find(yN < 1.54 & yN > 1.53 | yN > 3.5);
 
     idx_cluster2 = setdiff(idx_others_clusters, idx_cluster3);
@@ -37,7 +37,7 @@ function [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X)
     assert(length(idx_cluster1) + length(idx_cluster2) + length(idx_cluster3) == length(X));
     
     % Write cluster idx without outliers
-    idx_cls1 = setdiff(idx_cluster1, outliers_cluster1);
-    idx_cls2 = idx_cluster2;
-    idx_cls3 = setdiff(idx_cluster3, outliers_cluster3);
+    idx_cls1 = setdiff(setdiff(idx_cluster1, outliers_cluster1), outliers_cluster3);
+    idx_cls2 = setdiff(setdiff(idx_cluster2, outliers_cluster1), outliers_cluster3);
+    idx_cls3 = setdiff(setdiff(idx_cluster3, outliers_cluster1), outliers_cluster3);
 end
