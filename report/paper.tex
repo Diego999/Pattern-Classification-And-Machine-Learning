@@ -50,17 +50,15 @@ We also have test-data of size $N=1200$ without their corresponding output. Our 
 
 \section{Data visualization and cleaning}
 
-NORMALIZED ALL DATA OR NORMALIZATION PER CLUSTER ?
-
-We first have plot the distribution of our features (plot not shown because too big for the $76$ features). As expected, they are not center and we should normalized them. The Figure \ref{fig:histogram} shows an histogram of the output ($\mathbf{y}$) and we can conclude our data  seem to be a combination of three Gaussian distributions. It will be used later in order to separate the data in three sets and apply different regression models on them. We can also observe that each cluster have different sizes : 1946, 576 and 278. Moreover, on the right, we can see some data points (there are $2$) which have a higher values than the others. We consider them as outliers and we will remove.
+We first have plot the distribution of our features (plot not shown because too big for the $76$ features). As expected, they are not center and we should normalized them (each cluster will be normalized independently). The Figure \ref{fig:histogram} shows an histogram of the output ($\mathbf{y}$) and we can conclude our data  seem to be a combination of three Gaussian distributions. It will be used later in order to separate the data in three sets and apply different regression models on them. We can also observe that each cluster have different sizes : 1946, 576 and 278. Moreover, on the right, we can see some data points (there are $2$) which have a higher values than the others. We consider them as outliers and we will remove.
 
 To separate the data, we have observed that the feature $2$ and $16$ could help us. Figure \ref{fig:feature2}. We can observe $11$ misclassified data (green points), which we will remove them in order to not corrupt our model.  So, this feature can allow us to find the first cluster. For the two others clusters, we need to oberve the feature $16$. Figure \ref{fig:feature16}. We can observe $14$ misclassified data (green points and one blue). They also will be consider as outliers and remove. We set the threshold in order to minimize the number of misclassified data samples. Those thresholds are $0.42$ for the feature $2$ and $1.17$ for the feature $16$.
 
 We are also interested about the correlation between the input and output variables. We have observed the correlation for each cluster and conclude that for the first cluster, they are mainly in $[-0.1,0.1]$, except two features which are highly correlated. For the second and third cluster, also mainly in $[-0.1,0.1]$ but this time, there are more correlated features (~15). Moreover, the features seem not have correlation between them.
 
-ENCODING CATEGORICAL FEATURES
+We use dummy encoding for the categorical variables (for a categorical variable of size $k$, we need $k-1$ features), which gives us a total of $93$ input variable.
 
-We can note that the rank of our input matrix $\mathbf{X}$ is rank-deficient with a rank of 66 instead of 76.
+We can note that the rank of our input matrix $\mathbf{X}$ is rank-deficient with a rank of 66 instead of 76, and is rank-deficient of 65 for each cluster.
 
 \begin{figure}[!t]
 \center
