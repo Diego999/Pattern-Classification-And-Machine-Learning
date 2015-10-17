@@ -179,3 +179,32 @@ N = length(y);
 %     xlabel(sprintf('Values of feature %d', feature));
 %     saveas(f, sprintf('plots/cluster/featuresVSOutput/feature%d.jpg', feature));
 % end
+
+
+% Treat each cluster indepently
+% Fetch clusters without outliers
+% [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y, X);
+% 
+% for feature=1:size(X,2)
+%     f = figure;
+%     plot(X_cls1(:,feature),y_cls1,'ob');
+%     ylabel('y');
+%     xlabel(sprintf('Values of feature %d', feature));
+%     saveas(f, sprintf('plots/cluster/cluster1/featuresVSOutput/feature%d.jpg', feature));
+% end
+% 
+% for feature=1:size(X,2)
+%     f = figure;
+%     plot(X_cls2(:,feature),y_cls2,'ob');
+%     ylabel('y');
+%     xlabel(sprintf('Values of feature %d', feature));
+%     saveas(f, sprintf('plots/cluster/cluster1/featuresVSOutput/feature%d.jpg', feature));
+% end
+% 
+% for feature=1:size(X,2)
+%     f = figure;
+%     plot(X_cls3(:,feature),y_cls3,'ob');
+%     ylabel('y');
+%     xlabel(sprintf('Values of feature %d', feature));
+%     saveas(f, sprintf('plots/cluster/cluster1/featuresVSOutput/feature%d.jpg', feature));
+% end

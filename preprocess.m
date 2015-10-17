@@ -1,17 +1,17 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
-function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y, X)
+function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X)
     [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
     
     y_cls1 = y(idx_cls1);
-    X_cls1 = X(idx_cls1);
+    X_cls1 = X(idx_cls1,:);
     
     y_cls2 = y(idx_cls2);
-    X_cls2 = X(idx_cls2);
+    X_cls2 = X(idx_cls2,:);
     
     y_cls3 = y(idx_cls3);
-    X_cls3 = X(idx_cls3);
+    X_cls3 = X(idx_cls3,:);
 end
 
 function [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X)
