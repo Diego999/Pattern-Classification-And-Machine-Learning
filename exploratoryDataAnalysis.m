@@ -183,8 +183,8 @@ N = length(y);
 
 % Treat each cluster indepently
 % Fetch clusters without outliers
-% [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y, X);
-% 
+[y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y, X);
+
 % for feature=1:size(X,2)
 %     f = figure;
 %     plot(X_cls1(:,feature),y_cls1,'ob');
@@ -198,7 +198,7 @@ N = length(y);
 %     plot(X_cls2(:,feature),y_cls2,'ob');
 %     ylabel('y');
 %     xlabel(sprintf('Values of feature %d', feature));
-%     saveas(f, sprintf('plots/cluster/cluster1/featuresVSOutput/feature%d.jpg', feature));
+%     saveas(f, sprintf('plots/cluster/cluster2/featuresVSOutput/feature%d.jpg', feature));
 % end
 % 
 % for feature=1:size(X,2)
@@ -206,5 +206,36 @@ N = length(y);
 %     plot(X_cls3(:,feature),y_cls3,'ob');
 %     ylabel('y');
 %     xlabel(sprintf('Values of feature %d', feature));
-%     saveas(f, sprintf('plots/cluster/cluster1/featuresVSOutput/feature%d.jpg', feature));
+%     saveas(f, sprintf('plots/cluster/cluster3/featuresVSOutput/feature%d.jpg', feature));
 % end
+
+% Show correlation between feature X to Y for each cluster
+% f = figure;
+% corr_features = corr(X_cls1,y_cls1);
+% x_domain = 1:1:size(X,2);
+% plot(x_domain, corr_features, 'ob');
+% hold on
+% plot(x_domain, x_domain*0, '-r');
+% xlabel('Feature i');
+% ylabel('Correlation between feature i and y');
+% saveas(f, sprintf('plots/cluster/cluster1/featuresCorrelationOutput.jpg'));
+% 
+% f = figure;
+% corr_features = corr(X_cls2,y_cls2);
+% x_domain = 1:1:size(X,2);
+% plot(x_domain, corr_features, 'ob');
+% hold on
+% plot(x_domain, x_domain*0, '-r');
+% xlabel('Feature i');
+% ylabel('Correlation between feature i and y');
+% saveas(f, sprintf('plots/cluster/cluster2/featuresCorrelationOutput.jpg'));
+% 
+% f = figure;
+% corr_features = corr(X_cls3,y_cls3);
+% x_domain = 1:1:size(X,2);
+% plot(x_domain, corr_features, 'ob');
+% hold on
+% plot(x_domain, x_domain*0, '-r');
+% xlabel('Feature i');
+% ylabel('Correlation between feature i and y');
+% saveas(f, sprintf('plots/cluster/cluster3/featuresCorrelationOutput.jpg'));
