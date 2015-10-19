@@ -27,7 +27,7 @@ function [beta] = leastSquaresGD(y, tX, alpha)
             break;
         end
     end
-
+    fprintf('%.10f\n',norm(g));
     % Some information
     %L = computeCost(y, tX, beta);
     %fprintf('%d\n', steps);

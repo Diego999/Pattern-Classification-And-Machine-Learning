@@ -319,8 +319,8 @@ N = length(y);
 %             TEST 4
 % **********************************
 % WARNING : Change preprocess fct to remove dummy encoding !
-% Mean Tr : 120.63 + 136.51 + 138.4 = 395.54 (Improvement)
-% Mean Te : 126.85 + 202.07 + 355.89 = 685.44 (A?e !)
+% Mean Tr : 120.63 + 136.51 + 164.95 = 435.43 (Improvement x3)
+% Mean Te : 126.85 + 202.07 + 288 = 601.38 (Imrpvoement by x2)
 % Cluster 1
 % K = 5;
 % N = length(y_cls1);
@@ -455,30 +455,30 @@ for k=1:1:K
 
     % mean err3_tr_lsgd_cls2 : 137.38
     % mean err3_te_lsgd_cls2 : 376.38
-%      alpha = 0.2;
-%      beta4_lsgd_cls3 = leastSquaresGD(yTr, tXTr, alpha);
-%      err4_tr_lsgd_cls3(k) = RMSE(yTr, tXTr*beta4_lsgd_cls3);
-%      err4_te_lsgd_cls3(k) = RMSE(yTe, tXTe*beta4_lsgd_cls3);
+     alpha = 0.2;
+     beta3_lsgd_cls3 = leastSquaresGD(yTr, tXTr, alpha);
+     err3_tr_lsgd_cls3(k) = RMSE(yTr, tXTr*beta3_lsgd_cls3);
+     err3_te_lsgd_cls3(k) = RMSE(yTe, tXTe*beta3_lsgd_cls3);
 
 %     lambdas = logspace(-5,5,10000);
 %     for i = 1:1:length(lambdas)
 %         lambda = lambdas(i);
-%         beta4_rr_cls3 = ridgeRegression(yTr, tXTr, lambda);
-%         err4_tr_rr_cls3(k,i) = RMSE(yTr, tXTr*beta4_rr_cls3);
-%         err4_te_rr_cls3(k,i) = RMSE(yTe, tXTe*beta4_rr_cls3);
+%         beta3_rr_cls3 = ridgeRegression(yTr, tXTr, lambda);
+%         err3_tr_rr_cls3(k,i) = RMSE(yTr, tXTr*beta3_rr_cls3);
+%         err3_te_rr_cls3(k,i) = RMSE(yTe, tXTe*beta3_rr_cls3);
 %     end
 
-    % mean err3_tr_lsgd_cls3 : 138.4
-    % mean err3_te_lsgd_cls3 : 355.89
-     lambda = 0.5;
-     beta4_rr_cls3 = ridgeRegression(yTr, tXTr, lambda);
-     err4_tr_rr_cls3(k) = RMSE(yTr, tXTr*beta4_rr_cls3);
-     err4_te_rr_cls3(k) = RMSE(yTe, tXTe*beta4_rr_cls3);
+%     % mean err3_tr_lsgd_cls3 : 176.76
+%     % mean err3_te_lsgd_cls3 : 288.64
+%      lambda = 12.1230;
+%      beta3_rr_cls3 = ridgeRegression(yTr, tXTr, lambda);
+%      err3_tr_rr_cls3(k) = RMSE(yTr, tXTr*beta3_rr_cls3);
+%      err3_te_rr_cls3(k) = RMSE(yTe, tXTe*beta3_rr_cls3);
 end
 
 % figure
-% mseTr = mean(err4_tr_rr_cls3);
-% mseTe = mean(err4_te_rr_cls3);
+% mseTr = mean(err3_tr_rr_cls3);
+% mseTe = mean(err3_te_rr_cls3);
 % 
 % [errStar, lambdaIdStar] = min(mseTe);
 % lambdaStar = lambdas(lambdaIdStar);
@@ -489,5 +489,5 @@ end
 % semilogx(lambdaStar, errStar, 'black-diamond', 'MarkerSize', 10, 'MarkerFaceColor', 'k');
 % xlabel('lambda');
 % ylabel('error');
-% axis([lambdas(1) lambdas(end) 0 400]);
+% axis([lambdas(1) lambdas(end) 0 350]);
 % hold off;
