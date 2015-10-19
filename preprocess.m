@@ -4,7 +4,9 @@
 function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X)
     [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
     
-    % Find the discrete features
+    %WITH DUMMY ENCODING
+    
+     % Find the discrete features
     [idx_feature_2, idx_feature_3, idx_feature_4] = findDiscreteFeatures(X);
     idx_feature_real = setdiff(setdiff(setdiff(1:1:size(X,2), idx_feature_2), idx_feature_3), idx_feature_4);
 
@@ -23,7 +25,20 @@ function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, id
     X_cls1 = dummyFeatureEncoding(X_cls1, X(idx_cls1,:), idx_feature_2, idx_feature_3, idx_feature_4);
     X_cls2 = dummyFeatureEncoding(X_cls2, X(idx_cls2,:), idx_feature_2, idx_feature_3, idx_feature_4);
     X_cls3 = dummyFeatureEncoding(X_cls3, X(idx_cls3,:), idx_feature_2, idx_feature_3, idx_feature_4);
-end
+
+    % WITHOUT DUMMY ENCODING
+ 
+    % We shouldn't normalize y
+    % Normalize each cluster independantely withou categorical features
+%     y_cls1 = y(idx_cls1);
+%     X_cls1 = normalizedData(X(idx_cls1,:));
+%     
+%     y_cls2 = y(idx_cls2);
+%     X_cls2 = normalizedData(X(idx_cls2,:));
+%     
+%     y_cls3 = y(idx_cls3);
+%     X_cls3 = normalizedData(X(idx_cls3,:));
+ end
 
 function [XX] = dummyFeatureEncoding(X,X_original, idx_feature_2, idx_feature_3, idx_feature_4)
     XX = zeros(length(X_original),1);
