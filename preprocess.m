@@ -3,7 +3,7 @@
 
 function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X)
     [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
-    
+
     %WITH DUMMY ENCODING
     
      % Find the discrete features

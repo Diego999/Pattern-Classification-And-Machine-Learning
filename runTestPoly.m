@@ -5,7 +5,7 @@ function [mean_err_tr, mean_err_te] = runTestPoly(K, y, X, lambda)
     N = length(y);
     idxCV = splitGetCV(K, N);
     lambdas = logspace(-5,5,1000);
-    degrees = [1 2];
+    degrees = [1 2 3 4 5];
     figure
     subplot(1,length(degrees),1);
     for d=1:1:length(degrees)

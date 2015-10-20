@@ -14,13 +14,3 @@ function [idxCV] = splitGetCV(K, N)
         idxCV(k,:) = idx(1+(k-1)*Nk:k*Nk);
     end
 end
-
-function setSeed(seed)
-    % set seed
-	global RNDN_STATE  RND_STATE
-	RNDN_STATE = randn('state');
-	randn('state',seed);
-	RND_STATE = rand('state');
-	%rand('state',seed);
-	rand('twister',seed);
-end
