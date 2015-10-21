@@ -12,10 +12,10 @@ N = length(y);
 
 [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y, X);
 d1 = 3;
-d2 = 4;
+d2 = 5;
 d3 = 2;
 
-l1 = 0.0517;
+l1 = 0.035;
 l2 = 0.2783;
 l3 = 0.7497;
 

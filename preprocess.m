@@ -1,44 +1,60 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
-function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X)
-    [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
-
-    %WITH DUMMY ENCODING
+function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X, degree1, degree2, degree3)
+    if ~exist('degree1', 'var')
+        degree1 = 1;
+    end
     
-     % Find the discrete features
+    if ~exist('degree2', 'var')
+        degree2 = 1;
+    end
+    
+    if ~exist('degree3', 'var')
+        degree3 = 1;
+    end
+    
+    [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
+    
+    [y_cls1, X_cls1] = preprocessCluster(y, X, idx_cls1, degree1);
+    [y_cls2, X_cls2] = preprocessCluster(y, X, idx_cls2, degree2);
+    [y_cls3, X_cls3] = preprocessCluster(y, X, idx_cls3, degree3);
+end
+
+function [y, X] = preprocessCluster(y_, X_, idx, degree)
+
+    % If we decide to remove some features
+    %[res_corr, idx_corr] = sort(abs(corr(X_(idx,:),y_(idx,:))));
+    X__ = X_;
+    %X__(:,idx_corr(1:5)) = [];
+    X = X__;
+        
+    % Build the poly for X
+    X = repmat(X(idx,:),1,degree);
+    nbFeatures = size(X_,2);
+    
+    % Find different type of features
     [idx_feature_2, idx_feature_3, idx_feature_4] = findDiscreteFeatures(X);
     idx_feature_real = setdiff(setdiff(setdiff(1:1:size(X,2), idx_feature_2), idx_feature_3), idx_feature_4);
 
-    % We shouldn't normalize y
-    % Normalize each cluster independantely withou categorical features
-    y_cls1 = y(idx_cls1);
-    X_cls1 = normalizedData(X(idx_cls1,idx_feature_real));
+    for d = 1:1:(degree-1)
+        beg = d*nbFeatures+1;
+        en = (d+1)*nbFeatures;
+        
+        cols = intersect(idx_feature_real, beg:1:en);
+        X(:,cols) = X(:,cols).^(d+1);
+    end
     
-    y_cls2 = y(idx_cls2);
-    X_cls2 = normalizedData(X(idx_cls2,idx_feature_real));
+    X__ = X;
     
-    y_cls3 = y(idx_cls3);
-    X_cls3 = normalizedData(X(idx_cls3,idx_feature_real));
-    
-    % We encode categorical features and add the to the normalized X
-    X_cls1 = dummyFeatureEncoding(X_cls1, X(idx_cls1,:), idx_feature_2, idx_feature_3, idx_feature_4);
-    X_cls2 = dummyFeatureEncoding(X_cls2, X(idx_cls2,:), idx_feature_2, idx_feature_3, idx_feature_4);
-    X_cls3 = dummyFeatureEncoding(X_cls3, X(idx_cls3,:), idx_feature_2, idx_feature_3, idx_feature_4);
+    % Normalize
+    y = y_(idx);
+    X = normalizedData(X(:,idx_feature_real));
 
-    % WITHOUT DUMMY ENCODING
- 
-    % We shouldn't normalize y
-    % Normalize each cluster independantely withou categorical features
-%     y_cls1 = y(idx_cls1);
-%     X_cls1 = normalizedData(X(idx_cls1,:));
-%     
-%     y_cls2 = y(idx_cls2);
-%     X_cls2 = normalizedData(X(idx_cls2,:));
-%     
-%     y_cls3 = y(idx_cls3);
-%     X_cls3 = normalizedData(X(idx_cls3,:));
- end
+    % We encode categorical features and add them to the normalized X
+    X = dummyFeatureEncoding(X, X__, idx_feature_2, idx_feature_3, idx_feature_4); 
+    
+end
 
 function [XX] = dummyFeatureEncoding(X,X_original, idx_feature_2, idx_feature_3, idx_feature_4)
     XX = zeros(length(X_original),1);
