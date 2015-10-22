@@ -31,10 +31,10 @@ N = length(y);
 % **********************************
 % Mean Tr : 2797.4
 % Mean Te : 2796.6
-K = 5;
-y_ = y;
-X_ = X;
-[mean_err0_tr, mean_err0_te] = runTestConstant(K, y_, X_);
+% K = 5;
+% y_ = y;
+% X_ = X;
+% [mean_err0_tr, mean_err0_te] = runTestConstant(K, y_, X_);
 
 % **********************************
 %             TEST b
@@ -43,23 +43,23 @@ X_ = X;
 % Mean Tr : 444.9 + 640.28 + 898.90 = 
 % Mean Te : 444.75 + 639.6 + 897.55 = 
 
-% Cluster 1
-K = 5;
-y_ = y_cls1;
-X_ = X_cls1;
-[mean_err0b_tr_cls1, mean_err0b_te_cls1] = runTestConstant(K, y_, X_);
-
-% Cluster 2
-K = 6;
-y_ = y_cls2;
-X_ = X_cls2;
-[mean_err0b_tr_cls2, mean_err0b_te_cls2] = runTestConstant(K, y_, X_);
-
-% Cluster 3
-K = 4;
-y_ = y_cls3;
-X_ = X_cls3;
-[mean_err0b_tr_cls3, mean_err0b_te_cls3] = runTestConstant(K, y_, X_);
+% % Cluster 1
+% K = 5;
+% y_ = y_cls1;
+% X_ = X_cls1;
+% [mean_err0b_tr_cls1, mean_err0b_te_cls1] = runTestConstant(K, y_, X_);
+% 
+% % Cluster 2
+% K = 6;
+% y_ = y_cls2;
+% X_ = X_cls2;
+% [mean_err0b_tr_cls2, mean_err0b_te_cls2] = runTestConstant(K, y_, X_);
+% 
+% % Cluster 3
+% K = 4;
+% y_ = y_cls3;
+% X_ = X_cls3;
+% [mean_err0b_tr_cls3, mean_err0b_te_cls3] = runTestConstant(K, y_, X_);
 
 % **********************************
 %             TEST 1
@@ -220,13 +220,13 @@ X_ = X_cls3;
 % K = 5;
 % lambda = 0.035; %findLambda(K, y, X, 1, 3);
 % [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
-
-%Cluster 2
+% 
+% %Cluster 2
 % K = 6;
 % lambda = 0.1298;%findLambda(K, y, X, 2, 5);
 % [mean_err5_tr_cls2, mean_err5_te_cls2] = runTestPoly(K, y, X, lambda, 2);
-
-% Cluster 3
+% 
+% % Cluster 3
 % K = 4;
 % lambda = 0.7480;%findLambda(K, y, X, 3, 2);
 % [mean_err5_tr_cls3, mean_err5_te_cls3] = runTestPoly(K, y, X, lambda, 3);
