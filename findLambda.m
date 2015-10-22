@@ -23,7 +23,7 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d)
         tXTr = [ones(length(yTr),1) XTr];
         tXTe = [ones(length(yTe),1) XTe];
 
-        lambdas = logspace(-5,5,1000);
+        lambdas = logspace(-2,2,10000);
         for i = 1:1:length(lambdas)
             lambda = lambdas(i);
             beta_rr = ridgeRegression(yTr, tXTr, lambda);

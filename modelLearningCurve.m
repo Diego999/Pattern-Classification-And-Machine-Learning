@@ -2,7 +2,7 @@
 % all rights reserved
 
 function [err_tr, err_te_cv] = modelLearningCurve(prop, K, d, lambda, y, X)
-    for i = 1:1:100
+    for i = 1:1:10
         setSeed(28111993*i);
         [XTr, yTr, XTe, yTe] = splitProp(prop, y, X);
 
@@ -27,13 +27,13 @@ function [err_tr, err_te_cv] = modelLearningCurve(prop, K, d, lambda, y, X)
     end
 end
 
-% % Written by Diego Antognini & Jason Racine, EPFL 2015
-% % all rights reserved
-% 
+% % % Written by Diego Antognini & Jason Racine, EPFL 2015
+% % % all rights reserved
+% % 
 % function [err_tr, err_te_cv] = modelLearningCurve(prop, K, d, lambda, y, X)
 %     % Fix the test size
 %     setSeed(1111);
-%     [X_, y_, X_test, y_test] = splitProp(0.9, y, X);
+%     [X_, y_, X_test, y_test] = splitProp(0.8, y, X);
 %     
 %     for i = 1:1:10
 %         setSeed(28111993*i);

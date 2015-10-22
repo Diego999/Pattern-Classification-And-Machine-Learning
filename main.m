@@ -16,6 +16,8 @@ N = length(y);
 % LSGD
 % Ridge
 
+% 0) Constant baseline
+% 0b) Constant baseline with clusters
 % 1) Without any preprocess (no dummy encoding, no cluster separation, no normalization)
 % 2) Same as 1) but with normalization
 % 3) Separation with the cluster and normalization per cluster
@@ -23,6 +25,41 @@ N = length(y);
 % 5) Same as 3 but with Polynomial basis
 % 6) Same as 4 but with Polynomial basis
 % 6) Remove some uncorrelated data
+
+% **********************************
+%             TEST 0
+% **********************************
+% Mean Tr : 2797.4
+% Mean Te : 2796.6
+K = 5;
+y_ = y;
+X_ = X;
+[mean_err0_tr, mean_err0_te] = runTestConstant(K, y_, X_);
+
+% **********************************
+%             TEST b
+% **********************************
+
+% Mean Tr : 444.9 + 640.28 + 898.90 = 
+% Mean Te : 444.75 + 639.6 + 897.55 = 
+
+% Cluster 1
+K = 5;
+y_ = y_cls1;
+X_ = X_cls1;
+[mean_err0b_tr_cls1, mean_err0b_te_cls1] = runTestConstant(K, y_, X_);
+
+% Cluster 2
+K = 6;
+y_ = y_cls2;
+X_ = X_cls2;
+[mean_err0b_tr_cls2, mean_err0b_te_cls2] = runTestConstant(K, y_, X_);
+
+% Cluster 3
+K = 4;
+y_ = y_cls3;
+X_ = X_cls3;
+[mean_err0b_tr_cls3, mean_err0b_te_cls3] = runTestConstant(K, y_, X_);
 
 % **********************************
 %             TEST 1
@@ -171,20 +208,25 @@ N = length(y);
 % WARNING : Don't forget to put the degree at 1 in preprocess
 % K = 5 5 4
 % D = 3 4 2
-% Mean Tr : 5.63 + 15.9 + 17.45 = 38.98
-% Mean Te : 6.52 + 77.67 + 64.14 = 148.33
+% Mean Tr : 5.03 + 15.9 + 17.89 = 38.82
+% Mean Te : 7.28 + 77.67 + 63.24 = 148.19
+
+% K = 5 6 4
+% D = 3 5 2
+% Mean Tr : 5.03 + 6.86 + 17.89 = 29.78
+% Mean Te : 7.28 + 67.8 + 63.24 = 138.32
 
 %Cluster 1
 % K = 5;
-% lambda = 0.035;%findLambda(K, y, X, 1, 3);
+% lambda = 0.035; %findLambda(K, y, X, 1, 3);
 % [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
 
 %Cluster 2
-%K = 5;
-%lambda = 0.2783;%findLambda(K, y, X, 2, 5);
+% K = 6;
+% lambda = 0.1298;%findLambda(K, y, X, 2, 5);
 % [mean_err5_tr_cls2, mean_err5_te_cls2] = runTestPoly(K, y, X, lambda, 2);
-% 
-% % Cluster 3
+
+% Cluster 3
 % K = 4;
-% lambda = 0.7497;%findLambda(K, y, X, 3, 2);
+% lambda = 0.7480;%findLambda(K, y, X, 3, 2);
 % [mean_err5_tr_cls3, mean_err5_te_cls3] = runTestPoly(K, y, X, lambda, 3);
