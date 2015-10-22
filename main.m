@@ -24,7 +24,6 @@ N = length(y);
 % 4) Same as 3 but with dummy encoding
 % 5) Same as 3 but with Polynomial basis
 % 6) Same as 4 but with Polynomial basis
-% 6) Remove some uncorrelated data
 
 % **********************************
 %             TEST 0

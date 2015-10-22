@@ -106,35 +106,3 @@ function [idx_feature_2, idx_feature_3, idx_feature_4] = findDiscreteFeatures(X)
     end
     
 end
-
-function [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X)
-    XN = normalizedData(X);    
-    yN = normalizedData(y);
-
-    % Find first separation of cluster using feature 2
-    idx_cluster1 = find(XN(:,2) < 0.42);
-    idx_others_clusters = setdiff(1:length(y), idx_cluster1)';
-    
-    % There are 12 outliers here !
-    outliers_cluster1 = find(yN > 3.5 | (XN(:,2) < 0.42 & yN > 0.4) | (XN(:,2) > 0.42 & yN < 0));
-
-    % Find second separation of cluster using feature 16
-    idx_cluster3 = setdiff(idx_others_clusters, find(yN < 1.65 | XN(:,16) < 0.7));
-
-    % There is 11 outlier here
-    outliers_cluster3 = find(yN > 2 & XN(:,16) < 1.17);
-
-    % Find the last cluster using the last points
-    idx_cluster2 = setdiff(idx_others_clusters, idx_cluster3);
-
-    % There are 5 outliers here !
-    outliers_cluster2 = find(yN > 3.5 | (XN(:,16) > 1.17 & yN > 0.5 & yN < 1.5));
-
-    % Some checks
-    assert(length(idx_cluster1) + length(idx_cluster2) + length(idx_cluster3) == length(X));
-    
-    % Write cluster idx without outliers
-    idx_cls1 = setdiff(setdiff(setdiff(idx_cluster1, outliers_cluster1), outliers_cluster2), outliers_cluster3);
-    idx_cls2 = setdiff(setdiff(setdiff(idx_cluster2, outliers_cluster1), outliers_cluster2), outliers_cluster3);
-    idx_cls3 = setdiff(setdiff(setdiff(idx_cluster3, outliers_cluster1), outliers_cluster2), outliers_cluster3);
-end
