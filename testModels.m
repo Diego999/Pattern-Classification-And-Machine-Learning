@@ -72,13 +72,60 @@ saveFile(err0b_cls1, 'err0b_cls1');
 saveFile(err0b_cls2, 'err0b_cls2');
 saveFile(err0b_cls3, 'err0b_cls3');
 
+%%
+% **********************************
+%             TEST 1
+% **********************************
+
+K = 10;
+
+for i = 1:1:numberOfExperiments
+    setSeed(28111993*i);
+    [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
+    
+    % Learning
+    lambda = findLambda(K, yTr, XTr, 0, 1);
+    
+    tXTr = [ones(length(yTr),1) XTr];
+    beta = ridgeRegression(yTr, tXTr, lambda);
+    
+    tXTe = [ones(length(yTe),1) XTe];
+    err1(i) = RMSE(yTe, tXTe*beta);
+end
+
+saveFile(err1, 'err1');
+
+%%
+% **********************************
+%             TEST 2
+% **********************************
+
+K = 10;
+
+for i = 1:1:numberOfExperiments
+    setSeed(28111993*i);
+    [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, normalizedData(X));
+    
+    % Learning
+    lambda = findLambda(K, yTr, XTr, 0, 1);
+    
+    tXTr = [ones(length(yTr),1) XTr];
+    beta = ridgeRegression(yTr, tXTr, lambda);
+    
+    tXTe = [ones(length(yTe),1) XTe];
+    err2(i) = RMSE(yTe, tXTe*beta);
+end
+
+saveFile(err2, 'err2');
 
 %%
 s = [1 numberOfExperiments];
 
 err0 = openFile('err0', s);
 err0b = openFile('err0b_cls1', s) + openFile('err0b_cls2',s) + openFile('err0b_cls3',s);
+err1 = openFile('err1', s);
+err2 = openFile('err2', s);
 
 figure;
-boxplot([err0' err0b']);
-legend(findobj(gca,'Tag','Box'),'0 Constant model','0b Constant model per cluster')
+boxplot([err0' err0b' err1' err2']);
+legend(findobj(gca,'Tag','Box'),'0 Constant model','0b Constant model per cluster', '1 Least squares', '2 + Normalization');

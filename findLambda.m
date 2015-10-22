@@ -9,9 +9,12 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d)
     elseif idxCls == 2
         y = y_cls2;
         X = X_cls2;
-    else
+    elseif idxCls == 3
         y = y_cls3;
         X = X_cls3;
+    else
+        y = y_;
+        X = X_;
     end
 
     N = length(y);
@@ -23,7 +26,7 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d)
         tXTr = [ones(length(yTr),1) XTr];
         tXTe = [ones(length(yTe),1) XTe];
 
-        lambdas = logspace(-2,2,10000);
+        lambdas = logspace(-1,1,100);
         for i = 1:1:length(lambdas)
             lambda = lambdas(i);
             beta_rr = ridgeRegression(yTr, tXTr, lambda);
@@ -32,21 +35,20 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d)
         end
     end
 
-    figure
     mseTr = mean(err_tr_rr);
     mseTe = mean(err_te_rr);
 
     [errStar, lambdaIdStar] = min(mseTe);
     lambdaStar = lambdas(lambdaIdStar);
-
-    semilogx(lambdas, mseTr, 'b-o', lambdas, mseTe, 'r-x');
-    hold on;
-    legend('Train error', 'Test error', 'Location', 'southeast');
-    semilogx(lambdaStar, errStar, 'black-diamond', 'MarkerSize', 10, 'MarkerFaceColor', 'k');
-    xlabel('lambda');
-    ylabel('error');
-    axis([lambdas(1) lambdas(end) min([mseTr mseTe])-50 max([mseTr mseTe])+50]);
-    hold off;
+%     figure
+%     semilogx(lambdas, mseTr, 'b-o', lambdas, mseTe, 'r-x');
+%     hold on;
+%     legend('Train error', 'Test error', 'Location', 'southeast');
+%     semilogx(lambdaStar, errStar, 'black-diamond', 'MarkerSize', 10, 'MarkerFaceColor', 'k');
+%     xlabel('lambda');
+%     ylabel('error');
+%     axis([lambdas(1) lambdas(end) min([mseTr mseTe])-50 max([mseTr mseTe])+50]);
+%     hold off;
     
     lambda = lambdaStar;
 end
