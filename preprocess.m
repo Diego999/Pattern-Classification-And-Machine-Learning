@@ -57,6 +57,8 @@ function [y, X] = preprocessCluster(y_, X_, idx, degree)
 end
 
 function [XX] = dummyFeatureEncoding(X,X_original, idx_feature_2, idx_feature_3, idx_feature_4)
+    % WITH DUMMY ENCODING
+    
     XX = zeros(length(X_original),1);
     % The index to copy the real values (non discrete) of X
     i_real_X = 1;
@@ -84,6 +86,24 @@ function [XX] = dummyFeatureEncoding(X,X_original, idx_feature_2, idx_feature_3,
             i_real_X = i_real_X + 1;
         end
     end
+    
+    % WITHOUT DUMMY ENCODING
+    
+%     XX = zeros(size(X_original,1),1);
+%     % The index to copy the real values (non discrete) of X
+%     i_real_X = 1;
+%     for i = 1:1:size(X_original,2)
+%         % If categorical of 2, just copy the cols
+%         if any(idx_feature_2 == i) || any(idx_feature_3 == i) || any(idx_feature_4 == i)
+%           XX(:,end+1) = X_original(:,i);
+%         % Copy the real values (non discrete)
+%         else
+%             XX(:,end+1) = X(:,i_real_X);
+%             i_real_X = i_real_X + 1;
+%         end
+%     end
+    
+    
     
     % Remove the 1st column
     XX = XX(:,2:end);

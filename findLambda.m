@@ -2,7 +2,10 @@
 % all rights reserved
 
 function [lambda] = findLambda(K, y_, X_, idxCls, d)
-    [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_, d);
+    if idxCls ~= 0
+        [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_, d);
+    end
+    
     if idxCls == 1
         y = y_cls1;
         X = X_cls1;
