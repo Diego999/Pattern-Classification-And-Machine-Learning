@@ -16,12 +16,16 @@ function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, id
     
     [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
     
-    [y_cls1, X_cls1] = preprocessCluster(y, X, idx_cls1, degree1);
-    [y_cls2, X_cls2] = preprocessCluster(y, X, idx_cls2, degree2);
-    [y_cls3, X_cls3] = preprocessCluster(y, X, idx_cls3, degree3);
+    % Find different type of features
+    [idx_feature_2, idx_feature_3, idx_feature_4] = findDiscreteFeatures(X);
+    idx_feature_real = setdiff(setdiff(setdiff(1:1:size(X,2), idx_feature_2), idx_feature_3), idx_feature_4);
+
+    [y_cls1, X_cls1] = preprocessCluster(y, X, idx_cls1, degree1, idx_feature_2, idx_feature_3, idx_feature_4, idx_feature_real);
+    [y_cls2, X_cls2] = preprocessCluster(y, X, idx_cls2, degree2, idx_feature_2, idx_feature_3, idx_feature_4, idx_feature_real);
+    [y_cls3, X_cls3] = preprocessCluster(y, X, idx_cls3, degree3, idx_feature_2, idx_feature_3, idx_feature_4, idx_feature_real);
 end
 
-function [y, X] = preprocessCluster(y_, X_, idx, degree)
+function [y, X] = preprocessCluster(y_, X_, idx, degree, idx_feature_2, idx_feature_3, idx_feature_4, idx_feature_real)
 
     % If we decide to remove some features
     %[res_corr, idx_corr] = sort(abs(corr(X_(idx,:),y_(idx,:))));
@@ -32,10 +36,6 @@ function [y, X] = preprocessCluster(y_, X_, idx, degree)
     % Build the poly for X
     X = repmat(X(idx,:),1,degree);
     nbFeatures = size(X_,2);
-    
-    % Find different type of features
-    [idx_feature_2, idx_feature_3, idx_feature_4] = findDiscreteFeatures(X);
-    idx_feature_real = setdiff(setdiff(setdiff(1:1:size(X,2), idx_feature_2), idx_feature_3), idx_feature_4);
 
     for d = 1:1:(degree-1)
         beg = d*nbFeatures+1;
@@ -59,49 +59,49 @@ end
 function [XX] = dummyFeatureEncoding(X,X_original, idx_feature_2, idx_feature_3, idx_feature_4)
     % WITH DUMMY ENCODING
     
-    XX = zeros(length(X_original),1);
-    % The index to copy the real values (non discrete) of X
-    i_real_X = 1;
-    for i = 1:1:size(X_original,2)
-        % If categorical of 2, just copy the cols
-        if any(idx_feature_2 == i)
-          XX(:,end+1) = X_original(:,i);
-        % If categorical of 3 or 4, create (k-1) cols and put 0-0-0 if 0,
-        % 1-0-0 if 1, 0-1-0 if 2, 0-0-1 if 4 etc.
-        elseif any(idx_feature_3 == i)
-            for j = 1:1:(3-1)
-                cols = zeros(length(X),1);
-                cols(find(X_original(:,i) == j),1) = 1;
-                XX(:,end+1) = cols;
-            end
-        elseif any(idx_feature_4 == i)
-            for j = 1:1:(4-1)
-                cols = zeros(length(X),1);
-                cols(find(X_original(:,i) == j),1) = 1;
-                XX(:,end+1) = cols;
-            end
-        % Copy the real values (non discrete)
-        else
-            XX(:,end+1) = X(:,i_real_X);
-            i_real_X = i_real_X + 1;
-        end
-    end
-    
-    % WITHOUT DUMMY ENCODING
-    
-%     XX = zeros(size(X_original,1),1);
+%     XX = zeros(size(X_original, 1),1);
 %     % The index to copy the real values (non discrete) of X
 %     i_real_X = 1;
 %     for i = 1:1:size(X_original,2)
 %         % If categorical of 2, just copy the cols
-%         if any(idx_feature_2 == i) || any(idx_feature_3 == i) || any(idx_feature_4 == i)
+%         if any(idx_feature_2 == i)
 %           XX(:,end+1) = X_original(:,i);
+%         % If categorical of 3 or 4, create (k-1) cols and put 0-0-0 if 0,
+%         % 1-0-0 if 1, 0-1-0 if 2, 0-0-1 if 4 etc.
+%         elseif any(idx_feature_3 == i)
+%             for j = 1:1:(3-1)
+%                 cols = zeros(size(X, 1),1);
+%                 cols(find(X_original(:,i) == j),1) = 1;
+%                 XX(:,end+1) = cols;
+%             end
+%         elseif any(idx_feature_4 == i)
+%             for j = 1:1:(4-1)
+%                 cols = zeros(size(X,1),1);
+%                 cols(find(X_original(:,i) == j),1) = 1;
+%                 XX(:,end+1) = cols;
+%             end
 %         % Copy the real values (non discrete)
 %         else
 %             XX(:,end+1) = X(:,i_real_X);
 %             i_real_X = i_real_X + 1;
 %         end
 %     end
+    
+    % WITHOUT DUMMY ENCODING
+    
+    XX = zeros(size(X_original,1),1);
+    % The index to copy the real values (non discrete) of X
+    i_real_X = 1;
+    for i = 1:1:size(X_original,2)
+        % If categorical of 2, just copy the cols
+        if any(idx_feature_2 == i) || any(idx_feature_3 == i) || any(idx_feature_4 == i)
+          XX(:,end+1) = X_original(:,i);
+        % Copy the real values (non discrete)
+        else
+            XX(:,end+1) = X(:,i_real_X);
+            i_real_X = i_real_X + 1;
+        end
+    end
     
     
     
