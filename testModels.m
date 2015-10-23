@@ -22,7 +22,7 @@ N = length(y);
 numberOfExperiments = 100;
 proportionOfTraining = 0.8;
 
-%
+%%
 % **********************************
 %             TEST 0
 % **********************************
@@ -105,7 +105,7 @@ K = 10;
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, normalizedData(X));
-    
+
     % Learning
     lambda = findLambda(K, yTr, XTr, 0, 1);
     
@@ -131,7 +131,7 @@ k3 = 4;
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-    
+    fprintf('%d\n', i);    
     [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(yTr, XTr);
 
     % Learning
@@ -273,7 +273,7 @@ d3 = 2;
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-    fprintf('%d \n', i);
+    
     % Learning
      lambda_cls1 = findLambda(k1, yTr, XTr, 1, d1, d2, d3);
      lambda_cls2 = findLambda(k2, yTr, XTr, 2, d1, d2, d3);

@@ -11,10 +11,10 @@
 
 #
 *.bin
-*.aux
-*.log
-*.out
-*.gz
+report/*/*.aux
+report/*/*.log
+report/*/*.out
+report/*/*.gz
 # Compiled MEX binaries (all platforms)
 *.mex*
 
