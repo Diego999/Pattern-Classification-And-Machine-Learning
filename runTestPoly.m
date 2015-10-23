@@ -2,10 +2,11 @@
 % all rights reserved
 
 function [mean_err_tr, mean_err_te] = runTestPoly(K, y_, X_, lambda, idxCls)
-    degrees = [1 2 3];
+    degrees = [1 2];
     
     for d=1:1:length(degrees)
-        [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_, d);
+        degree = degrees(d);
+        [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_, degree, degree, degree);
         if idxCls == 1
             y = y_cls1;
             X = X_cls1;
@@ -20,12 +21,11 @@ function [mean_err_tr, mean_err_te] = runTestPoly(K, y_, X_, lambda, idxCls)
         N = length(y);
         idxCV = splitGetCV(K, N);
     
-        degree = degrees(d);
         for k=1:1:K
             [XTr, yTr, XTe, yTe] = splitGetTrTe(y, X, idxCV, k);
 
-            tXTr = [ones(length(yTr),1) buildPoly(XTr, degree)];
-            tXTe = [ones(length(yTe),1) buildPoly(XTe, degree)];
+            tXTr = [ones(length(yTr),1) XTr];
+            tXTe = [ones(length(yTe),1) XTe];
 
             beta_rr = ridgeRegression(yTr, tXTr, lambda);
             err_tr_rr(k) = RMSE(yTr, tXTr*beta_rr);

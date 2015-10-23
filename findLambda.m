@@ -1,9 +1,13 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
-function [lambda] = findLambda(K, y_, X_, idxCls, d)
+function [lambda] = findLambda(K, y_, X_, idxCls, d1, d2, d3)
     if idxCls ~= 0
-        [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_, d);
+        if ~exist('d1', 'var') || ~exist('d2', 'var') || ~exist('d3', 'var')
+            [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_);  
+        else
+            [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_, d1, d2, d3);
+        end
     end
     
     if idxCls == 1
@@ -29,7 +33,7 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d)
         tXTr = [ones(length(yTr),1) XTr];
         tXTe = [ones(length(yTe),1) XTe];
 
-        lambdas = logspace(-1,1,100);
+        lambdas = logspace(-5,5,1000);
         for i = 1:1:length(lambdas)
             lambda = lambdas(i);
             beta_rr = ridgeRegression(yTr, tXTr, lambda);
@@ -43,15 +47,15 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d)
 
     [errStar, lambdaIdStar] = min(mseTe);
     lambdaStar = lambdas(lambdaIdStar);
-%     figure
-%     semilogx(lambdas, mseTr, 'b-o', lambdas, mseTe, 'r-x');
-%     hold on;
-%     legend('Train error', 'Test error', 'Location', 'southeast');
-%     semilogx(lambdaStar, errStar, 'black-diamond', 'MarkerSize', 10, 'MarkerFaceColor', 'k');
-%     xlabel('lambda');
-%     ylabel('error');
-%     axis([lambdas(1) lambdas(end) min([mseTr mseTe])-50 max([mseTr mseTe])+50]);
-%     hold off;
+    figure
+    semilogx(lambdas, mseTr, 'b-o', lambdas, mseTe, 'r-x');
+    hold on;
+    legend('Train error', 'Test error', 'Location', 'southeast');
+    semilogx(lambdaStar, errStar, 'black-diamond', 'MarkerSize', 10, 'MarkerFaceColor', 'k');
+    xlabel('lambda');
+    ylabel('error');
+    axis([lambdas(1) lambdas(end) min([mseTr mseTe])-50 max([mseTr mseTe])+50]);
+    hold off;
     
     lambda = lambdaStar;
 end
