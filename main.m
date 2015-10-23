@@ -208,22 +208,22 @@ d3 = 3;
 % Mean Tr : 5.63 + 7.42 + 20.99 = 34.04
 % Mean Te : 6.51 + 60.86 + 61.56 = 128.93
 
-
-d1 = 3;
-d2 = 5;
-d3 = 2;
-
-% %Cluster 1
-% K = 5;
-% lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
-% [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
-
-%Cluster 2
-% K = 6;
-% lambda = 5.25e-5;%findLambda(K, y, X, 2, d1, d2, d3);
-% [mean_err5_tr_cls2, mean_err5_te_cls2] = runTestPoly(K, y, X, lambda, 2);
 % 
-% Cluster 3
-K = 8;
-lambda = 0.0312;%findLambda(K, y, X, 3, d1, d2, d3);
-[mean_err5_tr_cls3, mean_err5_te_cls3] = runTestPoly(K, y, X, lambda, 3);
+% d1 = 3;
+% d2 = 5;
+% d3 = 2;
+% 
+% % %Cluster 1
+% % K = 5;
+% % lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
+% % [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
+% 
+% %Cluster 2
+% % K = 6;
+% % lambda = 5.25e-5;%findLambda(K, y, X, 2, d1, d2, d3);
+% % [mean_err5_tr_cls2, mean_err5_te_cls2] = runTestPoly(K, y, X, lambda, 2);
+% % 
+% % Cluster 3
+% K = 4;
+% lambda = 0.0312;%findLambda(K, y, X, 3, d1, d2, d3);
+% [mean_err5_tr_cls3, mean_err5_te_cls3] = runTestPoly(K, y, X, lambda, 3);
