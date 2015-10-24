@@ -8,9 +8,6 @@
 % end
 
 function Xpoly = buildPoly(X,degree)
-    Xpoly = zeros(size(X,1), size(X,2)*degree);
-    for k = 1:degree
-        Xpoly(:,(k-1)*size(X,2)+1:1:k*size(X,2)) = X.^k;
-    end
+    Xpoly = X.^degree;
 end
 
