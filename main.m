@@ -183,13 +183,13 @@ N = length(y);
 d1 = 3;
 d2 = 6;
 d3 = 3;
-
+% 
 % %Cluster 1
-% K = 5;
-% lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
-% [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
-
-%Cluster 2
+K = 5;
+lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
+[mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
+% 
+% % % Cluster 2
 % K = 6;
 % lambda = 4.8e-4;%findLambda(K, y, X, 2, d1, d2, d3);
 % [mean_err5_tr_cls2, mean_err5_te_cls2] = runTestPoly(K, y, X, lambda, 2);
@@ -212,17 +212,17 @@ d3 = 3;
 % d1 = 3;
 % d2 = 5;
 % d3 = 2;
-% 
-% % %Cluster 1
-% % K = 5;
-% % lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
-% % [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
+% % 
+% %Cluster 1
+% K = 8;
+% lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
+% [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
 % 
 % %Cluster 2
-% % K = 6;
-% % lambda = 5.25e-5;%findLambda(K, y, X, 2, d1, d2, d3);
-% % [mean_err5_tr_cls2, mean_err5_te_cls2] = runTestPoly(K, y, X, lambda, 2);
-% % 
+% K = 6;
+% lambda = 5.25e-5;%findLambda(K, y, X, 2, d1, d2, d3);
+% [mean_err5_tr_cls2, mean_err5_te_cls2] = runTestPoly(K, y, X, lambda, 2);
+% 
 % % Cluster 3
 % K = 4;
 % lambda = 0.0312;%findLambda(K, y, X, 3, d1, d2, d3);
