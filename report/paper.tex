@@ -77,7 +77,7 @@ Since our matrix is ill-conditioned, using the least squares with normal equatio
 
 \subsubsection{Evaluation methods}
 
-In order to evaluate our different models, we first have split our data ($\mathbf{X}$) in two sets of $80\%$ and $20\%$, for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough in order to estimate correctly our models on the testing set with a concrete size. We learn with our models only on the training set and use the test set in order to estimate the error using the \textit{Root Mean Square Error}. Moreover, we have also used k-cross validation (see next section for the values of k) to tune the parameters like lambda of the different polynomial degrees. We repeated the experiment $100$ times with different seed in order to split the data in a unique random way for each trial. Finally, we made varied the lambda from $10^{-5}$ to $10^{5}$ with $500$ values between.
+In order to evaluate our different models, we first have split our data ($\mathbf{X}$) in two sets of $80\%$ and $20\%$, for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough in order to estimate correctly our models on the testing set with a concrete size. We learn with our models only on the training set and use the test set in order to estimate the error using the \textit{Root Mean Square Error}. Moreover, we have also used k-cross validation (see next section for the values of k) to tune the parameters like lambda of the different polynomial degrees. We repeated the experiment $30$ times with different seed in order to split the data in a unique random way for each trial. Finally, we made varied the lambda from $10^{-5}$ to $10^{5}$ with $500$ values between.
 
 \subsubsection{Model comparison}
 
@@ -96,5 +96,11 @@ For the seventh model, the degrees of the polynomial for the clusters are $3,6$ 
 In hope to minimize the error, we tried different feature transformations. The first try was add polynomial of them self as $X = [X X^2 X^3 ...]$ for which each cluster has is own degree. We made varied the different degrees and also the lambdas in order to keep the lambda which minimize the test error. We also try feature transformations where the degree is a root, but unfortunately it was worst. We also wanted to try to just pow features with different degrees (without add polynomial of themselves) but we couldn't do it due to a lack of time.
 
 We also thought about removing some uncorrelated features, we tried to remove the most uncorrelated then remove also the second one etc, but unfortunately we didn't get improvements. The reason is that maybe a feature may not be correlated directly with the input, however a combination of uncorrelated feature might be highly correlated.
+
+\begin{figure}[!t]
+\center
+\includegraphics[width=6in]{figures/models.jpg} \label{fig:models}
+\caption{Boxplot of our models, using the RMSE. Each model is represented with a box where we can see their mean and their standard deviation.}
+\end{figure}
 
 \end{document}
