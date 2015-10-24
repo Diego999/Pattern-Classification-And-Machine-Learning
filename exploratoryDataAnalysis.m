@@ -26,7 +26,10 @@ N = length(y);
 % histogram(y,edges);
 % xlabel('Y');
 % ylabel('Count');
+% xlim([0 15000])
 % saveas(f3, 'plots/general/histogram.jpg');
+% print('report/figures/histogram','-djpeg','-noui')
+
 % [nb_per_bins, bin_limits] = histcounts(y, edges);
 % 
 % % the value x_i2 corresponds to the nb in the bins [x_i1;x_(i+1)2]
@@ -95,17 +98,22 @@ N = length(y);
 % % Draw clusters with outliers
 % f1 = figure;
 % 
-% ylim([min(yN) max(yN)]);
-% xlim([min(XN(:,2)) max(XN(:,2))]);
-% xlabel('Feature 2');
-% ylabel('Y');
 % plot(XN(idx_cluster1,2), yN(idx_cluster1), 'ob');
 % hold on
 % plot(X_others_clusters(:, 2), y_others_clusters, 'or');
 % hold on
-% plot(XN(outliers_cluster1, 2), yN(outliers_cluster1), 'oy');
+% plot(XN(outliers_cluster1, 2), yN(outliers_cluster1), 'oc');
 % hold off;
-% % saveas(f1, 'plots/cluster/feature2.jpg');
+% ylim([min(yN) max(yN)-0.2]);
+% xlim([min(XN(:,2)) max(XN(:,2))]);
+% xlabel('Feature 2');
+% ylabel('Y');
+% SP=0.42;
+% line([SP SP], [min(yN) max(yN)],'Color',[0 0 0]);
+% legend('Cluster 1', 'Cluster 2 & 3', 'Misclassified', 'Location', 'northwest');
+% hold off;
+% saveas(f1, 'plots/cluster/feature2.jpg');
+% print('report/figures/feature2','-djpeg','-noui');
 % 
 % % Find second separation of cluster using feature 16
 % idx_cluster3 = setdiff(idx_others_clusters, find(XN(:,16) < 1.17));
@@ -124,10 +132,6 @@ N = length(y);
 % outliers_cluster2 = find(yN > 3.5 | (XN(:,16) > 1.17 & yN > 0.5 & yN < 1.5));
 % 
 % f2 = figure;
-% ylim([min(yN) max(yN)]);
-% xlim([min(XN(:,16)) max(XN(:,16))]);
-% xlabel('Feature 16');
-% ylabel('Y');
 % hold on
 % plot(X_cluster1(:,16), y_cluster1, 'ob');
 % hold on;
@@ -135,13 +139,23 @@ N = length(y);
 % hold on
 % plot(X_cluster3(:,16), y_cluster3, 'og');
 % hold on
-% plot(XN(outliers_cluster3, 16), yN(outliers_cluster3), 'oy');
-% hold on;
-% plot(XN(outliers_cluster2, 16), yN(outliers_cluster2), 'oy');
+% plot(XN(outliers_cluster3, 16), yN(outliers_cluster3), 'oc');
+% legend('Misclassified and outliers');
 % hold on
-% plot(XN(outliers_cluster1, 16), yN(outliers_cluster1), 'oy');
+% plot(XN(outliers_cluster2, 16), yN(outliers_cluster2), 'oc');
+% hold on
+% plot(XN(outliers_cluster1, 16), yN(outliers_cluster1), 'oc');
+% hold on;
+% ylim([min(yN) max(yN)-0.2]);
+% xlim([min(XN(:,16)) max(XN(:,16))]);
+% xlabel('Feature 16');
+% ylabel('Y');
+% SP=1.17;
+% line([SP SP], [min(yN) max(yN)-0.2],'Color',[0 0 0]);
+% legend('Cluster 1', 'Cluster 2', 'Cluster 3', 'Misclassified', 'Location', 'northwest');
 % hold off;
 % saveas(f2, 'plots/cluster/feature16.jpg');
+% print('report/figures/feature16','-djpeg','-noui')
 % 
 % % Some checks
 % assert(length(idx_cluster1) + length(idx_cluster2) + length(idx_cluster3) == length(X));
