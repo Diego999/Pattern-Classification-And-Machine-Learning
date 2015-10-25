@@ -7,10 +7,10 @@
 *.asv
 
 # OSX / *nix default autosave extension
-*.m~
+*/*.m~
 
 #
-*.bin
+*/*.bin
 report/*/*.aux
 report/*/*.log
 report/*/*.out

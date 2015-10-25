@@ -31,7 +31,7 @@ xlabel('Y');
 ylabel('Count');
 xlim([0 15000]);
 % saveas(f3, 'plots/general/histogram.jpg');
-% print('report/figures/histogram','-djpeg','-noui')
+% print('../report/figures/histogram','-djpeg','-noui')
 
 %% Plot feature VS Output
 for feature=1:size(X,2)
@@ -115,7 +115,7 @@ line([SP SP], [min(yN) max(yN)],'Color',[0 0 0]);
 legend('Cluster 1', 'Cluster 2 & 3', 'Misclassified', 'Location', 'northwest');
 hold off;
 % saveas(f1, 'plots/cluster/feature2.jpg');
-% print('report/figures/feature2','-djpeg','-noui');
+% print('../report/figures/feature2','-djpeg','-noui');
 
 % Find second separation of cluster (2 and 3) using feature 16
 idx_cluster3 = setdiff(idx_others_clusters, find(XN(:,16) < 1.17));
@@ -158,7 +158,7 @@ line([SP SP], [min(yN) max(yN)-0.2],'Color',[0 0 0]);
 legend('Cluster 1', 'Cluster 2', 'Cluster 3', 'Misclassified', 'Location', 'northwest');
 hold off;
 % saveas(f2, 'plots/cluster/feature16.jpg');
-% print('report/figures/feature16','-djpeg','-noui')
+% print('../report/figures/feature16','-djpeg','-noui')
 
 % Some checks, assure we didn't loose anything
 assert(length(idx_cluster1) + length(idx_cluster2) + length(idx_cluster3) == length(X));
