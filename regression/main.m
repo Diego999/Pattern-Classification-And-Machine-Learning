@@ -31,7 +31,6 @@ for i = 1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
     
-    % Nothing to learn
     beta = mean(yTr);
     
     err1(i) = RMSE(yTe, beta);
@@ -49,10 +48,8 @@ K = 10;
 
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
-    fprintf('%d\n', i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
     
-    % Learning
     lambda = findLambda(K, yTr, XTr, 0, 1);
     
     tXTr = [ones(length(yTr),1) XTr];
@@ -77,7 +74,6 @@ for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, normalizedData(X));
 
-    % Learning
     lambda = findLambda(K, yTr, XTr, 0);
     
     tXTr = [ones(length(yTr),1) XTr];
@@ -108,7 +104,6 @@ for i = 1:numberOfExperiments
     yTe_cls2 = yTe(idx_cls2,:);
     yTe_cls3 = yTe(idx_cls3,:);
     
-    % Nothing to learn
     beta_cls1 = mean(yTr_cls1);
     beta_cls2 = mean(yTr_cls2);
     beta_cls3 = mean(yTr_cls3);
@@ -139,7 +134,6 @@ for i = 1:1:numberOfExperiments
 
     [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(yTr, XTr);
 
-    % Learning
      lambda_cls1 = findLambda(k1, y_cls1, X_cls1, 0, 1);
      lambda_cls2 = findLambda(k2, y_cls2, X_cls2, 0, 1);
      lambda_cls3 = findLambda(k3, y_cls3, X_cls3, 0, 1);
@@ -153,10 +147,6 @@ for i = 1:1:numberOfExperiments
      beta_cls3 = ridgeRegression(y_cls3, tX_cls3, lambda_cls3);
      
      [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(yTe, XTe);
- 
-     if size(X_cls1,2) ~= size(X_cls2,2) || size(X_cls2,2) ~= size(X_cls3,2)
-         continue
-     end
      
      tXTe_cls1 = [ones(length(y_cls1),1) X_cls1];
      tXTe_cls2 = [ones(length(y_cls2),1) X_cls2];
@@ -188,7 +178,6 @@ for i = 1:1:numberOfExperiments
       
     [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(yTr, XTr);
 
-    % Learning
      lambda_cls1 = findLambda(k1, y_cls1, X_cls1, 0, 1);
      lambda_cls2 = findLambda(k2, y_cls2, X_cls2, 0, 1);
      lambda_cls3 = findLambda(k3, y_cls3, X_cls3, 0, 1);
@@ -236,7 +225,6 @@ for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
 
-    % Learning
      lambda_cls1 = findLambda(k1, yTr, XTr, 1, d1, d2, d3);
      lambda_cls2 = findLambda(k2, yTr, XTr, 2, d1, d2, d3);
      lambda_cls3 = findLambda(k3, yTr, XTr, 3, d1, d2, d3);
@@ -284,8 +272,7 @@ d3 = 2;
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-    fprintf('%d\n', i); 
-    % Learning
+    
      lambda_cls1 = findLambda(k1, yTr, XTr, 1, d1, d2, d3);
      lambda_cls2 = findLambda(k2, yTr, XTr, 2, d1, d2, d3);
      lambda_cls3 = findLambda(k3, yTr, XTr, 3, d1, d2, d3);
@@ -387,4 +374,4 @@ ylim([0 3000])
 set(gca,'YTick',0:100:3000)
 xlabel('Model');
 ylabel('RMSE');
-print('report/figures/models','-djpeg','-noui')
+print('../report/figures/models','-djpeg','-noui')
