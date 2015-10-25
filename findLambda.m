@@ -1,7 +1,11 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
+%idxCls1 is to indicate which cluster do we use (1 2 3). 0 means all the
+%dataset
 function [lambda] = findLambda(K, y_, X_, idxCls, d1, d2, d3)
+    % If we choose a cluster, we check if all the degrees were specified
+    % Otherwise we choose arbitrary degree to 1 for each cluster
     if idxCls ~= 0
         if ~exist('d1', 'var') || ~exist('d2', 'var') || ~exist('d3', 'var')
             [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3] = preprocess(y_, X_);  
@@ -10,6 +14,7 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d1, d2, d3)
         end
     end
     
+    % Select cluster if specified or the whole dataset
     if idxCls == 1
         y = y_cls1;
         X = X_cls1;
@@ -27,6 +32,7 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d1, d2, d3)
     N = length(y);
     idxCV = splitGetCV(K, N);
 
+    % K-fold
     for k=1:1:K
         [XTr, yTr, XTe, yTe] = splitGetTrTe(y, X, idxCV, k);
 
@@ -47,6 +53,7 @@ function [lambda] = findLambda(K, y_, X_, idxCls, d1, d2, d3)
 
     [errStar, lambdaIdStar] = min(mseTe);
     lambdaStar = lambdas(lambdaIdStar);
+    
 %     figure
 %     semilogx(lambdas, mseTr, 'b-o', lambdas, mseTe, 'r-x');
 %     hold on;

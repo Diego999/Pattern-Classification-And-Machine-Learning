@@ -27,12 +27,6 @@ function [beta] = leastSquaresGD(y, tX, alpha)
             break;
         end
     end
-
-    % Some information
-    %L = computeCost(y, tX, beta);
-    %fprintf('%d\n', steps);
-    %fprintf('%.4f\n', n);
-    %fprintf('K : %d \n Beta : %s\n Compute Cost : %.4f', steps, sprintf('%.4f ', beta), L);
 end
 
 function [gradient] = computeGradient(y, tX, beta)

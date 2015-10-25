@@ -1,7 +1,7 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
-function [XTr, yTr, XTe, yTe] = splitProp(K, y, X)
+function [XTr, yTr, XTe, yTe] = splitProp(prop, y, X)
     % split the data into train and test given a proportion
     N = length(y);
 
@@ -11,7 +11,7 @@ function [XTr, yTr, XTe, yTe] = splitProp(K, y, X)
     
 	% generate random indices
 	idx = randperm(N);
-    Ntr = floor(K * N);
+    Ntr = floor(prop * N);
 	% select few as training and others as testing
 	idxTr = idx(1:Ntr);
 	idxTe = idx(Ntr+1:end);

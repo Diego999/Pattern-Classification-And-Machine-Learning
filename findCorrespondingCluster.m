@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 % x is a data vector. Both have to be normalized
 function [idx_cls] = findCorrespondingCluster(x)
     if x(2) < 0.42
