@@ -50,7 +50,7 @@ We also have test-data of size $N=1200$ without their corresponding output. Our 
 
 \subsection{Data visualization and cleaning}
 
-We first have plot the distribution of our features (plot not shown because too big for the $76$ features). As expected, they are not center and we should normalized them. The Figure \ref{fig:histogram} shows an histogram of the output ($\mathbf{y}$) and we can conclude our data  seem to be a combination of three Gaussian distributions. It will be used later in order to separate the data in three sets and apply different regression models on them (each cluster will be normalized independently). We can also observe that each cluster have different sizes : 1946, 576 and 278. Moreover, on the right, we can see some data points (there are $2$) which have a higher values than the others. We consider them as outliers and will remove them.
+We first have plot the distribution of our features (plot not shown because too big for the $76$ features). As expected, they are not center and we should normalize them. The Figure \ref{fig:histogram} shows an histogram of the output ($\mathbf{y}$) and we can conclude our data  seem to be a combination of three Gaussian distributions. It will be used later in order to separate the data in three sets and apply different regression models on them (each cluster will be normalized independently). We can also observe that each cluster have different sizes : 1946, 576 and 278. Moreover, on the right, we can see some data points (there are $2$) which have a higher values than the others. We consider them as outliers and will remove them.
 
 To separate the data, we have observed that the feature $2$ and $16$ could help us. With Figure \ref{fig:feature2} we can see how we can use the second feature to separate cluster one to the others and observe $11$ misclassified data, which we will remove them in order to not corrupt our model. For the two other clusters, we need to observe the feature $16$. With Figure \ref{fig:feature16}, we can observe $14$ misclassified data. They also will be consider as outliers and removed. We set the threshold in order to minimize the number of misclassified data samples. Those thresholds are $0.42$ for the feature $2$ and $1.17$ for the feature $16$. So the final size of our clusters are $1937, 563$ and $273$.
 
@@ -102,6 +102,31 @@ We also thought about removing some uncorrelated features, we tried to remove th
 
 \subsubsection{Summary}
 
-We analyzed a regression data set with different methods and concluded that least squares wasn't a good approach due to the ill-conditioning and the least squares gradient descent was to slow and was less efficient than ridge regression. Moreover, the separation of the data into clusters was essential in order to decrease the prediction accuracy. Unfortunately, dummy encoding didn't help. However using polynomial basis help to decrease the variance. Finally, the variance of cluster 1 and 3 are very low, the one for cluster 2 is a bit higher. We think that we have bias because we use ridge regression but we don't think it is too high because we have seen that adding features helps and at a certain points it wasn't efficient. The best model we have is the seventh one, and we estimate the RMSE of the prediction to be around 97 with a standard deviation of 35. Finally, we think that our model is improvable, however we couldn't try other things in oorder to improve the estimation error, due to a lack of time.
+We analyzed a regression data set with different methods and concluded that least squares wasn't a good approach due to the ill-conditioning and the least squares gradient descent was to slow and was less efficient than ridge regression. Moreover, the separation of the data into clusters was essential in order to decrease the prediction accuracy. Unfortunately, dummy encoding didn't help. However using polynomial basis help to decrease the variance. Finally, the variance of cluster 1 and 3 are very low, the one for cluster 2 is a bit higher. We think that we have bias because we use ridge regression but we don't think it is too high because we have seen that adding features helps and at a certain points it wasn't efficient. The best model we have is the seventh one, and we estimate the RMSE of the prediction to be around 97 with a standard deviation of 35. Finally, we think that our model is improvable, however we couldn't try other things in order to improve the estimation error, due to a lack of time.
+
+\section{Classification}
+
+\subsection{Data Description}
+
+The train-data for classification consists of $N = 1500$ input ($\mathbf{X}$) and output ($\mathbf{y}$) data samples. Each input sample is a vector $\mathbf{x}_n$ with dimension $D = 25$. Out of these $25$ variables, $20$ are real, $3$ categorical with 2 categories, $1$ is categorical with 4 categories and $1$ is categorical with 5 categories.
+
+We also have test-data of size $N=1500$ without their corresponding output. Our goal is to produce predictions for those data, as well as an approximation of the test-error (using RMSE, 0-1 loss and logarithmic loss) using logistic regression and penalized logistic regression methods.
+
+\subsection{Data visualization and cleaning}
+
+We first have plot the distribution of our features. As expected, they are not center and we should normalize them (good practice because we also use methods using gradient descents). Then we plot the histogram of the output which shows that approximately $64.8\%$ of the data are in a class and the other $35.2\%$ in another. We also plot the histogram of the categorical variables, which shows us that mostly their values are uniform. However, for the real features, we have distinguish 3 types : 1) Look likes a Poisson distribution where the peak is near 0 and the values are mainly positive (like feature 17) 2) Same as one but the values are mainly negative (like feature 5) and so, maybe they have been transformed with a negative sign from a Poisson distribution. 3) Look likes Gaussian distribution which is not centered (like feature 10). The Figure \ref{fig:featuresType} shows their histogram, with their values normalized.
+
+We use dummy encoding for categorical variables, as we did for the regression.
+
+We are also interested about the correlation between the input and output variables. The Figure \ref{fig:correlation} shows the correlation. We have observed that the features are correlated mainly in the range $[-0.3,0.3]$ and some have higher correlation near $\pm0.4$ and $0.5$ like feature $7$ or $24$.We have decided to not remove features with low correlation because we don't have any pertinent reason to do so.
+
+\begin{figure}[!ht]
+\center
+\subfigure[Histogram of different feature types. We can see that the first and second looks like a Poisson distribution (the second has maybe be transformed with negative sign) and the third one a Gaussian distribution.]{\includegraphics[width=2.6in]{figures/featuresType.jpg} \label{fig:featuresType}}
+\hfill
+\subfigure[Plot of the correlation of the features and the outputs. Some feature are highly correlated  whereas some have really low correlation.]{\includegraphics[width=2.6in]{figures/correlation.jpg} \label{fig:correlation}}
+\hfill
+\caption{}
+\end{figure}
 
 \end{document}

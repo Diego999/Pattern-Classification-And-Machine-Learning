@@ -7,15 +7,15 @@
 *.asv
 
 # OSX / *nix default autosave extension
-*/*/*.*~
+**/*.*~
 
 #
-regression/results/*.bin
-classification/reults/*.bin
-report/*/*.aux
-report/*/*.log
-report/*/*.out
-report/*/*.gz
+**/*.bin
+**/*.aux
+**/*.log
+**/*.out
+**/*.gz
+
 # Compiled MEX binaries (all platforms)
 *.mex*
 

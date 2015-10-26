@@ -46,7 +46,7 @@ for feature=1:size(X,2)
     plot(X(idx,feature),y(idx),'ob');
     ylabel('y');
     xlabel(sprintf('Values of feature %d', feature));
-    saveas(f, sprintf('plots/features/featuresVSOuputTo1/feature%d.jpg', feature));
+    % saveas(f, sprintf('plots/features/featuresVSOuputTo1/feature%d.jpg', feature));
 end
 
 idx = find(y == -1);
@@ -55,8 +55,9 @@ for feature=1:size(X,2)
     plot(X(idx,feature),y(idx),'ob');
     ylabel('y');
     xlabel(sprintf('Values of feature %d', feature));
-    saveas(f, sprintf('plots/features/featuresVSOuputTo0/feature%d.jpg', feature));
+    % saveas(f, sprintf('plots/features/featuresVSOuputTo0/feature%d.jpg', feature));
 end
+
 %% Plot histogram of each feature
 for feature=1:size(X,2)
     f = figure;
@@ -72,7 +73,7 @@ for feature=1:size(X,2)
     histogram(X(idx,feature));
     xlabel(sprintf('Feature %d', feature));
     ylabel('Count');
-    saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo1/feature%d.jpg', feature));
+    % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo1/feature%d.jpg', feature));
 end
 
 idx = find(y == -1);
@@ -81,8 +82,32 @@ for feature=1:size(X,2)
     histogram(X(idx,feature));
     xlabel(sprintf('Feature %d', feature));
     ylabel('Count');
-    saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo0/feature%d.jpg', feature));
+    % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo0/feature%d.jpg', feature));
 end
+
+% For the report
+f = figure;
+X_ = normalizedData(X);
+subplot(1, 3, 1);
+histogram(X_(:,17));
+xlabel('First type');
+ylabel('Count');
+xlim([-5 5]);
+
+subplot(1, 3, 2);
+histogram(X_(:,5));
+xlabel('Second type');
+xlim([-5 5]);
+ylabel('Count');
+
+subplot(1, 3, 3);
+histogram(X_(:,10));
+xlabel('Third type');
+ylabel('Count');
+xlim([-5 5]);
+
+% print(f, '../report/figures/featuresType','-djpeg')
+
 %% Plot histogram of each normalized feature
 X_ = normalizedData(X);
 for feature=1:size(X,2)
@@ -101,5 +126,17 @@ for feature=1:size(X,2)
     histogram(X(idx,feature));
     xlabel(sprintf('Feature %d', feature));
     ylabel('Count');
-    saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
+    % saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
 end
+
+%% Show correlation between feature X to Y
+f = figure;
+corr_features = corr(X,y);
+x_domain = 1:1:size(X,2);
+plot(x_domain, corr_features, 'ob');
+hold on
+plot(x_domain, x_domain*0, '-r');
+xlabel('Feature i');
+ylabel('Correlation between feature i and y');
+% saveas(f, sprintf('plots/features/featuresCorrelationOutput.jpg'));
+print(f, '../report/figures/correlation','-djpeg')
