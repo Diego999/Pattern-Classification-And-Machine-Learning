@@ -40,6 +40,23 @@ for feature=1:size(X,2)
     % saveas(f, sprintf('plots/features/featuresVSOutput/feature%d.jpg', feature));
 end
 
+idx = find(y == 1);
+for feature=1:size(X,2)
+    f = figure;
+    plot(X(idx,feature),y(idx),'ob');
+    ylabel('y');
+    xlabel(sprintf('Values of feature %d', feature));
+    saveas(f, sprintf('plots/features/featuresVSOuputTo1/feature%d.jpg', feature));
+end
+
+idx = find(y == -1);
+for feature=1:size(X,2)
+    f = figure;
+    plot(X(idx,feature),y(idx),'ob');
+    ylabel('y');
+    xlabel(sprintf('Values of feature %d', feature));
+    saveas(f, sprintf('plots/features/featuresVSOuputTo0/feature%d.jpg', feature));
+end
 %% Plot histogram of each feature
 for feature=1:size(X,2)
     f = figure;
@@ -47,4 +64,42 @@ for feature=1:size(X,2)
     xlabel(sprintf('Feature %d', feature));
     ylabel('Count');
     % saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
+end
+
+idx = find(y == 1);
+for feature=1:size(X,2)
+    f = figure;
+    histogram(X(idx,feature));
+    xlabel(sprintf('Feature %d', feature));
+    ylabel('Count');
+    saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo1/feature%d.jpg', feature));
+end
+
+idx = find(y == -1);
+for feature=1:size(X,2)
+    f = figure;
+    histogram(X(idx,feature));
+    xlabel(sprintf('Feature %d', feature));
+    ylabel('Count');
+    saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo0/feature%d.jpg', feature));
+end
+%% Plot histogram of each normalized feature
+X_ = normalizedData(X);
+for feature=1:size(X,2)
+    f = figure;
+    histogram(X_(:,feature));
+    xlabel(sprintf('Feature %d', feature));
+    ylabel('Count');
+    % saveas(f, sprintf('plots/features/featuresNormalizedHistogram/feature%d.jpg', feature));
+end
+
+%% Plot histogram of each feature where the ouput is 1
+
+idx = find(y == 1);
+for feature=1:size(X,2)
+    f = figure;
+    histogram(X(idx,feature));
+    xlabel(sprintf('Feature %d', feature));
+    ylabel('Count');
+    saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
 end
