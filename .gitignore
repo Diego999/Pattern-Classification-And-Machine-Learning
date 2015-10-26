@@ -10,7 +10,8 @@
 */*/*.*~
 
 #
-*/*/*.bin
+regression/results/*.bin
+classification/reults/*.bin
 report/*/*.aux
 report/*/*.log
 report/*/*.out
