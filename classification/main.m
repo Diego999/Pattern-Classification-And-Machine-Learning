@@ -11,6 +11,10 @@ X = X_train;
 N = length(y);
 
 % 1) Constant baseline
+% 2) Logistic regression
+% 3) + Output either 0 or 1
+% 4) + without categorical variables
+% 5) + Removing outliers
 
 numberOfExperiments = 30;
 proportionOfTraining = 0.8;

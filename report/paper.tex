@@ -120,6 +120,8 @@ We use dummy encoding for categorical variables, as we did for the regression.
 
 We are also interested about the correlation between the input and output variables. The Figure \ref{fig:correlation} shows the correlation. We have observed that the features are correlated mainly in the range $[-0.3,0.3]$ and some have higher correlation near $\pm0.4$ and $0.5$ like feature $7$ or $24$.We have decided to not remove features with low correlation because we don't have any pertinent reason to do so.
 
+Finally, our matrix ($\mathbf{X}$) is a full-rank matrix.
+
 \begin{figure}[!ht]
 \center
 \subfigure[Histogram of different feature types. We can see that the first and second looks like a Poisson distribution (the second has maybe be transformed with negative sign) and the third one a Gaussian distribution.]{\includegraphics[width=2.6in]{figures/featuresType.jpg} \label{fig:featuresType}}
