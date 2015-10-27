@@ -6,7 +6,7 @@ function [e] = logLoss(y, p)
     res = 0;
     
     for i = 1:1:N
-       res = res + y(i)*log(p(i)) + (1-y(i))*log(1-p(i));
+       res = res + y(i)*p(i) - log(1.0 + exp(p(i)));
     end
     
     e = -res/N;

@@ -3,7 +3,7 @@
 
 function [beta] = logisticRegression(y, tX, alpha)
     % algorithm parameters
-    maxIters = 100000;
+    maxIters = 500000;
     epsilon_convergence = 1e-8;
 
     % initialize beta
@@ -27,13 +27,12 @@ function [beta] = logisticRegression(y, tX, alpha)
             break;
         end
     end
+    fprintf('%.10f\n', norm(g));
 end
 
 function [gradient] = computeGradient(y, tX, beta)
     gradient = tX'*(sigmoid(tX*beta) - y);
 end
-
-
 
 function [res] = computeCost(y, tX, beta)
     tXBeta = tX*beta;
