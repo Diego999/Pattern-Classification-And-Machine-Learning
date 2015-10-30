@@ -31,3 +31,18 @@ Features 3, 4, 15, 18, 25
 
 Special
 Features 6, 19, 2
+
+Outliers removal
+
+Features 6, 14, 19, 20, 21, 23, 24 : +- 4.5
+Features 22 : -2.5
+features 17 : +- 4
+features 10, 16 : -2; + 4.5
+features 13 : -4.5, 2
+features 11, 12 : 1.5, -4
+features 9 : -4
+features 8 : -4, 2
+features 7 : -1, 4.5
+features 5 : -4.5, 1.5
+features 2 : -1.5
+features 1 : -4.5, 1.5

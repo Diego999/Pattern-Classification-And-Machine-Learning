@@ -3,7 +3,7 @@
 
 function [beta] = penLogisticRegression(y, tX, alpha, lambda)
     % algorithm parameters
-    maxIters = 35000;
+    maxIters = 100000;
     epsilon_convergence = 1e-6;
 
     % initialize beta
@@ -27,6 +27,7 @@ function [beta] = penLogisticRegression(y, tX, alpha, lambda)
             break;
         end
     end
+    fprintf('%.10f\n', norm(g));
 end
 
 function [gradient] = computeGradient(y, tX, beta, lambda)

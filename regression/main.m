@@ -269,10 +269,10 @@ d1 = 3;
 d2 = 5;
 d3 = 2;
 
-for i = 1:1:numberOfExperiments
+for i = 1:1:5
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-    
+    fprintf('%d\n',i);
      lambda_cls1 = findLambda(k1, yTr, XTr, 1, d1, d2, d3);
      lambda_cls2 = findLambda(k2, yTr, XTr, 2, d1, d2, d3);
      lambda_cls3 = findLambda(k3, yTr, XTr, 3, d1, d2, d3);
@@ -298,9 +298,9 @@ for i = 1:1:numberOfExperiments
      err8_cls3(i) = RMSE(y_cls3, tXTe_cls3*beta_cls3);
 end
 
-saveFile(err8_cls1, 'results/err8_cls1');
-saveFile(err8_cls2, 'results/err8_cls2');
-saveFile(err8_cls3, 'results/err8_cls3');
+%saveFile(err8_cls1, 'results/err8_cls1');
+%saveFile(err8_cls2, 'results/err8_cls2');
+%saveFile(err8_cls3, 'results/err8_cls3');
 %%
 s = [1 numberOfExperiments];
 
