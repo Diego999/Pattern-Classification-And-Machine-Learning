@@ -13,7 +13,6 @@ function [y, X, outliers_idx] = preprocess(y_, X_, degree)
 
     X = X_;
     
-    %X = poissonToGaussian(X, [1 5 8 11 12 13 20 23 24 7 16 17 22 9 10 14 21 6 19 2]);
     X = poissonToGaussian(X, idx_feature_real);
     
     % 2
@@ -64,7 +63,7 @@ function [y, X, outliers_idx] = preprocess(y_, X_, degree)
     
     % WITH DUMMY ENCODING
     % We encode categorical features and add them to the normalized X
-    X = dummyFeatureEncoding(X, X_, idx_feature_2_poly, idx_feature_4_poly, idx_feature_5_poly); 
+     X = dummyFeatureEncoding(X, X_, idx_feature_2_poly, idx_feature_4_poly, idx_feature_5_poly); 
     % WITHOUT DUMMY ENCODING
     % X = addCategoricalVariableWithoutEncoding(X, X_, idx_feature_2_poly, idx_feature_4_poly, idx_feature_5_poly);
 end

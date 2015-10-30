@@ -341,7 +341,7 @@ saveFile(err6_log, 'results/err6_log');
 
 alphas = [0.001];
 degree = 2;
-for i = 1:1:5
+for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
      
