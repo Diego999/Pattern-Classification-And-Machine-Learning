@@ -59,31 +59,31 @@ for feature=1:size(X,2)
 end
 
 %% Plot histogram of each feature
-% for feature=1:size(X,2)
-%     f = figure;
-%     histogram(X(:,feature));
-%     xlabel(sprintf('Feature %d', feature));
-%     ylabel('Count');
-%     % saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
-% end
-% 
-% idx = find(y == 1);
-% for feature=1:size(X,2)
-%     f = figure;
-%     histogram(X(idx,feature));
-%     xlabel(sprintf('Feature %d', feature));
-%     ylabel('Count');
-%     % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo1/feature%d.jpg', feature));
-% end
-% 
-% idx = find(y == -1);
-% for feature=1:size(X,2)
-%     f = figure;
-%     histogram(X(idx,feature));
-%     xlabel(sprintf('Feature %d', feature));
-%     ylabel('Count');
-%     % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo0/feature%d.jpg', feature));
-% end
+for feature=1:size(X,2)
+    f = figure;
+    histogram(X(:,feature));
+    xlabel(sprintf('Feature %d', feature));
+    ylabel('Count');
+    % saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
+end
+
+idx = find(y == 1);
+for feature=1:size(X,2)
+    f = figure;
+    histogram(X(idx,feature));
+    xlabel(sprintf('Feature %d', feature));
+    ylabel('Count');
+    % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo1/feature%d.jpg', feature));
+end
+
+idx = find(y == -1);
+for feature=1:size(X,2)
+    f = figure;
+    histogram(X(idx,feature));
+    xlabel(sprintf('Feature %d', feature));
+    ylabel('Count');
+    % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo0/feature%d.jpg', feature));
+end
 
 % For the report
 f = figure;
