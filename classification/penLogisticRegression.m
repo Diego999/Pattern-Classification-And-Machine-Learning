@@ -27,7 +27,6 @@ function [beta] = penLogisticRegression(y, tX, alpha, lambda)
             break;
         end
     end
-    fprintf('%.10f\n', norm(g));
 end
 
 function [gradient] = computeGradient(y, tX, beta, lambda)

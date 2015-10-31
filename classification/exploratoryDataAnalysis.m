@@ -9,19 +9,6 @@ y = y_train;
 X = X_train;
 N = length(y);
 
-%% Test
-
-X_ = normalizedData(poissonToGaussian(X, [1:1:25]));
-idx = find(y == 1);
-edges = -5:0.1:5;
-for feature=1:size(X,2)
-    f = figure;
-    histogram(X_(idx,feature), edges);
-    xlabel(sprintf('Feature %d', feature));
-    ylabel('Count');
-    % saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
-end
-
 %% Plot of output
 f1 = figure;
 boxplot(X,'notch','on');
