@@ -11,17 +11,14 @@ X = X_train;
 N = length(y);
 
 % 1) Constant baseline
-% 2) Logistic regression (with normalization + output [0,1] + keaping only real features)
+% 2) Logistic regression (normalization & output [0,1] & only real features)
 % 3) + categorical variables
 % 4) + dummy encoding
 % 5) + Polynomial basis 2
-% 6) Feature transformation (abs) (without polynomial basis)
-% 7) Feature transformation (abs) (with polynomial basis 2)
-% 8) Feature transformation (with -) (without polynomial basis)
-% 9) Feature transformation (with -) (with polynomial basis 2)
-
-% 6) + Polynomial basis degree 3
-% 5) + Removing outliers
+% 6) Feature transformation (abs) (degree 1)
+% 7) Feature transformation (abs) (degree 2)
+% 8) Feature transformation (with neg) (degree 1)
+% 9) Feature transformation (with neg) (degree 2)
 
 numberOfExperiments = 30;
 proportionOfTraining = 0.8;
@@ -384,9 +381,9 @@ for i = 1:1:numberOfExperiments
     err7_log(i) = logLoss(yTe, y_hat);
 end
 
-saveFile(err7, 'results/err7');
-saveFile(err7_01, 'results/err7_01');
-saveFile(err7_log, 'results/err7_log');
+%saveFile(err7, 'results/err7');
+%saveFile(err7_01, 'results/err7_01');
+%saveFile(err7_log, 'results/err7_log');
 
 %%
 % **********************************
@@ -505,65 +502,6 @@ saveFile(err9_01, 'results/err9_01');
 saveFile(err9_log, 'results/err9_log');
 
 %%
-% **********************************
-%             TEST 10
-% **********************************
-% We MUST normalize and transform -1 to 0 in order to have GD working
-% Add categorical features from preprocess
-% Add dummy encoding
-% Add polynomial basis
-
-%a = 0.001, d = 2 -> 90.53 (Without discrete variable and using abs)
-alphas = [0.001];
-degree = 2;
-for i = 1:1:numberOfExperiments
-    setSeed(28111993*i);
-    [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-     
-    [yTr, XTr] = preprocess(yTr, XTr, degree);
-    N = length(yTr);
-    idxCV = splitGetCV(K, N);
-    
-%      for a = 1:1:length(alphas)
-%          % K-fold
-%          for k=1:1:K
-%              [XXTr, yyTr, XXTe, yyTe] = splitGetTrTe(yTr, XTr, idxCV, k);
-%              
-%              tXTr = [ones(length(yyTr),1) XXTr];
-%              tXTe = [ones(length(yyTe),1) XXTe];
-%              
-%              alpha = alphas(a);
-%              beta = logisticRegression(yyTr, tXTr, alpha);
-%              
-%              err_tr_rr(k,a) = RMSE(yyTr, tXTr*beta);
-%              err_te_rr(k,a) = RMSE(yyTe, tXTe*beta);
-%          end
-%  
-%          mseTr = mean(err_tr_rr);
-%          mseTe = mean(err_te_rr);
-%      end
-    
-    beta = logisticRegression(yTr, [ones(length(yTr), 1) XTr], alphas(1));
-    %[errStar, alphaStarId] = min(mseTe);
-    %alphaStar = alphas(alphaStarId);
-    
-    [yTe, XTe] = preprocess(yTe, XTe, degree);
-    
-    tXTe = [ones(length(yTe),1) XTe];
-    
-    %beta = logisticRegression(yTe, tXTe, alphaStar);
-    y_hat = (sigmoid(tXTe*beta) >= 0.5).*1.0;
-    
-    err10(i) = RMSE(yTe, y_hat);
-    err10_01(i) = zeroOneLoss(yTe, y_hat);
-    err10_log(i) = logLoss(yTe, y_hat);
-end
-
-saveFile(err10, 'results/err10');
-saveFile(err10_01, 'results/err10_01');
-saveFile(err10_log, 'results/err10_log');
-
-%%
 s = [1 numberOfExperiments];
 
 err1 = openFile('results/err1', s);
@@ -602,36 +540,30 @@ err9 = openFile('results/err9', s);
 err9_01 = openFile('results/err9_01', s);
 err9_log = openFile('results/err9_log', s);
 
-err10 = openFile('results/err10', s);
-err10_01 = openFile('results/err10_01', s);
-err10_log = openFile('results/err10_log', s);
 
 % 1) Constant baseline
-% 2) Logistic regression (with normalization + output [0,1])
+% 2) Logistic regression (normalization & output [0,1] & only real features)
 % 3) + categorical variables
 % 4) + dummy encoding
-% 5) + polynomial basis 2nd degree
-% 6) Feature transformation (abs) (without polynomial basis)
-% 7) Feature transformation (abs) (with polynomial basis)
-% 8) Feature transformation (with -) (without polynomial basis)
-% 9) Feature transformation (with -) (with polynomial basis)
-% 10) Feature transformation (abs) (with polynomial basis) (without
-% discrete)
+% 5) + Polynomial basis 2
+% 6) Feature transformation (abs) (degree 1)
+% 7) Feature transformation (abs) (degree 2)
+% 8) Feature transformation (with neg) (degree 1)
+% 9) Feature transformation (with neg) (degree 2)
 
 % RMSE
 figure;
-boxplot([err1' err2' err3' err4' err5' err6' err7' err8' err9' err10']);
+boxplot([err1' err2' err3' err4' err5' err6' err7' err8' err9']);
 h_legend = legend(findobj(gca,'Tag','Box'), ...
-'1 Constant model', ...
-'2 Logistic regression with normalization and output[0,1]', ...
-'3 + categorical features', ...
-'4 + dummy encoding', ...
-'5) + polynomial basis 2nd degree', ...
-'6) Features transformation (abs), without polynomial basis', ...
-'7) Feature transformation (abs) (with polynomial basis)', ...
-'8) Features transformation (with -), without polynomial basis', ...
-'9) Feature transformation (with -) (with polynomial basis)', ...
-'10) Feature transformation (abs) (with polynomial basis) (without discrete)');
+'1) Constant baseline', ...
+'2) Logistic regression (normalization, output [0,1])', ...
+'3) + categorical variables', ...
+'4) + dummy encoding', ...
+'5) + Polynomial basis 2', ...
+'6) Feature transformation (abs) (degree 1)', ...
+'7) Feature transformation (abs) (degree 2)', ...
+'8) Feature transformation (with neg) (degree 1)', ...
+'9) Feature transformation (with neg) (degree 2)');
 set(h_legend,'FontSize',12);
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
@@ -643,18 +575,17 @@ ylabel('RMSE');
 
 %0-1Loss
 figure;
-boxplot([err1_01' err2_01' err3_01' err4_01' err5_01' err6_01' err7_01' err8_01' err9_01' err10_01']);
+boxplot([err1_01' err2_01' err3_01' err4_01' err5_01' err6_01' err7_01' err8_01' err9_01']);
 h_legend = legend(findobj(gca,'Tag','Box'), ...
-'1 Constant model', ...
-'2 Logistic regression with normalization and output[0,1]', ...
-'3 + categorical features', ...
-'4 + dummy encoding', ...
-'5) + polynomial basis 2nd degree', ...
-'6) Features transformation (abs), without polynomial basis', ...
-'7) Feature transformation (abs) (with polynomial basis)', ...
-'8) Features transformation (with -), without polynomial basis', ...
-'9) Feature transformation (with -) (with polynomial basis)', ...
-'10) Feature transformation (abs) (with polynomial basis) (without discrete)');
+'1) Constant baseline', ...
+'2) Logistic regression (normalization, output [0,1])', ...
+'3) + categorical variables', ...
+'4) + dummy encoding', ...
+'5) + Polynomial basis 2', ...
+'6) Feature transformation (abs) (degree 1)', ...
+'7) Feature transformation (abs) (degree 2)', ...
+'8) Feature transformation (with neg) (degree 1)', ...
+'9) Feature transformation (with neg) (degree 2)');
 set(h_legend,'FontSize',12);
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
@@ -666,18 +597,17 @@ print('../report/figures/models_classification','-djpeg','-noui')
 
 %LogLoss
 figure;
-boxplot([err1_log' err2_log' err3_log' err4_log' err5_log' err6_log' err7_log' err8_log' err9_log' err10_log']);
+boxplot([err1_log' err2_log' err3_log' err4_log' err5_log' err6_log' err7_log' err8_log' err9_log']);
 h_legend = legend(findobj(gca,'Tag','Box'), ...
-'1 Constant model', ...
-'2 Logistic regression with normalization and output[0,1]', ...
-'3 + categorical features', ...
-'4 + dummy encoding', ...
-'5) + polynomial basis 2nd degree', ...
-'6) Features transformation (abs), without polynomial basis', ...
-'7) Feature transformation (abs) (with polynomial basis)', ...
-'8) Features transformation (with -), without polynomial basis', ...
-'9) Feature transformation (with -) (with polynomial basis)', ...
-'10) Feature transformation (abs) (with polynomial basis) (without discrete)');
+'1) Constant baseline', ...
+'2) Logistic regression (normalization, output [0,1])', ...
+'3) + categorical variables', ...
+'4) + dummy encoding', ...
+'5) + Polynomial basis 2', ...
+'6) Feature transformation (abs) (degree 1)', ...
+'7) Feature transformation (abs) (degree 2)', ...
+'8) Feature transformation (with neg) (degree 1)', ...
+'9) Feature transformation (with neg) (degree 2)');
 set(h_legend,'FontSize',12);
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
