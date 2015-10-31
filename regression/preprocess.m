@@ -76,15 +76,15 @@ function [y, X] = preprocessCluster(y_, X_, idx, degree, idx_feature_2, idx_feat
     % Normalize
     y = y_(idx);
     % WITH NORMALIZATION
-    X = normalizedData(X(:,real_features_idx_to_normalize));
+    %X = normalizedData(X(:,real_features_idx_to_normalize));
     % WITHOUT NORMALIZATION
-    % X = X(:,real_features_idx_to_normalize);
+    X = X(:,real_features_idx_to_normalize);
     
     % WITH DUMMY ENCODING
     % We encode categorical features and add them to the normalized X
-    X = dummyFeatureEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly); 
+    %X = dummyFeatureEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly); 
     % WITHOUT DUMMY ENCODING
-    % X = addCategoricalVariableWithoutEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly);
+     X = addCategoricalVariableWithoutEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly);
 
 end
 

@@ -131,7 +131,7 @@ k3 = 6;
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-
+    fprintf('%d\n', i);
     [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(yTr, XTr);
 
      lambda_cls1 = findLambda(k1, y_cls1, X_cls1, 0, 1);
@@ -165,7 +165,7 @@ saveFile(err5_cls3, 'results/err5_cls3');
 % **********************************
 %             TEST 6
 % **********************************
-% Add in preprocessCluster around line 68 the normalization 
+% Add in preprocessCluster around line 78 the normalization 
 % Add in preprocessCluster around line 75 the dummy encoding
 
 k1 = 10;
@@ -175,7 +175,7 @@ k3 = 6;
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-      
+    fprintf('%d\n', i);
     [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(yTr, XTr);
 
      lambda_cls1 = findLambda(k1, y_cls1, X_cls1, 0, 1);
@@ -224,7 +224,7 @@ d3 = 3;
 for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-
+    fprintf('%d\n', i);
      lambda_cls1 = findLambda(k1, yTr, XTr, 1, d1, d2, d3);
      lambda_cls2 = findLambda(k2, yTr, XTr, 2, d1, d2, d3);
      lambda_cls3 = findLambda(k3, yTr, XTr, 3, d1, d2, d3);
@@ -269,7 +269,7 @@ d1 = 3;
 d2 = 5;
 d3 = 2;
 
-for i = 1:1:5
+for i = 1:1:numberOfExperiments
     setSeed(28111993*i);
     [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
     fprintf('%d\n',i);
@@ -298,9 +298,9 @@ for i = 1:1:5
      err8_cls3(i) = RMSE(y_cls3, tXTe_cls3*beta_cls3);
 end
 
-%saveFile(err8_cls1, 'results/err8_cls1');
-%saveFile(err8_cls2, 'results/err8_cls2');
-%saveFile(err8_cls3, 'results/err8_cls3');
+saveFile(err8_cls1, 'results/err8_cls1');
+saveFile(err8_cls2, 'results/err8_cls2');
+saveFile(err8_cls3, 'results/err8_cls3');
 %%
 s = [1 numberOfExperiments];
 
