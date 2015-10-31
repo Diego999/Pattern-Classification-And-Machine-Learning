@@ -367,9 +367,9 @@ h_legend = legend(findobj(gca,'Tag','Box'), ...
 '6 + Dummy encoding', ...
 '7 Same as 5 + polynomial basis', ...
 '8 Same as 6 + polynomial basis');
-set(h_legend,'FontSize',12);
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
+set(gca,'LineWidth',1.5);
 ylim([0 3000])
 set(gca,'YTick',0:100:3000)
 xlabel('Model');

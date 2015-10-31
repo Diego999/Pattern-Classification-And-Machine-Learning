@@ -59,31 +59,31 @@ for feature=1:size(X,2)
 end
 
 %% Plot histogram of each feature
-for feature=1:size(X,2)
-    f = figure;
-    histogram(X(:,feature));
-    xlabel(sprintf('Feature %d', feature));
-    ylabel('Count');
-    % saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
-end
-
-idx = find(y == 1);
-for feature=1:size(X,2)
-    f = figure;
-    histogram(X(idx,feature));
-    xlabel(sprintf('Feature %d', feature));
-    ylabel('Count');
-    % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo1/feature%d.jpg', feature));
-end
-
-idx = find(y == -1);
-for feature=1:size(X,2)
-    f = figure;
-    histogram(X(idx,feature));
-    xlabel(sprintf('Feature %d', feature));
-    ylabel('Count');
-    % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo0/feature%d.jpg', feature));
-end
+% for feature=1:size(X,2)
+%     f = figure;
+%     histogram(X(:,feature));
+%     xlabel(sprintf('Feature %d', feature));
+%     ylabel('Count');
+%     % saveas(f, sprintf('plots/features/featuresHistogram/feature%d.jpg', feature));
+% end
+% 
+% idx = find(y == 1);
+% for feature=1:size(X,2)
+%     f = figure;
+%     histogram(X(idx,feature));
+%     xlabel(sprintf('Feature %d', feature));
+%     ylabel('Count');
+%     % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo1/feature%d.jpg', feature));
+% end
+% 
+% idx = find(y == -1);
+% for feature=1:size(X,2)
+%     f = figure;
+%     histogram(X(idx,feature));
+%     xlabel(sprintf('Feature %d', feature));
+%     ylabel('Count');
+%     % saveas(f, sprintf('plots/features/featuresHistogramWhereOutputTo0/feature%d.jpg', feature));
+% end
 
 % For the report
 f = figure;
@@ -93,20 +93,26 @@ histogram(X_(:,17));
 xlabel('First type');
 ylabel('Count');
 xlim([-5 5]);
+set(gca,'fontsize', 18);
+set(gca,'LineWidth',2);
 
 subplot(1, 3, 2);
 histogram(X_(:,5));
 xlabel('Second type');
 xlim([-5 5]);
 ylabel('Count');
+set(gca,'fontsize', 18);
+set(gca,'LineWidth',2);
 
 subplot(1, 3, 3);
 histogram(X_(:,10));
 xlabel('Third type');
 ylabel('Count');
+set(gca,'fontsize', 18);
 xlim([-5 5]);
+set(gca,'LineWidth',2);
 
-% print(f, '../report/figures/featuresType','-djpeg')
+print(f, '../report/figures/featuresType','-djpeg')
 
 %% Plot histogram of each normalized feature
 X_ = normalizedData(X);
@@ -152,5 +158,12 @@ hold on
 plot(x_domain, x_domain*0, '-r');
 xlabel('Feature i');
 ylabel('Correlation between feature i and y');
+set(gca,'fontsize', 18);
+ylim([-0.5 0.5]);
+set(gca, 'YGrid','on');
+set(gca,'YTick',-0.5:0.1:0.5);
+set(gca,'LineWidth',2)
+
+
 % saveas(f, sprintf('plots/features/featuresCorrelationOutput.jpg'));
 print(f, '../report/figures/correlation','-djpeg')

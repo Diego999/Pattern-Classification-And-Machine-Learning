@@ -213,10 +213,10 @@ lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
 % d2 = 5;
 % d3 = 2;
 % % 
-% %Cluster 1
-% K = 8;
-% lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
-% [mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
+%Cluster 1
+K = 8;
+lambda = 0.035;%findLambda(K, y, X, 1, d1, d2, d3);
+[mean_err5_tr_cls1, mean_err5_te_cls1] = runTestPoly(K, y, X, lambda, 1);
 % 
 % %Cluster 2
 % K = 6;

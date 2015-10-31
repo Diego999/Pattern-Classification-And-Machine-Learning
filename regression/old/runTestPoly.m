@@ -47,7 +47,10 @@ function [mean_err_tr, mean_err_te] = runTestPoly(K, y_, X_, lambda, idxCls)
     legend('Train error', 'Test error', 'Location', 'northwest');
     xlabel('Degree');
     ylabel('RMSE');
-    print('../report/figures/degrees_cls1','-djpeg','-noui')
+    set(gca, 'XGrid','on');
+    set(gca,'fontsize', 18);
+    set(gca,'LineWidth',1.5);
+    print('../../report/figures/degrees_cls1','-djpeg','-noui')
     
     mean_err_tr = mean_err_tr(end);
     mean_err_te = mean_err_te(end);

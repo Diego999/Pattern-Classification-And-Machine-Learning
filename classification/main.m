@@ -589,8 +589,9 @@ h_legend = legend(findobj(gca,'Tag','Box'), ...
 set(h_legend,'FontSize',12);
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
-%ylim([0 3000])
-%set(gca,'YTick',0:100:3000)
+set(gca,'LineWidth',1.5);
+ylim([0 0.45])
+set(gca,'YTick',0:0.05:0.45)
 xlabel('Model');
 ylabel('0-1 Loss');
 print('../report/figures/models_classification','-djpeg','-noui')

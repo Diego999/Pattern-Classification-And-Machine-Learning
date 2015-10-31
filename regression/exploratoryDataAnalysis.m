@@ -30,8 +30,12 @@ histogram(y,edges);
 xlabel('Y');
 ylabel('Count');
 xlim([0 15000]);
+set(gca, 'XGrid','on')
+set(gca, 'YGrid','on')
+set(gca,'fontsize', 18);
+set(gca,'LineWidth',2);
 % saveas(f3, 'plots/general/histogram.jpg');
-% print('../report/figures/histogram','-djpeg','-noui')
+print('../report/figures/histogram','-djpeg','-noui')
 
 %% Plot feature VS Output
 for feature=1:size(X,2)
@@ -110,12 +114,14 @@ ylim([min(yN) max(yN)-0.2]);
 xlim([min(XN(:,2)) max(XN(:,2))]);
 xlabel('Feature 2');
 ylabel('Y');
+set(gca,'fontsize', 18);
+set(gca,'LineWidth',2);
 SP=0.42;
-line([SP SP], [min(yN) max(yN)],'Color',[0 0 0]);
+line([SP SP], [min(yN) max(yN)],'Color',[0 0 0], 'LineWidth', 2);
 legend('Cluster 1', 'Cluster 2 & 3', 'Misclassified', 'Location', 'northwest');
 hold off;
 % saveas(f1, 'plots/cluster/feature2.jpg');
-% print('../report/figures/feature2','-djpeg','-noui');
+print('../report/figures/feature2','-djpeg','-noui');
 
 % Find second separation of cluster (2 and 3) using feature 16
 idx_cluster3 = setdiff(idx_others_clusters, find(XN(:,16) < 1.17));
@@ -151,14 +157,16 @@ plot(XN(outliers_cluster1, 16), yN(outliers_cluster1), 'oc');
 hold on;
 ylim([min(yN) max(yN)-0.2]);
 xlim([min(XN(:,16)) max(XN(:,16))]);
+set(gca,'fontsize', 18);
+set(gca,'LineWidth',2);
 xlabel('Feature 16');
 ylabel('Y');
 SP=1.17;
-line([SP SP], [min(yN) max(yN)-0.2],'Color',[0 0 0]);
+line([SP SP], [min(yN) max(yN)-0.2],'Color',[0 0 0], 'LineWidth', 2);
 legend('Cluster 1', 'Cluster 2', 'Cluster 3', 'Misclassified', 'Location', 'northwest');
 hold off;
 % saveas(f2, 'plots/cluster/feature16.jpg');
-% print('../report/figures/feature16','-djpeg','-noui')
+print('../report/figures/feature16','-djpeg','-noui')
 
 % Some checks, assure we didn't loose anything
 assert(length(idx_cluster1) + length(idx_cluster2) + length(idx_cluster3) == length(X));

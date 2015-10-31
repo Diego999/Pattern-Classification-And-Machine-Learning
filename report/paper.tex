@@ -17,7 +17,7 @@
 \title{Project-I by Group Sydney}
 
 \author{
-Diego Antognin and Jason Racine \\
+Diego Antognini \& Jason Racine\\
 EPFL \\
 \texttt{diego.antognini@epfl.ch}, \texttt{jason.racine@epfl.ch} \\
 }
@@ -37,7 +37,7 @@ EPFL \\
 \maketitle
 
 \begin{abstract}
-This report provides a summary of the project one of the PCML class. The project consists of doing regression and classification on data. For the regression data set we have observed that it was essential to separate the data into three clusters and doing a ridge regression on each of them due to the ill-condition matrix and the rapidity of tuning the algorithm. Moreover feature transformations like using polynomial basis was a key to decrease the prediction accuracy.
+This report provides a summary of the project one of the PCML class. The project consists of doing regression and classification on data. For the regression data set we have observed that it was essential to separate the data into three clusters and doing a ridge regression on each of them due to the ill-condition matrix and the rapidity of tuning the algorithm. Moreover feature transformations like using polynomial basis was a key to decrease the prediction error. For the classification data set we have observed using logistic regression was as good as penalized logistic regression. Transformation of features in order to make them look like Gaussian helps a lot as well as adding a polynomial basis help a lot to improve prediction accuracy.
 \end{abstract}
 
 \section{Regression}
@@ -50,7 +50,7 @@ We also have test-data of size $N=1200$ without their corresponding output. Our 
 
 \subsection{Data visualization and cleaning}
 
-We first have plot the distribution of our features (plot not shown because too big for the $76$ features). As expected, they are not center and we should normalize them. The Figure \ref{fig:histogram} shows an histogram of the output ($\mathbf{y}$) and we can conclude our data  seem to be a combination of three Gaussian distributions. It will be used later in order to separate the data in three sets and apply different regression models on them (each cluster will be normalized independently). We can also observe that each cluster have different sizes : 1946, 576 and 278. Moreover, on the right, we can see some data points (there are $2$) which have a higher values than the others. We consider them as outliers and will remove them.
+We first have plot the distribution of our features (plot not shown because too big for the $76$ features). As expected, they are not centered and we should normalize them. The Figure \ref{fig:histogram} shows an histogram of the output ($\mathbf{y}$) and we can conclude our data  seem to be a combination of three Gaussian distributions. It will be used later in order to separate the data in three sets and apply different regression models on them (each cluster will be normalized independently). We can also observe that each cluster have different sizes : 1946, 576 and 278. Moreover, on the right, we can see some data points (there are $2$) which have a higher values than the others. We consider them as outliers and will remove them.
 
 To separate the data, we have observed that the feature $2$ and $16$ could help us. With Figure \ref{fig:feature2} we can see how we can use the second feature to separate cluster one to the others and observe $11$ misclassified data, which we will remove them in order to not corrupt our model. For the two other clusters, we need to observe the feature $16$. With Figure \ref{fig:feature16}, we can observe $14$ misclassified data. They also will be consider as outliers and removed. We set the threshold in order to minimize the number of misclassified data samples. Those thresholds are $0.42$ for the feature $2$ and $1.17$ for the feature $16$. So the final size of our clusters are $1937, 563$ and $273$.
 
@@ -60,7 +60,7 @@ We use dummy encoding for the categorical variables (for a categorical variable 
 
 We can note that the rank of our input matrix $\mathbf{X}$ is rank-deficient with a rank of 66 instead of 76, and is rank-deficient of 65 for each cluster.
 
-\begin{figure}[!ht]
+\begin{figure}
 \center
 \subfigure[Histogram of $\mathbf{y}$. We can see three Gaussian distributions and also some outliers on the right.]{\includegraphics[width=2.7in]{figures/histogram.jpg} \label{fig:histogram}}
 \hfill
@@ -80,7 +80,7 @@ Since our matrix is ill-conditioned, using the least squares with normal equatio
 
 \subsubsection{Evaluation methods}
 
-In order to evaluate our different models, we first have split our data ($\mathbf{X}$) in two sets of $80\%$ and $20\%$, for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough to estimate correctly our models on the testing set with a concrete size. We learn only on the training set and then use the test set in order to estimate the error using the \textit{Root Mean Square Error}. Moreover, we have also used k-cross validation (see next section for the values of k) to tune the parameters up like lambda or the different polynomial degrees. We repeated the experiment $30$ times with different seeds in order to split the data in a unique random way for each trial and so try to have an unbiased estimation error. Finally, we made vary the lambda from $10^{-5}$ to $10^{5}$ with $500$ values in-between.
+In order to evaluate our different models, we first have split our data ($\mathbf{X}$) in two sets of $80\%$ and $20\%$, for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough to estimate correctly our models on the testing set with a concrete size. We learn only on the training set and then use the test set in order to estimate the error using the \textit{Root Mean Square Error}. Moreover, we have also used $k$-fold cross validation (see next section for the values of $k$) to tune the parameters up like lambda or the different polynomial degrees. We repeated the experiment $30$ times with different seeds in order to split the data in a unique random way for each trial and so try to have an unbiased estimation error. Finally, we made vary the lambda from $10^{-5}$ to $10^{5}$ with $500$ values in-between.
 
 \subsubsection{Model comparison}
 
@@ -96,13 +96,13 @@ For the seventh model, the degrees of the polynomial for the clusters are $3,6$ 
 
 \subsubsection{Feature transformations}
 
-In hope to minimize the error, we tried different feature transformations. The first try was add polynomial of them self as $X = [X X^2 X^3 ...]$ for which each cluster has its own degree. We made vary the different degrees and also the lambdas in order to keep the lambda which minimizes the test error. We also try feature transformations where the degree is a root, but unfortunately it was worst. We also wanted to try to just pow features with different degrees (without add polynomial of themselves) but we couldn't do it due to a lack of time.
+In hope to minimize the error, we tried different feature transformations. The first try was adding polynomial of them self as $X = [X X^2 X^3 ...]$ for which each cluster has its own degree. We made vary the different degrees and also the lambdas in order to keep the lambda which minimizes the test error. We also try feature transformations where the degree is a root, but unfortunately it was worst. We also wanted to try to just pow features with different degrees (without adding polynomial of themselves) but we couldn't do it due to a lack of time.
 
 We also thought about removing some uncorrelated features, we tried to remove the most uncorrelated ones and then remove also the second one etc, but unfortunately we didn't get improvements. We think that the reason is that a feature may not be correlated directly with the output however a combination of uncorrelated features might be highly correlated. 
 
 \subsubsection{Summary}
 
-We analyzed a regression data set with different methods and concluded that least squares wasn't a good approach due to the ill-conditioning and the least squares gradient descent was to slow and was less efficient than ridge regression. Moreover, the separation of the data into clusters was essential in order to decrease the prediction accuracy. Unfortunately, dummy encoding didn't help. However using polynomial basis help to decrease the variance. Finally, the variance of cluster 1 and 3 are very low, the one for cluster 2 is a bit higher. We think that we have bias because we use ridge regression but we don't think it is too high because we have seen that adding features helps and at a certain points it wasn't efficient. The best model we have is the seventh one, and we estimate the RMSE of the prediction to be around 97 with a standard deviation of 35. Finally, we think that our model is improvable, however we couldn't try other things in order to improve the estimation error, due to a lack of time.
+We analyzed a regression data set with different methods and concluded that least squares wasn't a good approach due to the ill-conditioning and the least squares gradient descent was to slow and was less efficient than ridge regression. Separation of the data into clusters was essential in order to decrease the prediction accuracy. Unfortunately, dummy encoding didn't help. However using polynomial basis helped to decrease the bias. Finally, the variance of cluster 1 and 3 are very low, the one for cluster 2 is a bit higher. We think that we have bias because we use ridge regression but we don't think it is too high because we have seen that adding features helps and at a certain points it wasn't efficient. The best model we have is the seventh one, and we estimate the \textit{RMSE} of the prediction to be around $97$ with a standard deviation of $35$. Finally, we think that our model is improvable, however we couldn't try other things in order to improve the estimation error, due to a lack of time.
 
 \section{Classification}
 
@@ -110,25 +110,59 @@ We analyzed a regression data set with different methods and concluded that leas
 
 The train-data for classification consists of $N = 1500$ input ($\mathbf{X}$) and output ($\mathbf{y}$) data samples. Each input sample is a vector $\mathbf{x}_n$ with dimension $D = 25$. Out of these $25$ variables, $20$ are real, $3$ categorical with 2 categories, $1$ is categorical with 4 categories and $1$ is categorical with 5 categories.
 
-We also have test-data of size $N=1500$ without their corresponding output. Our goal is to produce predictions for those data, as well as an approximation of the test-error (using RMSE, 0-1 loss and logarithmic loss) using logistic regression and penalized logistic regression methods.
+We also have test-data of size $N=1500$ without their corresponding output. Our goal is to produce predictions for those data, as well as an approximation of the test-error (using \textit{RMSE}, \textit{0-1 loss} and \textit{logarithmic loss}) using logistic regression and penalized logistic regression methods.
 
 \subsection{Data visualization and cleaning}
 
-We first have plot the distribution of our features. As expected, they are not center and we should normalize them (good practice because we also use methods using gradient descents). Then we plot the histogram of the output which shows that approximately $64.8\%$ of the data are in a class and the other $35.2\%$ in another. We also plot the histogram of the categorical variables, which shows us that mostly their values are uniform. However, for the real features, we have distinguish 3 types : 1) Look likes a Poisson distribution where the peak is near 0 and the values are mainly positive (like feature 17) 2) Same as one but the values are mainly negative (like feature 5) and so, maybe they have been transformed with a negative sign from a Poisson distribution. 3) Look likes Gaussian distribution which is not centered (like feature 10). The Figure \ref{fig:featuresType} shows their histogram, with their values normalized.
+We first have plot the distribution of our features. As expected, they are not center and we should normalize them (good practice because we also use methods using gradient descents). Then we plot the histogram of the output which shows that approximately $64.8\%$ of the data are in a class and the other $35.2\%$ in another. We also plot the histogram of the categorical variables, which shows us that mostly their values are uniform. However, for the real features, we have distinguished 3 types : 1) Look likes a Poisson distribution where the peak is near 0 and the values are mainly positive (like feature 17) 2) Same as one but the values are mainly negative (like feature 5) and so, maybe they have been transformed with a negative sign from a Poisson distribution. 3) Look likes Gaussian distribution which is not centered (like feature 10). The Figure \ref{fig:featuresType} shows their histogram with their values normalized.
 
 We use dummy encoding for categorical variables, as we did for the regression.
 
 We are also interested about the correlation between the input and output variables. The Figure \ref{fig:correlation} shows the correlation. We have observed that the features are correlated mainly in the range $[-0.3,0.3]$ and some have higher correlation near $\pm0.4$ and $0.5$ like feature $7$ or $24$.We have decided to not remove features with low correlation because we don't have any pertinent reason to do so.
 
-Finally, our matrix ($\mathbf{X}$) is a full-rank matrix.
+Finally, our matrix ($\mathbf{X}$) is a full-rank matrix, which is a good news for logistic regression.
 
-\begin{figure}[!ht]
+\begin{figure}
 \center
-\subfigure[Histogram of different feature types. We can see that the first and second looks like a Poisson distribution (the second has maybe be transformed with negative sign) and the third one a Gaussian distribution.]{\includegraphics[width=2.6in]{figures/featuresType.jpg} \label{fig:featuresType}}
+\subfigure[Histogram of different feature types. We can see that the first and second looks like a Poisson distribution (the second has maybe be transformed with negative sign) and the third one a Gaussian distribution.]{\includegraphics[width=2.65in]{figures/featuresType.jpg} \label{fig:featuresType}}
 \hfill
-\subfigure[Plot of the correlation of the features and the outputs. Some feature are highly correlated  whereas some have really low correlation.]{\includegraphics[width=2.6in]{figures/correlation.jpg} \label{fig:correlation}}
+\subfigure[Plot of the correlation of the features and the outputs. Some feature are highly correlated  whereas some have really low correlation.]{\includegraphics[width=2.65in]{figures/correlation.jpg} \label{fig:correlation}}
 \hfill
+\subfigure[Boxplot of our models, using the 0-1 Loss. Each model is represented with a box where we can see their mean and their standard deviation.]{\includegraphics[width=5in]{figures/models_classification.jpg}} \label{fig:models_classification}
 \caption{}
 \end{figure}
+
+\subsection{Logistic Regression}
+
+Since our matrix is full-rank using logistic regression was appropriate. Because logistic regression is more efficient in term of complexity and because we didn't need to penalize some betas, we report only the results using this method. However, using penalized logistic regression gave us similar results although it was much slower.
+
+\subsection{Evaluation methods}
+
+In order to evaluate our different models, the method is similar that the one used in regression. We split our data ($\mathbf{X}$) in two sets of $80\%$ and $20\%$, we compute the test-error using the \textit{Root Mean Square Error}, \textit{0-1 loss} and \textit{logarithmic loss}. Because all the errors grows similarly and because we think that \textit{0-1 loss} is the easiest error to visualize, we have decided to report only this error. To find the learning step $\alpha$, we have used $10$ fold cross validation because we have enough data to use this $k$. We repeated the experiment $30$ times with different seeds in order to split the data in a unique random way for each trial and so try to have an unbiased estimation error. 
+
+\subsection{Model comparison}
+
+The Figure \ref{fig:models_classification} represents the \textit{0-1 Loss} for each models. The first model used is the constant one, which will allow us to compare improvements with other models. It simply returns $1$ and doesn't depend on the inputs. Our second model does a logistic regression, using normalization, transforming the output is the range $[0,1]$ and using only real features. We can that it clearly outperforms the constant model. In the next model (third) we added the categorical variables which didn't improve the error and increase a little bit the variance. However, because it could be important features, we have decided to keep them.
+
+The fourth model consists in using dummy encoding for the categorical variable. This times, the error was improved and the variance has diminished. The next model (fifth) adds a polynomial basis of degree 2. We can observe the the variance as increased, we have some outliers (five in totel, there might be hidden due to the legend) and the error has increased. We think that the bias is better but due to its high variance, we consider as a bad model.
+
+In order to try to improve the error, we have transformed the feature (more information in the next section) with the formula using the absolute values (see next section) in order to have more Gaussian-like distribution. The sixth model represents this transformation. We can observe that the error is a little bit higher than model 4 but the mean is more stable and the variance lower. Because we assume that data sample sare generated from a Gaussian distribution, we decided to continue this way. The seventh one adds a polynomial basis of degree 2, which improves the error and still decrease the variance. Moreover, because we use more features, we think that our model has also a lower bias.
+
+The two last models (eighth and ninth) use another transformation where negative values weren't transformed into positive one, holding them with the formula $-\sqrt[4]{-x}$ and try using also a polynomial basis. However, the error wasn't as good as the seventh model, surely because the transformed feature look like less Gaussian than the transformation using the absolute values. We can also see that the variance seems also higher.
+
+Our final model will be the seventh.
+
+\subsection{Feature transformations}
+
+In hope to minimize the error, we tried different feature transformations. The first try was add polynomial of them self as $X = [X X^2 X^3 ...]$. With the data not transformed into Gaussian like distribution, we didn't get an improvement (even with degree 3). We then try to transform the features which look like a Poisson distribution in order to transform them into a Gaussian-like distribution. We first use the formula $\sqrt[4]{|x|}$ which gave us distribution which was similar to Gaussian even if we transformed the negative values into positive. Mixed with polynomial of features at degree 2 allowed us to have an important improvement for the error. We also try to keep the negative values, this time using the formula $-\sqrt[4]{-x}$ but unfortunately, it didn't help. We think the reason is first that distribution was more a superposition of two Gaussian-like, and secondly  because we try to do an operation to data which are not applicable. Using a degree greater than 2 didn't improve the error, surely because our bias is not too high.
+
+We also try to remove some uncorrelated features, it didn't improve surely for the same reasons as specified in regression section. We didn't have time to try to remove combination of features.
+
+\subsection{Summary}
+
+We analyzed a classification data set with different methods and concluded that logistic regression was appropriate because the input matrix was full-rank. Moreover, using the penalized logistic regression gave us similar results. Using normalization was essential, and also transform the output in the range $[0,1]$. Adding categorical variables with dummy encoding helps. The key of our model was to transform features which look like Poisson distribution into a Gaussian like distribution using $\sqrt[4]{|x|}$ and using a polynomial basis of degree 2. All together, they give us our best model which is the seventh one. Finally, we think that our model is improvable because we didn't remove outliers because we couldn't find such outliers in all dimensions (or most of the dimensions). We estimate the \textit{RMSE} of the prediction to be around $0.329$ with a standard deviation of $0.028$. For the \textit{0-1 loss} around $0.109$ with standard deviation of $0.018$. Finally for the \textit{logarithmic loss} around $0.509$ with standard deviation $0.018$.
+
+\subsubsection*{Acknowledgments}
+All the code, as well as the report were written by both members. We worked together in the regression and classification, exchanged our ideas in order to test models and avoiding loosing our time. We would like to thank the teaching assistants who were very helpful during the office hours.
 
 \end{document}
