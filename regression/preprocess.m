@@ -2,7 +2,7 @@
 % all rights reserved
 
 % If degrees are not specified, they will get the value 1.
-function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X, degree1, degree2, degree3)
+function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X, degree1, degree2, degree3, is_prediction)
     if ~exist('degree1', 'var')
         degree1 = 1;
     end
@@ -16,8 +16,28 @@ function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, id
     end
     
     % Find idx of each cluster
-    [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
-    
+    if ~exist('is_prediction', 'var')
+        [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
+    else
+        idx_cls1 = [];
+        idx_cls2 = [];
+        idx_cls3 = [];
+        X_ = normalizedData(X);
+        for n = 1:1:size(X_,1)
+           res = findCorrespondingCluster(X_(n,:));
+           if res == 1
+               idx_cls1 = [idx_cls1 n];
+           elseif res == 2
+               idx_cls2 = [idx_cls2 n];
+           elseif res == 3
+               idx_cls3 = [idx_cls3 n];
+           end
+        end
+        idx_cls1 = idx_cls1';
+        idx_cls2 = idx_cls2';
+        idx_cls3 = idx_cls3';
+    end
+
     % Find different type of features
     [idx_feature_2, idx_feature_3, idx_feature_4] = findDiscreteFeatures(X);
     idx_feature_real = setdiff(setdiff(setdiff(1:1:size(X,2), idx_feature_2), idx_feature_3), idx_feature_4);
@@ -76,15 +96,15 @@ function [y, X] = preprocessCluster(y_, X_, idx, degree, idx_feature_2, idx_feat
     % Normalize
     y = y_(idx);
     % WITH NORMALIZATION
-    %X = normalizedData(X(:,real_features_idx_to_normalize));
+    X = normalizedData(X(:,real_features_idx_to_normalize));
     % WITHOUT NORMALIZATION
-    X = X(:,real_features_idx_to_normalize);
+    %X = X(:,real_features_idx_to_normalize);
     
     % WITH DUMMY ENCODING
     % We encode categorical features and add them to the normalized X
-    %X = dummyFeatureEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly); 
+    % X = dummyFeatureEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly); 
     % WITHOUT DUMMY ENCODING
-     X = addCategoricalVariableWithoutEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly);
+    X = addCategoricalVariableWithoutEncoding(X, X__, idx_feature_2_poly, idx_feature_3_poly, idx_feature_4_poly);
 
 end
 

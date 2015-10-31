@@ -307,9 +307,6 @@ s = [1 numberOfExperiments];
 [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X);
 
 N = length(y_cls1) + length(y_cls2) + length(y_cls3);
-ratio_cls1 = size(X_cls1, 1)/N;
-ratio_cls2 = size(X_cls2, 1)/N;
-ratio_cls3 = size(X_cls3, 1)/N;
 
 err1 = openFile('results/err1', s);
 err2 = openFile('results/err2',s);
