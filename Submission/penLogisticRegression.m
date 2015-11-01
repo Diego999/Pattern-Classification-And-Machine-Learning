@@ -38,11 +38,6 @@ function [gradient] = computeGradient(y, tX, beta, lambda)
     gradient = tX'*(sigmoid(tX*beta) - y) + penalized_term;
 end
 
-function [res] = sigmoid(x)
-    ex = exp(x);
-    res = ex./(1 + ex);
-end
-
 function [res] = computeCost(y, tX, beta)
     tXBeta = tX*beta;
     res = -sum(y.*tXBeta - log(1 + exp(tXBeta)));

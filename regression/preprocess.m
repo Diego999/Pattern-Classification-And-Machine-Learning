@@ -2,6 +2,7 @@
 % all rights reserved
 
 % If degrees are not specified, they will get the value 1.
+% is prediction separate the cluster using only the X values
 function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, idx_cls3] = preprocess(y, X, degree1, degree2, degree3, is_prediction)
     if ~exist('degree1', 'var')
         degree1 = 1;
@@ -18,6 +19,7 @@ function [y_cls1, X_cls1, y_cls2, X_cls2, y_cls3, X_cls3, idx_cls1, idx_cls2, id
     % Find idx of each cluster
     if ~exist('is_prediction', 'var')
         [idx_cls1, idx_cls2, idx_cls3] = findClusters(y, X);
+    % Using only the X values (the case as X_test)
     else
         idx_cls1 = [];
         idx_cls2 = [];
@@ -174,7 +176,11 @@ function [idx_feature_2, idx_feature_3, idx_feature_4] = findDiscreteFeatures(X)
     idx_feature_4 = [];
     
     for i = 1:1:size(X,2)
+       % Find uniques values of X(:,i) in order to count the number of
+       % uniques values
        unique_val = length(unique(X(:,i)));
+       
+       % Search wich categorical variable is it.
        if unique_val == 2
         idx_feature_2 = [idx_feature_2 i];
        elseif unique_val == 3

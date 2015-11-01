@@ -1,6 +1,12 @@
 % Written by Diego Antognini & Jason Racine, EPFL 2015
 % all rights reserved
 
+% We MUST normalize and transform -1 to 0 in order to have GD working
+% Add categorical features from preprocess
+% Add dummy encoding
+% Add polynomial basis
+% Add Transformation
+
 clear all;
 close all;
 
@@ -25,7 +31,8 @@ yRandom = y(shuffle,:);
 for k = 1:1:K;
     [XTr, yTr, XTe, yTe] = splitGetTrTe(yRandom, XRandom, idxCV, k);
 
-    [yTr, XTr] = preprocess(yTr, XTr, degree);    
+    [yTr, XTr] = preprocess(yTr, XTr, degree);   
+    
     beta = logisticRegression(yTr, [ones(length(yTr), 1) XTr], alpha);
     
     [yTe, XTe] = preprocess(yTe, XTe, degree);
@@ -48,7 +55,8 @@ std_err_log = std(err_log);
 
 %% TRAINING FOR PREDICTION
 
-[yTr, XTr] = preprocess(y, X, degree);    
+[yTr, XTr] = preprocess(y, X, degree);   
+
 beta = logisticRegression(yTr, [ones(length(yTr), 1) XTr], alpha);
 
 % PREPARE THE DATA TO PREDICT
@@ -58,5 +66,5 @@ y = zeros(size(X, 1), 1);
 [y, X_] = preprocess(y, X, degree);
 tXTe = [ones(length(y),1) X_];
 y = (sigmoid(tXTe*beta) >= 0.5).*1.0;
-y(find(y == 0)) = -1;
+
 csvwrite('predictions_classification.csv', y);
