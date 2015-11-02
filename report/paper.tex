@@ -57,9 +57,9 @@ We first have plot the distribution of our features. As expected, they are not c
 \center
 \subfigure[Histogram of $\mathbf{y}$. We can see three Gaussian distributions and also some outliers on the right.]{\includegraphics[width=2.7in]{figures/histogram.jpg} \label{fig:histogram}}
 \hfill
-\subfigure[Feature 2 can help us to separate the data. Green data points are misclassified data. The separation is at $x=0.42$.]{\includegraphics[width=2.7in]{figures/feature2.jpg}\label{fig:feature2}}
+\subfigure[Feature 2 can help us to separate the data. Light blue data points are misclassified data. The separation is at $x=0.42$.]{\includegraphics[width=2.7in]{figures/feature2.jpg}\label{fig:feature2}}
 \hfill
-\subfigure[Feature 16 can help us to separate the data. Green data points are misclassified data. The separation is at $x=1.17$.]{\includegraphics[width=2.7in]{figures/feature16.jpg}\label{fig:feature16}}
+\subfigure[Feature 16 can help us to separate the data. Light blue data points are misclassified data. The separation is at $x=1.17$.]{\includegraphics[width=2.7in]{figures/feature16.jpg}\label{fig:feature16}}
 \hfill
 \subfigure[Different degree for the polynomial basis of the cluster 1. We can observe a low variance. The third degree seems the best model to choose.]{\includegraphics[width=2.7in]{figures/degrees_cls1.jpg}\label{fig:degrees_cls1}}
 \vspace{-1em}
@@ -72,7 +72,7 @@ We are also interested about the correlation between the input and output variab
 
 We use dummy encoding for the categorical variables (for a categorical variable of size $k$, we need $k-1$ features), which gives us a total of $93$ input variables.
 
-We can note that the rank of our input matrix $\mathbf{X}$ is rank-deficient with a rank of 66 instead of 76, and is rank-deficient of 65 for each cluster.
+We can note that our input matrix $\mathbf{X}$ is rank-deficient with a rank of 66 instead of 76, and is rank-deficient of 65 for each cluster.
 \vspace{-0.5em}
 \subsection{Ridge Regression}
 
@@ -95,11 +95,11 @@ The Figure \ref{fig:models} represents the \textit{RMSE} for each models. The fi
 \label{fig:models}
 \end{figure}
 
-At this stage, we want to try to separate our data into clusters. The fourth model consists of using a constant model but this time separating the data into three clusters and then computing the mean for each cluster. We can observe a big improvement, justifying our choice to split the data into clusters. The next model (fifth) is about doing a ridge regression per cluster, each one having its own lambda. We also use $k$ fold cross validation where the first cluster has a $k_1=10$ because we have a lot of data ($1937$), the second $k_2=6$, because we don't have a lot of data ($563$) and the last $k_3=4$ because we really a small number of data ($273$) and so we have to choose a smaller k. As expected we obtained another big improvement justifying again the choice of splitting the data.
+At this stage, we want to try to separate our data into clusters. The fourth model consists of using a constant model but this time separating the data into three clusters and then computing the mean for each cluster. We can observe a big improvement, justifying our choice to split the data into clusters. The next model (fifth) is about doing a ridge regression per cluster, each one having its own lambda. We also use $k$ fold cross validation where the first cluster has a $k_1=10$ because we have a lot of data ($1937$), the second $k_2=6$, because we don't have a lot of data ($563$) and the last $k_3=4$ because we really have a small number of data ($273$) and so we have to choose a smaller k. As expected we obtained another big improvement justifying again the choice of splitting the data.
 
 The sixth model consists of using dummy encoding for the categorical variables. Unfortunately, we didn't get major improvements. We think that the reason why dummy encoding didn't help is because we don't have a high bias and so, having more features doesn't help.
 
-The two next models is about using polynomial basis functions for each cluster. Categorical variables aren't concerned, they are just replicated for each degree, because it doesn't make any sense to build polynomial for them.  We have to be careful about the polynomial degrees to avoid the case where $D > N$. Moreover, if we don't observe significant improvement between degrees, we keep the lowest one. The Figure \ref{fig:degrees_cls1}, shows the case for the first cluster, we can also see that the variance is very low (same observation for the third one, however the second one has higher variance). The seventh model doesn't use dummy encoding and the eighth does.
+The two next models are about using polynomial basis functions for each cluster. Categorical variables aren't concerned, they are just replicated for each degree, because it doesn't make any sense to build polynomial for them.  We have to be careful about the polynomial degrees to avoid the case where $D > N$. Moreover, if we don't observe significant improvement between degrees, we keep the lowest one. The Figure \ref{fig:degrees_cls1}, shows the case for the first cluster, we can also see that the variance is very low (same observation for the third one, however the second one has higher variance). The seventh model doesn't use dummy encoding and the eighth does.
 
 For the seventh model, the degrees of the polynomial for the clusters are $3,6$ and $3$. When we add higher degrees, we can directly observe overfitting because suddenly the training error decreases to a value near zero and the test errors grows exponentially, so with this manner we know that our degrees are not to high. The eighth model is similar to the seventh one, except that this time it uses dummy encoding and has lower degrees : $3,5$ and $2$, due to the number of input variables. We can see that feature transformations significantly improves the test error compared to other models. The reason is certainly because we had a high bias. However, dummy encoding doesn't seem to more efficient. Our final model will be the seventh with lambdas $\lambda_1 = 0.0369, \lambda_2 = 1.8303e^{-4}, \lambda_3 = 0.0053$.
 
@@ -111,7 +111,7 @@ We also thought about removing some uncorrelated features, we tried to remove th
 
 \subsection{Summary}
 
-We analyzed a regression data set with different methods and concluded that least squares wasn't a good approach due to the ill-conditioning and the least squares gradient descent was too slow and less efficient than ridge regression. Separation of the data into clusters was essential in order to decrease the test error. Unfortunately, dummy encoding didn't help. However using polynomial basis helped to decrease the bias. Finally, the variance of cluster 1 and 3 are very low, the one for cluster 2 is a bit higher. We think that we have bias because we use ridge regression but we don't think it is too high because we have seen that adding features helps until a certain point. The best model we have is the seventh one and we estimate the \textit{RMSE} of the prediction to be around $115.34$ with a standard deviation of $454.61$. However, we should take into consideration outliers, which gives us a \textit{RMSE} of $412.52$ with a standard deviation of $234.78$. Finally, we think that our model is improvable, however we couldn't try other things to improve the estimation error, due to a lack of time.
+We analyzed a regression data set with different methods and concluded that least squares wasn't a good approach due to the ill-conditioning and the least squares gradient descent was too slow and less efficient than ridge regression. Separation of the data into clusters was essential in order to decrease the test error. Unfortunately, dummy encoding didn't help. However using polynomial basis helped to decrease the bias. Finally, the variance of cluster 1 and 3 are very low, the one for cluster 2 is a bit higher. We think that we have bias because we use ridge regression but we don't think it is too high because we have seen that adding features helps until a certain point. The best model we have is the seventh one and we estimate the \textit{RMSE} of the prediction to be around $115.34$ with a standard deviation of $44.62$. However, we should take into consideration outliers, which gives us a \textit{RMSE} of $412.52$ with a standard deviation of $234.78$. Finally, we think that our model is improvable, however we couldn't try other things to improve the estimation error, due to a lack of time.
 
 \section{Classification}
 

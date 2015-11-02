@@ -4,7 +4,7 @@
 function [beta] = leastSquaresGD(y, tX, alpha)
     % algorithm parameters
     maxIters = 35000;
-    epsilon_convergence = 1e-6;
+    epsilon_convergence = 1e-8;
 
     % initialize beta
     D = size(tX,2)-1;

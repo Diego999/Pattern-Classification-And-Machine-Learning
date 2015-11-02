@@ -4,7 +4,7 @@
 function [beta] = penLogisticRegression(y, tX, alpha, lambda)
     % algorithm parameters
     maxIters = 35000;
-    epsilon_convergence = 1e-6;
+    epsilon_convergence = 1e-8;
 
     % initialize beta
     D = size(tX,2)-1;
@@ -41,4 +41,9 @@ end
 function [res] = computeCost(y, tX, beta)
     tXBeta = tX*beta;
     res = -sum(y.*tXBeta - log(1 + exp(tXBeta)));
+end
+
+function [res] = sigmoid(x)
+    ex = exp(x);
+    res = ex./(1 + ex);
 end

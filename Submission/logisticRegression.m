@@ -37,3 +37,8 @@ function [res] = computeCost(y, tX, beta)
     tXBeta = tX*beta;
     res = -sum(y.*tXBeta - log(1 + exp(tXBeta)));
 end
+
+function [res] = sigmoid(x)
+    ex = exp(x);
+    res = ex./(1 + ex);
+end
