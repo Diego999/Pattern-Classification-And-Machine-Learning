@@ -10,7 +10,7 @@ img = imread(sprintf('train/imgs/train%05d.jpg', i));
 subplot(121);
 imshow(img); % image itself
 
-subplot(122);
-feature = reshape(train.X_hog(i,:), 13, 13, 32);
+feature = hog( single(img)/255, 17, 8);
 im( hogDraw(feature) ); colormap gray;
 axis off; colorbar off;
+
