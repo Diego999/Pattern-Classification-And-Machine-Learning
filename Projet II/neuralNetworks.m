@@ -19,7 +19,6 @@ function [err, nnPred] = neuralNetworks(Xtr, ytr, Xte, yTe, inputSize, innerSize
     labels = ytr(1:numSampToUse);
     
     % prepare labels for NN
-    
     if binary
         LL = [1 * (labels == 1), ... % first column, p(y=1)
           1 * (labels == 2)];        

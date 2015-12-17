@@ -35,16 +35,35 @@ batchsize = 100;
 learningRate = 2;
 binaryClassification = false;
 
+yTr = Tr.y;
+yTe = Te.y;
+    
+if binaryClassification    
+    yTr(find(yTr == 2)) = 1;
+    yTr(find(yTr == 3)) = 1;
+    yTr(find(yTr == 4)) = 2;
+    
+    yTe(find(yTe == 2)) = 1;
+    yTe(find(yTe == 3)) = 1;
+    yTe(find(yTe == 4)) = 2;
+end
+
 % Train using Z
-[errZ, nnPredZ] = neuralNetworks(Tr.nZ, Tr.y, Te.nZ, Te.y, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+[errZ, nnPredZ] = neuralNetworks(Tr.nZ, yTr, Te.nZ, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
 % Train using Z
 inputSize = size(Tr.nZU, 2);
-[errZU, nnPredZU] = neuralNetworks(Tr.nZU, Tr.y, Te.nZU, Te.y, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+[errZU, nnPredZU] = neuralNetworks(Tr.nZU, yTr, Te.nZU, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
 % Train using X
 inputSize = size(Tr.nX, 2);
-[errX, nnPredX] = neuralNetworks(Tr.nX, Tr.y, Te.nX, Te.y, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+[errX, nnPredX] = neuralNetworks(Tr.nX, yTr, Te.nX, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+
+if binaryClassification
+   fprintf('\n Binary classification\n');
+else
+   fprintf('\n Multiclass classification\n');
+end
 
 fprintf('\nBER Testing error  Z: %.2f%%\n', errZ * 100);
 fprintf('\nBER Testing error  ZU: %.2f%%\n', errZU * 100);
