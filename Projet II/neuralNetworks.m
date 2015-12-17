@@ -8,7 +8,7 @@ function [err, nnPred] = neuralNetworks(Xtr, ytr, Xte, yTe, inputSize, innerSize
     nn = nnsetup([inputSize innerSize outputSize]);
 
     opts.numepochs  = numepochs;
-    opts.batchsize  = batchsize;
+    opts.batchsize  = batchsize; % http://stats.stackexchange.com/questions/153531/what-is-batch-size-in-neural-network
     opts.plot       = 0;
     nn.learningRate = learningRate;
 

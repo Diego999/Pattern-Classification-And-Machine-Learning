@@ -26,7 +26,6 @@ function [Tr, Te] = PCA(Tr_, Te_, M)
     l = abs(l); % To avoid neg values, only for the "0" which can be negative
     
     % Compute U term
-    
     norm = sqrt(N*l)';
     norm = repmat(norm, D, 1);
     U = X2' * V ./ norm;
@@ -36,6 +35,9 @@ function [Tr, Te] = PCA(Tr_, Te_, M)
     
     Tr.nZ = Tr.nX * U(:, 1:M);
     Te.nZ = Te.nX * U(:, 1:M);
+    
+        Tr.Z = Tr.X * U(:, 1:M);
+    Te.Z = Te.X * U(:, 1:M);
 end
 
 function [J] = computeDistortionMatrix(l, N)

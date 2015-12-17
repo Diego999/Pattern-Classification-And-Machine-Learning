@@ -21,9 +21,6 @@ function [Tr, Te] = PCA(Tr_, Te_, M)
     
     Tr.nZ = Tr.nX * U(:, 1:M);
     Te.nZ = Te.nX * U(:, 1:M);
-    
-    Tr.nZU = Tr.nX * U(:, 1:M) * U(:, 1:M)';
-    Te.nZU = Te.nX * U(:, 1:M) * U(:, 1:M)';
 end
 
 function [J] = computeDistortionMatrix(l, D)

@@ -8,7 +8,7 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 
 ratio = 0.8;
-M = 5408; % All the data
+M = 1000; % All the data
 
 %% Create data
 fprintf('Creating Train & Test sets\n');
@@ -51,10 +51,6 @@ end
 % Train using Z
 [errZ, nnPredZ] = neuralNetworks(Tr.nZ, yTr, Te.nZ, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
-% Train using Z
-inputSize = size(Tr.nZU, 2);
-[errZU, nnPredZU] = neuralNetworks(Tr.nZU, yTr, Te.nZU, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
-
 % Train using X
 inputSize = size(Tr.nX, 2);
 [errX, nnPredX] = neuralNetworks(Tr.nX, yTr, Te.nX, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
@@ -66,7 +62,6 @@ else
 end
 
 fprintf('\nBER Testing error  Z: %.2f%%\n', errZ * 100);
-fprintf('\nBER Testing error  ZU: %.2f%%\n', errZU * 100);
 fprintf('\nBER Testing error  X: %.2f%%\n', errX * 100);
 
 % figure('Name', ['NN on HOG + PCA, M = ' num2str(M)]);
@@ -74,9 +69,6 @@ fprintf('\nBER Testing error  X: %.2f%%\n', errX * 100);
 % imagesc(nnPredZ); colorbar;
 % title(['BER(Z) = ' num2str(errZ)]);
 % subplot(132);
-% imagesc(nnPredZU); colorbar;
-% title(['BER(ZU) = ' num2str(errZU)]);
-% subplot(133);
 % imagesc(nnPredX); colorbar;
 % title(['BER(X) = ' num2str(errX)]);
 
