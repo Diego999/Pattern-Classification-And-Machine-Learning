@@ -3,7 +3,7 @@ IDEA
 Binary classification
 
 0) Baseline : Always return 0 or 1 
-1) Logistic regression (linear)
+1) Logistic regression (linear) -> To slow !
 2) Kernel regression (non linear) (http://youngmok.com/gaussian-kernel-regression-with-matlab-code/)
 3) SVM (using kernel tricks -> Non linear ! (ike RBF)) (with different kernel methods)
 4) Neural networks
