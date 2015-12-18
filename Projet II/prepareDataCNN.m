@@ -36,7 +36,7 @@ function [Tr, Te] = PCA(Tr_, Te_, M)
     Tr.nZ = Tr.nX * U(:, 1:M);
     Te.nZ = Te.nX * U(:, 1:M);
     
-        Tr.Z = Tr.X * U(:, 1:M);
+    Tr.Z = Tr.X * U(:, 1:M);
     Te.Z = Te.X * U(:, 1:M);
 end
 
