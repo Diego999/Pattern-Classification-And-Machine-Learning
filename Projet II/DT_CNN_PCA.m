@@ -45,27 +45,26 @@ if binaryClassification
 end
 
     % Binary
-    % AdaBoostM1, 200, Tree : 13.57% (nZ), 8.69% (Z)
-    % LogitBoost, 200, Tree : 12.80% (nZ), 9.74% (Z), 2000 16.07% (bZ),
-    % 10.52% (Z)
-    % GentleBoost, 200, Tree : 14.67% (nZ), 10.71% (Z)
-    % RUSBoost, 200, Tree : 17.81% (nZ), 12.25% (Z)
-    % Bag, 200, Tree, : 11.51% (nZ), 10.13% (Z)
+    % AdaBoostM1, 200, Tree : 11.14% (nZ), 9.80% (Z)
+    % LogitBoost, 200, Tree : 10.68% (nZ), 9.64% (Z)
+    % GentleBoost, 200, Tree : 10.95% (nZ), 9.98% (Z)
+    % RUSBoost, 200, Tree : 14.31% (nZ), 11.74% (Z)
+    % Bag, 200, Tree, : 10.84% (nZ), 9.09% (Z)
     
     % Multiclass
-    % AdaBoostM2, 200, Tree : 29.63% (bZ), 15.34% (Z)
-    % RUSBoost, 200, Tree : 50.94% (nZ), 50.60% (Z)
-    % Bag, 200, Tree, : 11.55% (nZ), 11.36 (Z)
-
-     CMdl = fitensemble(Tr.Z, yTr, 'Bag', 200, 'Tree', 'Type', 'classification');
-        
+    % AdaBoostM2, 200, Tree : 16.96% (nZ), 15.2% (Z)
+    % RUSBoost, 200, Tree : 50.67% (nZ), 50.61% (Z)
+    % Bag, 200, Tree, : 10.5% (nZ), 9.88% (Z)
+    
     % Training using nZ
+    CMdl = fitensemble(Tr.nZ, yTr, 'AdaBoostM1', 200, 'Tree');
     yhat = predict(CMdl, Te.nZ);
  
     errnZ = balancedErrorRate(yTe, yhat);
     fprintf('BER Testing error nZ: %.2f%%\n', errnZ * 100);
     
     % Training using Z
+    CMdl = fitensemble(Tr.Z, yTr, 'AdaBoostM1', 200, 'Tree');
     yhat = predict(CMdl, Te.Z);
 
     errZ = balancedErrorRate(yTe, yhat);
