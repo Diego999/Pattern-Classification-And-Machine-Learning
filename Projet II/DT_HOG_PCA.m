@@ -8,7 +8,7 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 
 ratio = 0.8;
-M = 3000; % All the data
+M = 3000;
 
 %% Create data
 fprintf('Creating Train & Test sets\n');
@@ -56,10 +56,8 @@ end
     % RUSBoost, 200, Tree : 49.67% (nX)
     % Bag, 200, Tree, : 28.66% (nX), 500 : 28.35%
     
-    %CMdl = fitensemble(Tr.nX, yTr, 'Bag', 200, 'Tree', 'Type', 'classification');
     % Training using nX
-    Mdl = fitcecoc(Tr.nX, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
-    CMdl = compact(discardSupportVectors(Mdl));
+    CMdl = fitensemble(Tr.nX, yTr, 'Bag', 200, 'Tree', 'Type', 'classification');
     yhat = predict(CMdl, Te.nX);
 
     errnX = balancedErrorRate(yTe, yhat);
