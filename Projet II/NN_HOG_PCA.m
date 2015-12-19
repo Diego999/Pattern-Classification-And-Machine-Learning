@@ -8,7 +8,7 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 
 ratio = 0.8;
-M = 1000; % All the data
+M = 500;
 
 %% Create data
 fprintf('Creating Train & Test sets\n');
@@ -29,11 +29,11 @@ fprintf('Training\n');
 
 % Setup NN.
 inputSize  = M;
-innerSize  = 100;
+innerSize  = 700;
 numepochs = 15;
 batchsize = 100;
 learningRate = 2;
-binaryClassification = true;
+binaryClassification = false;
 
 yTr = Tr.y;
 yTe = Te.y;
@@ -57,11 +57,11 @@ end
 [errnZ, nnPrednZ] = neuralNetworks(Tr.nZ, yTr, Te.nZ, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
 % Train using nX
-inputSize = size(Tr.nX, 2);
-[errnX, nnPrednX] = neuralNetworks(Tr.nX, yTr, Te.nX, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+%inputSize = size(Tr.nX, 2);
+%[errnX, nnPrednX] = neuralNetworks(Tr.nX, yTr, Te.nX, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
 fprintf('\nBER Testing error  nZ: %.2f%%\n', errnZ * 100);
-fprintf('\nBER Testing error  nX: %.2f%%\n', errnX * 100);
+%fprintf('\nBER Testing error  nX: %.2f%%\n', errnX * 100);
 
 
 % figure('Name', ['NN on HOG + PCA, M = ' num2str(M)]);

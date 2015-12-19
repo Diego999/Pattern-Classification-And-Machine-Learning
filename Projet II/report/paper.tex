@@ -74,6 +74,16 @@ The last parameter to set, is the parameter $M$ which defines the $M$ largest ei
 
 The Figure XX shows the plot of $J$ for the HOG features and the CNN features. For the CNN, we have tried several values for $M$ and have conclude that $M = 150$ was a good compromise between accuracy and speed. The corresponding distortion might be very high compared to the HOG features, but the range of the values are not the same, CNN has values going larger than $0.2$. We tried some bigger values but we didn't get major improvements in terms of error. For the HOG features, the distortion measure seems more nice, and have decided to take $M = XXX$. BECAUSE BLA BLA BLA
 
+\subsection{Support Vector Machine}
+
+\subsection{Neural Networks}
+
+This is the multi-layer perceptron (MLP) we have seen in class. The neural networks used in this project comes from the given DeepLearning matlab toolbox. It uses batch sizes in order to use less memory (take the first $n$ data samples and works on them, then the next $n$ etc). We have let the default parameter ($100$). The number of epochs is simply the number of time where all the training data do a forward and a backward pass. We have put this value to $20$, in order to have a little more accuracy without loosing a lot of time, it was a good compromise because larger epochs don't mean especially better accuracy. the number of input is $M$ and output is either $2$ or $4$, depending of the type of classification (binary or multi-class). For the number of hidden layer, we have let $1$ because we didn't see improvement by adding some more. However, the number of neurons in the hidden layer has been tested and have found $1000$ for the binary classification and $700$ for the multi-class case. We also have to set up the learning rate : the optimal value we have found is $3$ for the binary case and $2$ for the multi-class one. By default, the activation function used is the \textit{tanh} one. We didn't see so much different using the \textit{sigmoid}. Finally, the algorithm uses stochastic gradient descent using a momentum of $0.5$, which might help to converge faster.
+
+\subsection{Decision Trees}
+
+\subsection{Random Forests}
+
 \section{Evaluation methods}
 
 \section{Model comparison}

@@ -172,8 +172,9 @@ for j = 1:1:numberOfExperiments
     % K-fold
     for k=1:1:K
         [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
-        
+        tic
         Mdl = fitcecoc(TTTr.Z, TTTr.y, 'Learners', t, 'Options', statset('UseParallel', 1));
+        toc
         CMdl = compact(discardSupportVectors(Mdl));
         yhat = predict(CMdl, TTTe.Z);
     
@@ -185,7 +186,7 @@ end
 fprintf('\n%f\n', mean(err5));
 saveFile(err5, 'results/multi/err4');
 
-%%
+%% Plot
 s = [1 numberOfExperiments];
 
 err1 = openFile('results/multi/err1', s);

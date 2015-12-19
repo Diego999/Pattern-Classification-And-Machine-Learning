@@ -1,40 +1,155 @@
-% Written by Diego Antognini & Jason Racine, EPFL 2015
-% all rights reserved
-
+%% Initialization
 clear all;
 close all;
 
+addpath(genpath('Piotr'));
+addpath(genpath('DeepLearnToolbox'));
+
 load train/train.mat;
 
-y = train.y;
-X_cnn = train.X_cnn;
-X_hog = train.X_hog;
-
-y(find(y == 1)) = 0;
-y(find(y == 2)) = 0;
-y(find(y == 3)) = 0;
-y(find(y == 4)) = 1;
-
-numberOfExperiments = 30;
+numberOfExperiments = 10;
 proportionOfTraining = 0.8;
-K = 20;
+K = 10;
+M = 150;
+
+train.y(find(train.y == 2)) = 1;
+train.y(find(train.y == 3)) = 1;
+train.y(find(train.y == 4)) = 2;
+
+%% Create data
+fprintf('Creating Train & Test sets\n');
+tic
+[Tr, Te] = createTrainingTestingCNN(train.X_cnn, train.y, proportionOfTraining);
+toc
+
+%% Prepare data
+
+fprintf('Prepare the data for the training\n');
+tic
+[Tr, Te] = prepareDataCNN(Tr, Te, M);
+toc
 
 %%
+% 50%
 %**********************************
 %            TEST 1
 %**********************************
 
-X = X_hog;
 fprintf('Test 1\n')
 for i = 1:numberOfExperiments
     fprintf('%d ', i);
     setSeed(28111993*i);
-    [XTr, yTr, XTe, yTe] = splitProp(proportionOfTraining, y, X);
-     
-    out = 0;
-    
-    err1(i) = balancedErrorRate(yTe, repmat([out], length(yTr), 1));
-
+    out = 1;
+    err1(i) = balancedErrorRate(Te.y, repmat([out], length(Tr.y), 1));
 end
 fprintf('\n%f\n', mean(err1));
 saveFile(err1, 'results/binary/err1');
+
+%% 9.96%
+%**********************************
+%            TEST 2
+%**********************************
+
+N = length(Tr.y);
+
+% Setup NN.
+inputSize  = M;
+innerSize  = 1000;
+numepochs = 20;
+batchsize = 100;
+learningRate = 3;
+binaryClassification = true;
+
+Tr_ = Tr;
+Te_ = Te;
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+        
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for k=1:1:K
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
+        
+        [errnZ, nnPrednZ] = neuralNetworks(TTTr.nZ, TTTr.y, TTTe.nZ, TTTe.y, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+
+        err_te(k) = errnZ;
+    end
+    err2(j) = mean(err_te);
+end
+fprintf('\n%f\n', mean(err2));
+saveFile(err2, 'results/binary/err2');
+
+%% 9.97%
+%**********************************
+%            TEST 3
+%**********************************
+
+N = length(Tr.y);
+
+% Setup 
+NLeaves = 200;
+Tr_ = Tr;
+Te_ = Te;
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+        
+    idxCV = splitGetCV(K, length(TTr.y));
+    tic
+    % K-fold
+    for k=1:1:K
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
+        
+        CMdl = fitensemble(TTTr.Z, TTTr.y, 'Bag', NLeaves, 'Tree', 'Type', 'classification');
+        yhat = predict(CMdl, TTTe.Z);
+
+        err_te(k) = balancedErrorRate(TTTe.y, yhat);
+    end
+    toc
+    err3(j) = mean(err_te);
+end
+fprintf('\n%f\n', mean(err3));
+saveFile(err3, 'results/binary/err3');
+
+%% 9.98%
+%**********************************
+%            TEST 4
+%**********************************
+
+N = length(Tr.y);
+
+% Setup 
+NTrees = 400;
+
+Tr_ = Tr;
+Te_ = Te;
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+        
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for k=1:1:K
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
+        
+        BaggedEnsemble = TreeBagger(NTrees, TTTr.Z, TTTr.y);
+        yhat = str2double(predict(BaggedEnsemble, TTTe.Z));
+
+        err_te(k) = balancedErrorRate(TTTe.y, yhat);
+    end
+    err4(j) = mean(err_te);
+end
+fprintf('\n%f\n', mean(err4));
+saveFile(err4, 'results/binary/err4');

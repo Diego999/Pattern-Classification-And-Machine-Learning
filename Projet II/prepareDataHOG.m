@@ -16,8 +16,8 @@ function [Tr, Te] = PCA(Tr_, Te_, M)
     [l, I] = sort(l, 1, 'descend');
     U = U(:, I);
 
-    J = computeDistortionMatrix(l, D);
-    displayDistortionMatrix(J);
+    %J = computeDistortionMatrix(l, D);
+    %displayDistortionMatrix(J);
     
     Tr.nZ = Tr.nX * U(:, 1:M);
     Te.nZ = Te.nX * U(:, 1:M);

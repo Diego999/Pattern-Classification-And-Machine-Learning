@@ -8,7 +8,7 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 
 ratio = 0.8;
-M = 3000;
+M = 500;
 
 %% Create data
 fprintf('Creating Train & Test sets\n');
@@ -27,7 +27,7 @@ toc
 
 fprintf('Training\n');
 
-binaryClassification = true;
+binaryClassification = false;
 
 yTr = Tr.y;
 yTe = Te.y;
@@ -58,21 +58,21 @@ end
     
     t = templateSVM();%'Solver', 'ISDA', 'KernelFunction', 'polynomial', 'PolynomialOrder', 7, 'BoxConstraint', Inf);
     
-    % Training using X
-    Mdl = fitcecoc(Tr.X, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
-    CMdl = compact(discardSupportVectors(Mdl));
-    yhat = predict(CMdl, Te.X);
-
-    errX = balancedErrorRate(yTe, yhat);
-    fprintf('BER Testing error  X: %.2f%%\n', errX * 100);
-
-    % Training using nX
-    Mdl = fitcecoc(Tr.nX, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
-    CMdl = compact(discardSupportVectors(Mdl));
-    yhat = predict(CMdl, Te.nX);
-
-    errnX = balancedErrorRate(yTe, yhat);
-    fprintf('BER Testing error nX: %.2f%%\n', errnX * 100);
+%     % Training using X
+%     Mdl = fitcecoc(Tr.X, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
+%     CMdl = compact(discardSupportVectors(Mdl));
+%     yhat = predict(CMdl, Te.X);
+% 
+%     errX = balancedErrorRate(yTe, yhat);
+%     fprintf('BER Testing error  X: %.2f%%\n', errX * 100);
+% 
+%     % Training using nX
+%     Mdl = fitcecoc(Tr.nX, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
+%     CMdl = compact(discardSupportVectors(Mdl));
+%     yhat = predict(CMdl, Te.nX);
+% 
+%     errnX = balancedErrorRate(yTe, yhat);
+%     fprintf('BER Testing error nX: %.2f%%\n', errnX * 100);
 
     % Training using Z
     Mdl = fitcecoc(Tr.Z, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
