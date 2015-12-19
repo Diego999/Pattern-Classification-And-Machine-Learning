@@ -27,7 +27,7 @@ toc
 
 fprintf('Training\n');
 
-binaryClassification = false;
+binaryClassification = true;
 
 yTr = Tr.y;
 yTe = Te.y;
@@ -43,27 +43,25 @@ if binaryClassification
     yTe(find(yTe == 3)) = 1;
     yTe(find(yTe == 4)) = 2;
 end
+   
+% Binary
+% 20.61% (nZ), 21.40% (Z)
+% Multi
+% 21.51% (nZ), 22.35% (Z)
 
-    % Binary
-    % 200 : 9.29% (nZ), 9.26% (Z)
-    % 500 : 9.6% (nZ), 9.31% (Z)
-    % 1000 : 9.73% (nZ), 9.07% (Z)
+fernPrm = struct('S', 10, 'M', 50, 'thrr', [-1 1], 'bayes', 1);
 
-    % Multiclass
-    % 200 : % 11.27% (nZ), 11.44% (Z)
-    % 500 : 11.64% (nZ), 11.12% (Z)
-    % 1000 : 11.08% (nZ), 10.90% (Z)
+% Training using Z
+ferns = fernsClfTrain(Tr.Z, yTr, fernPrm);
+yhat = fernsClfApply(Te.Z, ferns );
+  
+errZ = balancedErrorRate(yTe, yhat);
 
-    % Training using nZ
-    BaggedEnsemble = TreeBagger(200, Tr.nZ, yTr);
-    yhat = str2double(predict(BaggedEnsemble, Te.nZ));
+% Training using nZ
+ferns = fernsClfTrain(Tr.nZ, yTr, fernPrm);
+yhat = fernsClfApply(Te.nZ, ferns );
+  
+errnZ = balancedErrorRate(yTe, yhat);
 
-    errnZ = balancedErrorRate(yTe, yhat);
-    fprintf('BER Testing error nZ: %.2f%%\n', errnZ * 100);
-
-    % Training using Z
-    BaggedEnsemble = TreeBagger(200, Tr.Z, yTr);
-    yhat = str2double(predict(BaggedEnsemble, Te.Z));
-
-    errZ = balancedErrorRate(yTe, yhat);
-    fprintf('BER Testing error Z: %.2f%%\n', errZ * 100);
+fprintf('BER Testing error Z: %.2f%%\n', errZ * 100);
+fprintf('BER Testing error nZ: %.2f%%\n', errnZ * 100);
