@@ -48,20 +48,19 @@ if binaryClassification
     yTe(find(yTe == 4)) = 2;
 end
 
+% Binary
+% 9.98% (Z), 9.35% (nZ)
+% Multiclass
+% 10.17% (Z), 9.76% (nZ)
+
+% Train using nZ
+[errnZ, nnPrednZ] = neuralNetworks(Tr.nZ, yTr, Te.nZ, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+
 % Train using Z
-[errZ, nnPredZ] = neuralNetworks(Tr.nZ, yTr, Te.nZ, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+[errZ, nnPredZ] = neuralNetworks(Tr.Z, yTr, Te.Z, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
-% Train using X
-inputSize = size(Tr.X, 2); % NOT Tr.normX as it is HUGE and NOT sparse
-[errX, nnPredX] = neuralNetworks(Tr.X, yTr, Te.X, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
-
-if binaryClassification
-   fprintf('\n Binary classification\n');
-else
-   fprintf('\n Multiclass classification\n');
-end
 fprintf('\nBER Testing error  Z: %.2f%%\n', errZ * 100);
-fprintf('\nBER Testing error  X: %.2f%%\n', errX * 100);
+fprintf('\nBER Testing error  nZ: %.2f%%\n', errnZ * 100);
 
 % figure('Name', ['NN on CNN + PCA, M = ' num2str(M)]);
 % subplot(131);

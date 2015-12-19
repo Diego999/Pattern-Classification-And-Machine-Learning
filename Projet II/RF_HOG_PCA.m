@@ -55,28 +55,28 @@ end
     % 500 : 68.24% (nZ), 65.72% (Z), 28.24% (nX), 28.39% (X)
     
     % Training using nZ
-    BaggedEnsemble = TreeBagger(100, Tr.nZ, yTr);
+    BaggedEnsemble = TreeBagger(200, Tr.nZ, yTr);
     yhat = str2double(predict(BaggedEnsemble, Te.nZ));
  
     errnZ = balancedErrorRate(yTe, yhat);
     fprintf('BER Testing error nZ: %.2f%%\n', errnZ * 100);
     
     % Training using Z
-    BaggedEnsemble = TreeBagger(100, Tr.Z, yTr);
+    BaggedEnsemble = TreeBagger(200, Tr.Z, yTr);
     yhat = str2double(predict(BaggedEnsemble, Te.Z));
 
     errZ = balancedErrorRate(yTe, yhat);
     fprintf('BER Testing error Z: %.2f%%\n', errZ * 100);
     
     % Training using nX
-    BaggedEnsemble = TreeBagger(100, Tr.nX, yTr);
+    BaggedEnsemble = TreeBagger(200, Tr.nX, yTr);
     yhat = str2double(predict(BaggedEnsemble, Te.nX));
  
     errnX = balancedErrorRate(yTe, yhat);
     fprintf('BER Testing error nX: %.2f%%\n', errnX * 100);
     
     % Training using X
-    BaggedEnsemble = TreeBagger(100, Tr.X, yTr);
+    BaggedEnsemble = TreeBagger(200, Tr.X, yTr);
     yhat = str2double(predict(BaggedEnsemble, Te.X));
 
     errX = balancedErrorRate(yTe, yhat);

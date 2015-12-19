@@ -33,7 +33,7 @@ innerSize  = 100;
 numepochs = 15;
 batchsize = 100;
 learningRate = 2;
-binaryClassification = false;
+binaryClassification = true;
 
 yTr = Tr.y;
 yTe = Te.y;
@@ -48,21 +48,21 @@ if binaryClassification
     yTe(find(yTe == 4)) = 2;
 end
 
-% Train using Z
-[errZ, nnPredZ] = neuralNetworks(Tr.nZ, yTr, Te.nZ, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+% Binary
+% 25.38% (nZ), 24.88% (nX)
+% Multiclass
+% 27.03% (nZ), 28.08% (nX)
 
-% Train using X
+% Train using nZ
+[errnZ, nnPrednZ] = neuralNetworks(Tr.nZ, yTr, Te.nZ, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+
+% Train using nX
 inputSize = size(Tr.nX, 2);
-[errX, nnPredX] = neuralNetworks(Tr.nX, yTr, Te.nX, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+[errnX, nnPrednX] = neuralNetworks(Tr.nX, yTr, Te.nX, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
-if binaryClassification
-   fprintf('\n Binary classification\n');
-else
-   fprintf('\n Multiclass classification\n');
-end
+fprintf('\nBER Testing error  nZ: %.2f%%\n', errnZ * 100);
+fprintf('\nBER Testing error  nX: %.2f%%\n', errnX * 100);
 
-fprintf('\nBER Testing error  Z: %.2f%%\n', errZ * 100);
-fprintf('\nBER Testing error  X: %.2f%%\n', errX * 100);
 
 % figure('Name', ['NN on HOG + PCA, M = ' num2str(M)]);
 % subplot(131);

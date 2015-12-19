@@ -27,7 +27,7 @@ toc
 
 fprintf('Training\n');
 
-binaryClassification = false;
+binaryClassification = true;
 
 yTr = Tr.y;
 yTe = Te.y;
@@ -45,13 +45,13 @@ if binaryClassification
 end
 
     % Binary
-    % Default : 9.19
+    % Default : 9.73% (nZ), 9.31% (Z)
     % Linear : ~%
     % RBF : ~%
     % Poly^7 : ~%
 
     % Multiclass
-    % Default : 8.85% (nZ), 10.12% (Z)
+    % Default : 9.73% (nZ), 9.7% (Z)
     % Linear : ~27.11%
     % RBF : ~26.88%
     % Poly^7 : 26.65%
@@ -64,7 +64,7 @@ end
     yhat = predict(CMdl, Te.Z);
     
     errZ = balancedErrorRate(yTe, yhat);
-    fprintf('\nBER Testing error  X: %.2f%%\n', errZ * 100);
+    fprintf('\nBER Testing error  Z: %.2f%%\n', errZ * 100);
     
     % Training using nZ 
     Mdl = fitcecoc(Tr.nZ, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
@@ -72,4 +72,4 @@ end
     yhat = predict(CMdl, Te.nZ);
     
     errnZ = balancedErrorRate(yTe, yhat);
-    fprintf('\nBER Testing error  X: %.2f%%\n', errnZ * 100);
+    fprintf('\nBER Testing error  nZ: %.2f%%\n', errnZ * 100);

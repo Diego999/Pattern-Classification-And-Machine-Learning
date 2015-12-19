@@ -8,7 +8,7 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 
 ratio = 0.8;
-M = 3000; % All the data
+M = 3000;
 
 %% Create data
 fprintf('Creating Train & Test sets\n');
@@ -27,7 +27,7 @@ toc
 
 fprintf('Training\n');
 
-binaryClassification = false;
+binaryClassification = true;
 
 yTr = Tr.y;
 yTe = Te.y;
@@ -45,13 +45,13 @@ if binaryClassification
 end
 
     % Binary
-    % Default : 25.5 (X), 28.73 (nX), 29.59 (nZ)
+    % Default : 25.5 (X), 28.73 (nX), 26.08% (Z), 29.59 (nZ)
     % Linear : ~29.96%
     % RBF : ~23.81%
     % Poly^7 : ~20.8%
 
     % Multiclass
-    % Default : 29.59 (X), 30.46 (nX), 31.05 (nZ)
+    % Default : 29.59 (X), 30.46 (nX), 29.52% (Z) 31.05 (nZ)
     % Linear : ~31.06%
     % RBF : ~27.04%
     % Poly^7 : ~25.6
@@ -74,10 +74,18 @@ end
     errnX = balancedErrorRate(yTe, yhat);
     fprintf('BER Testing error nX: %.2f%%\n', errnX * 100);
 
+    % Training using Z
+    Mdl = fitcecoc(Tr.Z, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
+    CMdl = compact(discardSupportVectors(Mdl));
+    yhat = predict(CMdl, Te.Z);
+
+    errZ = balancedErrorRate(yTe, yhat);
+    fprintf('BER Testing error  Z: %.2f%%\n', errZ * 100);
+    
     % Training using nZ
     Mdl = fitcecoc(Tr.nZ, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
     CMdl = compact(discardSupportVectors(Mdl));
     yhat = predict(CMdl, Te.nZ);
 
     errnZ = balancedErrorRate(yTe, yhat);
-    fprintf('BER Testing error  Z: %.2f%%\n', errnZ * 100);
+    fprintf('BER Testing error  nZ: %.2f%%\n', errnZ * 100);
