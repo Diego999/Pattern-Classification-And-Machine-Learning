@@ -1,4 +1,4 @@
-function [err, nnPred] = neuralNetworks(Xtr, ytr, Xte, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binary)
+function [err, predictions] = neuralNetworks(Xtr, ytr, Xte, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binary)
     if binary
         outputSize = 2;
     else
