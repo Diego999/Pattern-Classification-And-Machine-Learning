@@ -154,6 +154,55 @@ end
 fprintf('\n%f\n', mean(err4));
 saveFile(err4, 'results/binary/err4');
 
+%% 8.59%
+%**********************************
+%            TEST 5
+%**********************************
+
+N = length(Tr.y);
+
+% Setup 
+nbWeak = 1024;
+maxDepth = 4;
+pBoost=struct('nWeak',nbWeak,'pTree',struct('maxDepth',maxDepth));
+
+Tr_ = Tr;
+Te_ = Te;
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+        
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for k=1:1:K
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
+
+        model = adaBoostTrain(TTTr.nZ(TTTr.y==1, :), TTTr.nZ(TTTr.y==2,:), pBoost);
+
+        yp = TTTe.y(find(TTTe.y == 1));
+        yn = TTTe.y(find(TTTe.y == 2));
+
+        fp = adaBoostApply(TTTe.nZ(TTTe.y==1, :), model);
+        fp = double(fp > 0);
+        fp = fp + ones(length(fp), 1);
+        fn = adaBoostApply(TTTe.nZ(TTTe.y==2, :), model);
+        fn = double(fn > 0);
+        fn = fn + ones(length(fn), 1);
+
+        yhat = [fp; fn];
+        ytrue = [yp; yn];
+
+        err_te(k) = balancedErrorRate(ytrue, yhat);
+    end
+    err5(j) = mean(err_te);
+end
+fprintf('\n%f\n', mean(err5));
+saveFile(err5, 'results/binary/err5');
+
 %% Plot
 s = [1 numberOfExperiments];
 
@@ -161,19 +210,21 @@ err1 = openFile('results/binary/err1', s);
 err2 = openFile('results/binary/err2',s);
 err3 = openFile('results/binary/err3', s);
 err4 = openFile('results/binary/err4', s);
+err5 = openFile('results/binary/err5', s);
 
 figure;
-boxplot([err1' err2' err3' err4']);
+boxplot([err1' err2' err3' err4' err5']);
 h_legend = legend(findobj(gca,'Tag','Box'), ...
 '1 ', ...
 '2 ', ...
 '3 ', ...
-'4 ');
+'4 ', ...
+'5 ');
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
 set(gca,'LineWidth',1.5);
-ylim([0 0.8])
-set(gca,'YTick',0:0.05:0.8)
+ylim([0 0.55])
+set(gca,'YTick',0:0.05:0.55)
 xlabel('Model');
 ylabel('BER');
 %print('../report/figures/models','-djpeg','-noui')

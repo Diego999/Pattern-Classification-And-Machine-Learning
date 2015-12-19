@@ -92,8 +92,21 @@ end
 
 %% DT
 
+binaryClassification = true;
+
 Tr_ = Tr;
 Te_ = Te;
+    
+if binaryClassification    
+    Tr_.y(find(Tr_.y == 2)) = 1;
+    Tr_.y(find(Tr_.y == 3)) = 1;
+    Tr_.y(find(Tr_.y == 4)) = 2;
+    
+    Te_.y(find(Te_.y == 2)) = 1;
+    Te_.y(find(Te_.y == 3)) = 1;
+    Te_.y(find(Te_.y == 4)) = 2;
+end
+
 
 % 10.824 with 200
 NLeaves = [200];
@@ -129,8 +142,21 @@ end
 
 %% RF
     
+binaryClassification = true;
+
 Tr_ = Tr;
 Te_ = Te;
+    
+if binaryClassification    
+    Tr_.y(find(Tr_.y == 2)) = 1;
+    Tr_.y(find(Tr_.y == 3)) = 1;
+    Tr_.y(find(Tr_.y == 4)) = 2;
+    
+    Te_.y(find(Te_.y == 2)) = 1;
+    Te_.y(find(Te_.y == 3)) = 1;
+    Te_.y(find(Te_.y == 4)) = 2;
+end
+
 
 % Best is 400 (9.92), however NTrees growsl linearly and so, it is a good
 % comprises between speed an accuracy
@@ -163,4 +189,75 @@ for j = 1:1:numberOfExperiments
 
     [errStar, NTreeStarId] = min(mseTe);
     NTreeStar = NTrees(NTreeStarId);
+end
+
+%% BT
+
+binaryClassification = true;
+
+Tr_ = Tr;
+Te_ = Te;
+    
+if binaryClassification    
+    Tr_.y(find(Tr_.y == 2)) = 1;
+    Tr_.y(find(Tr_.y == 3)) = 1;
+    Tr_.y(find(Tr_.y == 4)) = 2;
+    
+    Te_.y(find(Te_.y == 2)) = 1;
+    Te_.y(find(Te_.y == 3)) = 1;
+    Te_.y(find(Te_.y == 4)) = 2;
+end
+
+nWeak = 1024;
+maxDepth = 4;
+nWeaks = [1024]; % 9.06 for 1024
+maxDepths = [4 8 16 32 64]; % 9.06 for 4
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d : Split the data\n', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for k=1:1:K
+        fprintf('%d : %dth fold\n', j, k);
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
+        
+        %for i = 1:1:length(nWeaks)
+        %    nWeak = nWeaks(i);
+        for i = 1:1:length(maxDepths)
+            maxDepth = maxDepths(i);
+
+            pBoost=struct('nWeak',nWeak,'pTree',struct('maxDepth',maxDepth));
+            model = adaBoostTrain(TTTr.nZ(TTTr.y==1, :), TTTr.nZ(TTTr.y==2,:), pBoost);
+
+            yp = TTTe.y(find(TTTe.y == 1));
+            yn = TTTe.y(find(TTTe.y == 2));
+
+            fp = adaBoostApply(TTTe.nZ(TTTe.y==1, :), model);
+            fp = double(fp > 0);
+            fp = fp + ones(length(fp), 1);
+            fn = adaBoostApply(TTTe.nZ(TTTe.y==2, :), model);
+            fn = double(fn > 0);
+            fn = fn + ones(length(fn), 1);
+
+            yhat = [fp; fn];
+            ytrue = [yp; yn];
+
+            err_te(k,i) = balancedErrorRate(ytrue, yhat);
+            fprintf('%f\n', err_te(k,i));
+        %end
+        end
+    end
+
+    mseTe = mean(err_te);
+
+    %[errStar, nbWeaksStarId] = min(mseTe);
+    %nbWeaksStar = nWeaks(nbWeaksStarId);
+    
+    [errStar, maxDepthStarId] = min(mseTe);
+    maxDepthStar = maxDepths(maxDepthStarId);
 end
