@@ -40,17 +40,16 @@ EPFL \\
 This report provides a summary of the project two of the PCML class. 
 \end{abstract}
 
-\section{Binary Classification}
-
-\subsection{Data Description}
+\section{Data Description}
 
 The train-data for binary classification consists of $N = 6000$ images. As input we have 2 representations of the image : \textit{the histogram of oriented gradients} (HOG) $\mathbf{X}_{hog}$ and the \textit{overFEAT ImageNet CNN features} (CNN) $\mathbf{X}_{cnn}$. Our input $\mathbf{X}$ is the concatenation of $\mathbf{X}_{hog}$ with $\mathbf{X}_{cnn}$. 
-\\Each input sample is a vector $\mathbf{x}_n$ with dimension $D = 42273$ ($5408$ for the HOG and $36865$ for the CNN) and is the concatenation of $\mathbf{x}_n^{hog}$ with $\mathbf{x}_n^{cnn}$
-The output ($\mathbf{y}$) represents the classification of the images, with $0$ if it represents a car, a horse or a plane, $1$ otherwise.
+
+Each input sample is a vector $\mathbf{x}_n$ with dimension $D = 42273$ ($5408$ for the HOG and $36865$ for the CNN) and is the concatenation of $\mathbf{x}_n^{hog}$ with $\mathbf{x}_n^{cnn}$
+The output ($\mathbf{y}$) represents the classification of the images. For the binary classification, the label $1$  represents a car, a horse or a plane and the label $2$ anything else. For the multi-class classification, the label $1$ represents a car, $2$2 a horse, $3$ a plane and $4$ anything else.
 
 We also have test-data of size $N=XXX$ without their corresponding output. Our goal is to produce predictions for those data, as well as an approximation of the test-error using \textit{Balanced Error Rate} (BER).
 
-\subsubsection{Histogram of Oriented Gradients}
+\subsection{Histogram of Oriented Gradients}
 
 Histogram of oriented gradients is a feature used in computer vision in order to detect objects. To compute it, we first need to normalize the image, compute the gradients (of each pixel) for the different color channel and take those with the largest norm. Then we decompose the image in bins of size $w \times h$. For each of those bins, we compute an histogram of the orientation of the gradients using theirs angles and weighted by theirs magnitudes. The histogram has $n$ bins from $0$ to $180$ degrees. We compute this histogram using $4$ different normalizations.
 
@@ -60,8 +59,8 @@ In our case, the dimensions of this feature is $13 \times 13 \times 32=5408$, wh
 %http://vision.ucsd.edu/~pdollar/toolbox/doc/channels/hog.html
 \subsubsection{OverFEAT ImageNet CNN features}
 
-Those features are extracted from a convolutional network-based image features extractor OverFeat. They were trained on the ImageNet dataset (tens of millions images). The size is the output of the fifth layer of the neural network which is $1024 \times 6 \times 6 = 36864$. In our feature, we also have an extra dimension which can be ruled out.
+Those features are extracted from a convolutional network-based image features extractor OverFeat. They were trained on the ImageNet dataset (tens of millions images). The size is the output of the fifth layer of the neural network which is $1024 \times 6 \times 6 = 36864$. In our features, we also have an extra dimension which can be ruled out.
 
-\subsection{Data visualization and cleaning}
+\section{Data visualization and cleaning}
 
 \end{document}

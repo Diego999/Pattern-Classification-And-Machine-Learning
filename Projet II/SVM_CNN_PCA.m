@@ -27,7 +27,7 @@ toc
 
 fprintf('Training\n');
 
-binaryClassification = true;
+binaryClassification = false;
 
 yTr = Tr.y;
 yTe = Te.y;

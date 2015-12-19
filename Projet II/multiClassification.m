@@ -40,7 +40,7 @@ end
 fprintf('\n%f\n', mean(err1));
 saveFile(err1, 'results/multi/err1');
 
-%%
+%% 9.14 %
 %**********************************
 %            TEST 2
 %**********************************
@@ -59,7 +59,7 @@ Tr_ = Tr;
 Te_ = Te;
 
 for j = 1:1:numberOfExperiments
-    setSeed(28111993*i);
+    setSeed(28111993*j);
 
     fprintf('%d ', j);
     [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
@@ -78,3 +78,38 @@ for j = 1:1:numberOfExperiments
 end
 fprintf('\n%f\n', mean(err2));
 saveFile(err2, 'results/multi/err2');
+
+%%  %
+%**********************************
+%            TEST 3
+%**********************************
+
+N = length(Tr.y);
+
+% Setup 
+NLeaves = 500;
+Tr_ = Tr;
+Te_ = Te;
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+        
+    idxCV = splitGetCV(K, length(TTr.y));
+    tic
+    % K-fold
+    for k=1:1:K
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
+        
+        CMdl = fitensemble(TTTr.Z, TTTr.y, 'Bag', NLeaves, 'Tree', 'Type', 'classification');
+        yhat = predict(CMdl, TTTe.Z);
+
+        err_te(k,i) = balancedErrorRate(TTTe.y, yhat);
+    end
+    toc
+    err3(j) = mean(err_te);
+end
+fprintf('\n%f\n', mean(err3));
+saveFile(err3, 'results/multi/err3');
