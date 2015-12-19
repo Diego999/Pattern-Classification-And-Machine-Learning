@@ -126,3 +126,41 @@ for j = 1:1:numberOfExperiments
     [errStar, NLeaveStarId] = min(mseTe);
     NLeaveStar = NLeaves(NLeaveStarId);
 end
+
+%% RF
+    
+Tr_ = Tr;
+Te_ = Te;
+
+% Best is 500 (0.1072), however NTrees growsl linearly and so, it is a good
+% comprises between speed an accuracy
+NTrees = [100 200 300 400 500];
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d : Split the data\n', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for k=1:1:K
+        fprintf('%d : %dth fold\n', j, k);
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
+        
+        for i = 1:1:length(NTrees)
+            NTree = NTrees(i);
+            tic
+            BaggedEnsemble = TreeBagger(NTree, TTTr.Z, TTTr.y);
+            yhat = str2double(predict(BaggedEnsemble, TTTe.Z));
+            toc
+            err_te(k,i) = balancedErrorRate(TTTe.y, yhat);
+        end
+    end
+
+    mseTe = mean(err_te);
+
+    [errStar, NTreeStarId] = min(mseTe);
+    NTreeStar = NTrees(NLeaveStarId);
+end

@@ -22,14 +22,6 @@ EPFL \\
 \texttt{diego.antognini@epfl.ch}, \texttt{jason.racine@epfl.ch} \\
 }
 
-% The \author macro works with any number of authors. There are two commands
-% used to separate the names and addresses of multiple authors: \And and \AND.
-%
-% Using \And between authors leaves it to \LaTeX{} to determine where to break
-% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
-% puts 3 of 4 authors names on the first line, and the last on the second
-% line, try using \AND instead of \And before the third author name.
-
 \nipsfinalcopy 
 
 \begin{document}
@@ -57,10 +49,57 @@ In our case, the dimensions of this feature is $13 \times 13 \times 32=5408$, wh
 
 %http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf
 %http://vision.ucsd.edu/~pdollar/toolbox/doc/channels/hog.html
-\subsubsection{OverFEAT ImageNet CNN features}
+\subsection{OverFEAT ImageNet CNN features}
 
 Those features are extracted from a convolutional network-based image features extractor OverFeat. They were trained on the ImageNet dataset (tens of millions images). The size is the output of the fifth layer of the neural network which is $1024 \times 6 \times 6 = 36864$. In our features, we also have an extra dimension which can be ruled out.
 
-\section{Data visualization and cleaning}
+\section{Data visualization and analysis}
+
+We first have plot the labels distribution for the binary and multi-class cases. For the binary case, we have $60.3\%$ for the label $1$ and $39.8\%$ for the second one. We have observed that there is a imbalance between the classes but this is quite small. For the multi-classes case, we obtain $16.07\%$, $19.37\%$, $24.87\%$ and $39.70\%$ for the labels $1$, $2$, $3$ and $4$. This time, the imbalance is more important, especially with the label $4$ and we do have to take care about it during the training.
+
+We also wanted to analyze the distribution of our features, and have observed that for the features HOG, each of them has a has similar distribution as showed in Figure XXX. The values are essentially in the range $[0, 0.2]$. We are also interested about the correlation between the input and output variables. We have observed that the correlation is in the range $[-0.24 ;0.30]$, and so can conclude that features seem not to have a direct correlation between them. However, a combination of features can have a high correlation with the output but we couldn't find such combination. Finally, $\mathbf{X}_{hog}$ is rank-deficient with a rank of $3467$ instead of $5408$.
+
+For the features CNN, first we can see that it is a sparse matrix and most of the values for each data is $0$ (around $95.5\%$). This means that for each data, a small subset is able to describe the picture. Moreover, we can observe that we are faced to the problem of $D > N$ and the solution we have adopted is PCA which will describe during the next sections. The values are in mainly in the range $[0, 64.87]$. We also wanted to see the correlation of those features with the output and have found that they are in the range $[-0.24;0.18]$, which is similar to the HOG features. Finally,  $\mathbf{X}_{cnn}$ is rank-deficient with a rank of $5997$ instead of $36865$.
+
+\section{Techniques used}
+
+This section is a description of the technique we have used in the project. It describes mainly how it works, why we thought it could be useful in this project.
+
+\subsection{Principal component analysis}
+
+As we have seen in the section "Data visualization and analysis", we are faced to the $D > N$ problem with the CNN features. One way to solve this problem is to use PCA.  Basically, PCA works as follow : we compute the mean and the covariance matrix $S = \frac{1}{N}\sum_{n=1}^{N}(x_n-\bar{x})(x_n-\bar{x})^T$ of our data and then compute the $M$ eigenvectors of $S$ corresponding to the $M$ largest eigenvalues. $M$ is the number of features we have to take into account in order to minimize the reconstruction. Finally, the approximation of a data sample is $\tilde{x_n} = \sum_{i=1}^M x_{ni} u_i$. However, we couldn't compute PCA using this method, because computing the full eigenvector decomposition a matrix $D \times D$ runs in  $O(D^3)$ and D is quite large. 
+We have used an alternative proposed in [REF] which allows us to compute the same eigenvectors in $O(N^3)$, which is roughly at least $230$ times faster. The tricks is to express $S = \frac{1}{N}XX^T$ and finally using $\frac{1}{N}XX^Tv_i = \lambda_i v_i$, where $v_i=Xu_i$, we obtain an eigenvector equation for the $N \times N$ matrix $S$.
+
+The last parameter to set, is the parameter $M$ which defines the $M$ largest eigenvectors to take into consideration for our features selection.We introduce a distortion measure $J = \frac{1}{N}\sum_{n=1}^{N}||x_n-\tilde{x_n}||^2$ which represents the mean squared distance between the original data sample and our approximation. Without going into the steps, the solution to the minimization of $J$ is $J = \sum_{i=M+1}^D \lambda_i$. 
+
+The Figure XX shows the plot of $J$ for the HOG features and the CNN features. For the CNN, we have tried several values for $M$ and have conclude that $M = 150$ was a good compromise between accuracy and speed. The corresponding distortion might be very high compared to the HOG features, but the range of the values are not the same, CNN has values going larger than $0.2$. We tried some bigger values but we didn't get major improvements in terms of error. For the HOG features, the distortion measure seems more nice, and have decided to take $M = XXX$. BECAUSE BLA BLA BLA
+
+\section{Evaluation methods}
+
+\section{Model comparison}
+
+\subsection{Binary classification}
+
+\subsection{Multi-class classification}
+
+\section{Feature transformation}
+
+\section{Conclusion}
+
+\section{References}
+
+@misc{IMM2012-06284,
+    author       = "R. B. Palm",
+    title        = "Prediction as a candidate for learning deep hierarchical models of data",
+    year         = "2012",
+}
+
+@misc{PMT,
+   author = {Piotr Doll\'ar}, 
+   title = {{P}iotr's {C}omputer {V}ision {M}atlab {T}oolbox ({PMT})}, 
+   howpublished = {\url{http://vision.ucsd.edu/~pdollar/toolbox/doc/index.html}} 
+} 
+
+
 
 \end{document}

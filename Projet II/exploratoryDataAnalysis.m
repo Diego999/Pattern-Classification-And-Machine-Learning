@@ -10,15 +10,22 @@ y = train.y;
 X_cnn = train.X_cnn;
 X_hog = train.X_hog;
 
-y(find(y == 1)) = 0;
-y(find(y == 2)) = 0;
-y(find(y == 3)) = 0;
-y(find(y == 4)) = 1;
+y(find(y == 1)) = 1;
+y(find(y == 2)) = 1;
+y(find(y == 3)) = 1;
+y(find(y == 4)) = 2;
 
 %% Classes
 
-lc1 = length(find(y == 0)); % 60.3%
-lc2 = length(find(y == 1)); % 39.7%
+lc1 = length(find(y == 1)); % 16.07%
+lc2 = length(find(y == 2)); % 19.37%
+lc3 = length(find(y == 3)); % 24.87%
+lc4 = length(find(y == 4)); % 39.7%
+
+%% Classes
+
+lc1 = length(find(y == 1)); % 60.3%
+lc2 = length(find(y == 2)); % 39.7%
 
 %% HOG
 % Explanation what is it
@@ -42,11 +49,11 @@ f1 = figure;
 histogram(y);
 xlabel('Y');
 ylabel('Count');
-xlim([0 1]);
+xlim([1 2]);
 
 %% Histogram feature HOG (distribution)
 
-idx = find(y == 0);
+idx = find(y == 1);
 X = X_hog;
 for feature=1:10%size(X,2)
     f = figure;
@@ -55,7 +62,7 @@ for feature=1:10%size(X,2)
     ylabel('Count');
 end
 
-idx = find(y == 1);
+idx = find(y == 2);
 X = X_hog;
 for feature=1:10%size(X,2)
     f = figure;
@@ -66,7 +73,7 @@ end
 
 %% Histogram feature CNN (distribution)
 
-idx = find(y == 0);
+idx = find(y == 1);
 X = X_cnn;
 for feature=1:10%size(X,2)
     f = figure;
@@ -75,7 +82,7 @@ for feature=1:10%size(X,2)
     ylabel('Count');
 end
 
-idx = find(y == 1);
+idx = find(y == 2);
 X = X_cnn;
 for feature=1:10%size(X,2)
     f = figure;
