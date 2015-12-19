@@ -153,3 +153,27 @@ for j = 1:1:numberOfExperiments
 end
 fprintf('\n%f\n', mean(err4));
 saveFile(err4, 'results/binary/err4');
+
+%% Plot
+s = [1 numberOfExperiments];
+
+err1 = openFile('results/binary/err1', s);
+err2 = openFile('results/binary/err2',s);
+err3 = openFile('results/binary/err3', s);
+err4 = openFile('results/binary/err4', s);
+
+figure;
+boxplot([err1' err2' err3' err4']);
+h_legend = legend(findobj(gca,'Tag','Box'), ...
+'1 ', ...
+'2 ', ...
+'3 ', ...
+'4 ');
+set(gca, 'XGrid','on')
+set(gca, 'YGrid','on')
+set(gca,'LineWidth',1.5);
+ylim([0 0.8])
+set(gca,'YTick',0:0.05:0.8)
+xlabel('Model');
+ylabel('BER');
+%print('../report/figures/models','-djpeg','-noui')
