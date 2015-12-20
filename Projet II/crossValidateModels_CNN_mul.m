@@ -164,3 +164,91 @@ for j = 1:1:numberOfExperiments
     [errStar, NTreeStarId] = min(mseTe);
     NTreeStar = NTrees(NLeaveStarId);
 end
+
+%% RF-2
+
+Tr_ = Tr;
+Te_ = Te;
+
+% 9.6%
+maxDepths = [1024];
+Ms = [256];
+F1s = [20];
+
+for jj = 1:1:numberOfExperiments
+    setSeed(28111993*jj);
+
+    fprintf('%d : Split the data\n', jj);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for kk=1:1:K
+        fprintf('%d : %dth fold\n', j, kk);
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, kk, false);
+        
+        for i = 1:1:length(maxDepths)
+            for j = 1:1:length(Ms)
+                for k = 1:1:length(F1s)
+                    md = maxDepths(i);
+                    m = Ms(j);
+                    f1 = F1s(k);
+                    pTrain={'maxDepth',md,'M',m,'F1',f1,'minChild',5};
+                    forest=forestTrain(Tr.Z,yTr,pTrain{:});
+
+                    hsPr0 = forestApply(single(full(Te.Z)),forest);
+                    err(kk, i, j, k) = balancedErrorRate(hsPr0, yTe);
+                    fprintf('%d %d %d \t\t\t\t\t%f\n', md, m, f1, err(kk, i, j, k));
+                end
+            end
+        end
+    end
+    fprintf('%f ', mean(err));
+    mseTe = mean(err_te);
+
+    [errStar, NTreeStarId] = min(mseTe);
+    NTreeStar = NTrees(NLeaveStarId);
+end
+
+%% Fernst
+
+Tr_ = Tr;
+Te_ = Te;
+
+% 8.54 %
+Ss = [15];
+Ms = [4096];
+
+for jj = 1:1:numberOfExperiments
+    setSeed(28111993*jj);
+
+    fprintf('%d : Split the data\n', jj);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for kk=1:1:K
+        fprintf('%d : %dth fold\n', j, kk);
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, kk, false);
+        
+        for i = 1:1:length(Ss)
+            for j = 1:1:length(Ms)
+                s = Ss(i);
+                m = Ms(j);
+                fernPrm=struct('S',s,'M',m,'thrr',[-1 1],'bayes',1);
+                [ferns,hsPr0]=fernsClfTrain(Tr.Z, Tr.y,fernPrm);
+                hsPr1 = fernsClfApply(Te.Z, ferns );
+
+                err(kk,i,j) = balancedErrorRate(hsPr1, Te.y);
+                fprintf('%d %d \t\t\t\t\t%f\n', s, m, err(kk, i, j));
+            end
+        end
+    end
+    fprintf('%f ', mean(err));
+    mseTe = mean(err_te);
+
+    [errStar, NTreeStarId] = min(mseTe);
+    NTreeStar = NTrees(NLeaveStarId);
+end

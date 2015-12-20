@@ -92,7 +92,7 @@ end
 
 %% DT
 
-binaryClassification = true;
+binaryClassification = false;
 
 Tr_ = Tr;
 Te_ = Te;
@@ -110,6 +110,7 @@ end
 
 % 10.824 with 200
 NLeaves = [200];
+depths = [512];
 
 for j = 1:1:numberOfExperiments
     setSeed(28111993*j);
@@ -118,7 +119,7 @@ for j = 1:1:numberOfExperiments
     [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
     
     idxCV = splitGetCV(K, length(TTr.y));
-    
+
     % K-fold
     for k=1:1:K
         fprintf('%d : %dth fold\n', j, k);
@@ -126,11 +127,14 @@ for j = 1:1:numberOfExperiments
         
         for i = 1:1:length(NLeaves)
             NLeave = NLeaves(i);
-            
-            CMdl = fitensemble(TTTr.Z, TTTr.y, 'Bag', NLeave, 'Tree', 'Type', 'classification');
-            yhat = predict(CMdl, TTTe.Z);
+            for i = 1:1:length(depths)
+                depth = depths(i);
+                t = templateTree('MaxNumSplits', depth);
+                CMdl = fitensemble(TTTr.Z, TTTr.y, 'Bag', NLeave, 'Tree', 'Type', 'classification', 'Learners', t);
+                yhat = predict(CMdl, TTTe.Z);
 
             err_te(k,i) = balancedErrorRate(TTTe.y, yhat);
+            end
         end
     end
 
@@ -260,4 +264,120 @@ for j = 1:1:numberOfExperiments
     
     [errStar, maxDepthStarId] = min(mseTe);
     maxDepthStar = maxDepths(maxDepthStarId);
+end
+
+%% RF-2
+
+Tr_ = Tr;
+Te_ = Te;
+
+binaryClassification = true;
+
+Tr_ = Tr;
+Te_ = Te;
+    
+if binaryClassification    
+    Tr_.y(find(Tr_.y == 2)) = 1;
+    Tr_.y(find(Tr_.y == 3)) = 1;
+    Tr_.y(find(Tr_.y == 4)) = 2;
+    
+    Te_.y(find(Te_.y == 2)) = 1;
+    Te_.y(find(Te_.y == 3)) = 1;
+    Te_.y(find(Te_.y == 4)) = 2;
+end
+
+
+% 9.61%
+maxDepths = [512];
+Ms = [256];
+F1s = [20];
+
+for jj = 1:1:numberOfExperiments
+    setSeed(28111993*jj);
+
+    fprintf('%d : Split the data\n', jj);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for kk=1:1:K
+        fprintf('%d : %dth fold\n', j, kk);
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, kk, false);
+        
+        for i = 1:1:length(maxDepths)
+            for j = 1:1:length(Ms)
+                for k = 1:1:length(F1s)
+                    md = maxDepths(i);
+                    m = Ms(j);
+                    f1 = F1s(k);
+                    pTrain={'maxDepth',md,'M',m,'F1',f1,'minChild',5};
+                    forest=forestTrain(Tr.Z,yTr,pTrain{:});
+
+                    hsPr0 = forestApply(single(full(Te.Z)),forest);
+                    err(kk, i, j) = balancedErrorRate(hsPr0, yTe);
+                    fprintf('%d %d %d \t\t\t\t\t%f\n', md, m, f1, err(kk, i, j));
+                end
+            end
+        end
+    end
+    fprintf('%f ', mean(err));
+    mseTe = mean(err_te);
+
+    [errStar, NTreeStarId] = min(mseTe);
+    NTreeStar = NTrees(NLeaveStarId);
+end
+
+%% Fernst
+
+binaryClassification = true;
+
+Tr_ = Tr;
+Te_ = Te;
+    
+if binaryClassification    
+    Tr_.y(find(Tr_.y == 2)) = 1;
+    Tr_.y(find(Tr_.y == 3)) = 1;
+    Tr_.y(find(Tr_.y == 4)) = 2;
+    
+    Te_.y(find(Te_.y == 2)) = 1;
+    Te_.y(find(Te_.y == 3)) = 1;
+    Te_.y(find(Te_.y == 4)) = 2;
+end
+
+% 8.01 %
+Ss = [12];
+Ms = [4096*4];
+
+for jj = 1:1:numberOfExperiments
+    setSeed(28111993*jj);
+
+    fprintf('%d : Split the data\n', jj);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    
+    idxCV = splitGetCV(K, length(TTr.y));
+    
+    % K-fold
+    for kk=1:1:K
+        fprintf('%d : %dth fold\n', j, kk);
+        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, kk, false);
+        
+        for i = 1:1:length(Ss)
+            for j = 1:1:length(Ms)
+                s = Ss(i);
+                m = Ms(j);
+                fernPrm=struct('S',s,'M',m,'thrr',[-1 1],'bayes',1);
+                [ferns,hsPr0]=fernsClfTrain(Tr.Z, yTr,fernPrm);
+                hsPr1 = fernsClfApply(Te.Z, ferns );
+
+                err(kk,i,j) = balancedErrorRate(hsPr1, yTe);
+                fprintf('%d %d \t\t\t\t\t%f\n', s, m, err(kk, i, j));
+            end
+        end
+    end
+    fprintf('%f ', mean(err));
+    mseTe = mean(err_te);
+
+    [errStar, NTreeStarId] = min(mseTe);
+    NTreeStar = NTrees(NLeaveStarId);
 end

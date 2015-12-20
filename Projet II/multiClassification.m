@@ -89,8 +89,11 @@ N = length(Tr.y);
 
 % Setup 
 NLeaves = 500;
+depth = 512;
 Tr_ = Tr;
 Te_ = Te;
+
+t = templateTree('MaxNumSplits', depth);
 
 for j = 1:1:numberOfExperiments
     setSeed(28111993*j);
@@ -104,7 +107,7 @@ for j = 1:1:numberOfExperiments
     for k=1:1:K
         [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
         
-        CMdl = fitensemble(TTTr.Z, TTTr.y, 'Bag', NLeaves, 'Tree', 'Type', 'classification');
+        CMdl = fitensemble(TTTr.Z, TTTr.y, 'Bag', NLeaves, 'Tree', 'Type', 'classification', 'Learners', t);
         yhat = predict(CMdl, TTTe.Z);
 
         err_te(k) = balancedErrorRate(TTTe.y, yhat);

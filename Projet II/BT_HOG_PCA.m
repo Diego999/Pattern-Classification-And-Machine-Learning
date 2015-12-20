@@ -8,7 +8,7 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 
 ratio = 0.8;
-M = 3000;
+M = 500;
 
 %% Create data
 fprintf('Creating Train & Test sets\n');
