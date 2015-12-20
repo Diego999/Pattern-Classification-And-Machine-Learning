@@ -96,9 +96,11 @@ The idea of bootstrap aggregation is to average several decision trees. It will 
 
 \subsection{Random Forests}
 
+\subsection{Fernst}
+
 \section{Evaluation methods}
 
-In order to evaluate our different models, we have split our data in two sets of $80\%$ and $20\%$ for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough to estimate correctly our models on the testing set. We learn only on the training set and then use the test set in order to estimate the error using the \textit{Balanced Error Rate}. This error compute the average percentage of misclassification per class. It allows us to avoid the case of the $90\%/10\%$ and having a good error. We have also used k-fold cross validation to tune the parameters up of our different models. We set $k=10$ because we have a lot of data, splitting them into $10$ folds seems reasonable ($4320$ data samples for the training set and $480$ for the testing set). We repeated the experiment $10$ times with different seeds in order to split the data in a unique random way for each trial and so try to have an unbiased estimation error. We couldn't increase the number of experiments because some methods are really slow.
+In order to evaluate our different models, we have split our data in two sets of $80\%$ and $20\%$ for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough to estimate correctly our models on the testing set. We learn only on the training set and then use the test set in order to estimate the error using the \textit{Balanced Error Rate}. This error compute the average percentage of misclassification per class. It allows us to avoid the case of the $90\%/10\%$ and having a good error. We have also used k-fold cross validation to tune the parameters up of our different models. We set $k=10$ because we have a lot of data, splitting them into $10$ folds seems reasonable ($4320$ data samples for the training set and $480$ for the testing set). We repeated the experiment $30$ times with different seeds in order to split the data in a unique random way for each trial and so try to have an unbiased estimation error. 
 
 \section{Model comparison}
 

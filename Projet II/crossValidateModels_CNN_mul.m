@@ -16,7 +16,7 @@ M = 150;
 %% Create data
 fprintf('Creating Train & Test sets\n');
 tic
-[Tr, Te] = createTrainingTestingCNN(train.X_cnn, train.y, proportionOfTraining);
+[Tr, Te] = createTrainingTestingCNN(train.X_cnn, train.y, 1.0);
 toc
 
 %% Prepare data
@@ -167,19 +167,16 @@ end
 
 %% RF-2
 
-Tr_ = Tr;
-Te_ = Te;
-
 % 9.6%
 maxDepths = [1024];
-Ms = [256];
+Ms = [64];
 F1s = [20];
 
 for jj = 1:1:numberOfExperiments
     setSeed(28111993*jj);
 
     fprintf('%d : Split the data\n', jj);
-    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
     
     idxCV = splitGetCV(K, length(TTr.y));
     
@@ -195,10 +192,10 @@ for jj = 1:1:numberOfExperiments
                     m = Ms(j);
                     f1 = F1s(k);
                     pTrain={'maxDepth',md,'M',m,'F1',f1,'minChild',5};
-                    forest=forestTrain(Tr.Z,yTr,pTrain{:});
+                    forest=forestTrain(TTTr.Z, TTTr.y,pTrain{:});
 
-                    hsPr0 = forestApply(single(full(Te.Z)),forest);
-                    err(kk, i, j, k) = balancedErrorRate(hsPr0, yTe);
+                    hsPr0 = forestApply(single(full(TTTe.Z)),forest);
+                    err(kk, i, j, k) = balancedErrorRate(hsPr0, TTTe.y);
                     fprintf('%d %d %d \t\t\t\t\t%f\n', md, m, f1, err(kk, i, j, k));
                 end
             end
@@ -213,18 +210,15 @@ end
 
 %% Fernst
 
-Tr_ = Tr;
-Te_ = Te;
-
-% 8.54 %
-Ss = [15];
-Ms = [4096];
+% 8.69 %
+Ss = [11];
+Ms = [2048];
 
 for jj = 1:1:numberOfExperiments
     setSeed(28111993*jj);
 
     fprintf('%d : Split the data\n', jj);
-    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
     
     idxCV = splitGetCV(K, length(TTr.y));
     
@@ -238,10 +232,10 @@ for jj = 1:1:numberOfExperiments
                 s = Ss(i);
                 m = Ms(j);
                 fernPrm=struct('S',s,'M',m,'thrr',[-1 1],'bayes',1);
-                [ferns,hsPr0]=fernsClfTrain(Tr.Z, Tr.y,fernPrm);
-                hsPr1 = fernsClfApply(Te.Z, ferns );
+                [ferns,hsPr0]=fernsClfTrain(TTTr.Z, TTTr.y,fernPrm);
+                hsPr1 = fernsClfApply(TTTe.Z, ferns );
 
-                err(kk,i,j) = balancedErrorRate(hsPr1, Te.y);
+                err(kk,i,j) = balancedErrorRate(hsPr1, TTTe.y);
                 fprintf('%d %d \t\t\t\t\t%f\n', s, m, err(kk, i, j));
             end
         end

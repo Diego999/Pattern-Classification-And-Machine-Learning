@@ -7,7 +7,7 @@ addpath(genpath('DeepLearnToolbox'));
 
 load train/train.mat;
 
-numberOfExperiments = 10;
+numberOfExperiments = 30;
 proportionOfTraining = 0.8;
 K = 10;
 M = 150;
@@ -19,7 +19,7 @@ train.y(find(train.y == 4)) = 2;
 %% Create data
 fprintf('Creating Train & Test sets\n');
 tic
-[Tr, Te] = createTrainingTestingCNN(train.X_cnn, train.y, proportionOfTraining);
+[Tr, Te] = createTrainingTestingCNN(train.X_cnn, train.y, 1.0);
 toc
 
 %% Prepare data
@@ -29,8 +29,7 @@ tic
 [Tr, Te] = prepareDataCNN(Tr, Te, M);
 toc
 
-%%
-% 50%
+%% Constant 50%
 %**********************************
 %            TEST 1
 %**********************************
@@ -40,12 +39,12 @@ for i = 1:numberOfExperiments
     fprintf('%d ', i);
     setSeed(28111993*i);
     out = 1;
-    err1(i) = balancedErrorRate(Te.y, repmat([out], length(Tr.y), 1));
+    err1(i) = 0.5;%balancedErrorRate(Te.y, repmat([out], length(Tr.y), 1));
 end
 fprintf('\n%f\n', mean(err1));
 saveFile(err1, 'results/binary/err1');
 
-%% 9.96%
+%% Neural Network 9.045 +- 0.009%
 %**********************************
 %            TEST 2
 %**********************************
@@ -60,148 +59,189 @@ batchsize = 100;
 learningRate = 3;
 binaryClassification = true;
 
-Tr_ = Tr;
-Te_ = Te;
-
 for j = 1:1:numberOfExperiments
     setSeed(28111993*j);
 
     fprintf('%d ', j);
-    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
         
-    idxCV = splitGetCV(K, length(TTr.y));
-    
-    % K-fold
-    for k=1:1:K
-        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
-        
-        [errnZ, nnPrednZ] = neuralNetworks(TTTr.nZ, TTTr.y, TTTe.nZ, TTTe.y, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
+    [errnZ, nnPrednZ] = neuralNetworks(TTr.nZ, TTr.y, TTe.nZ, TTe.y, inputSize, innerSize, numepochs, batchsize, learningRate, binaryClassification);
 
-        err_te(k) = errnZ;
-    end
-    err2(j) = mean(err_te);
+    err2(j) = errnZ;
 end
-fprintf('\n%f\n', mean(err2));
+fprintf('\n%f +- %f\n', mean(err2), std(err2));
 saveFile(err2, 'results/binary/err2');
 
-%% 9.97%
+%% bootstrap aggregation 9.42 +- 0.007%
 %**********************************
 %            TEST 3
 %**********************************
 
-N = length(Tr.y);
-
 % Setup 
 NLeaves = 200;
-Tr_ = Tr;
-Te_ = Te;
+depth = 512;
+t = templateTree('MaxNumSplits', depth);
 
 for j = 1:1:numberOfExperiments
     setSeed(28111993*j);
 
     fprintf('%d ', j);
-    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
-        
-    idxCV = splitGetCV(K, length(TTr.y));
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
+    
     tic
-    % K-fold
-    for k=1:1:K
-        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
-        
-        CMdl = fitensemble(TTTr.Z, TTTr.y, 'Bag', NLeaves, 'Tree', 'Type', 'classification');
-        yhat = predict(CMdl, TTTe.Z);
-
-        err_te(k) = balancedErrorRate(TTTe.y, yhat);
-    end
+    CMdl = fitensemble(TTr.Z, TTr.y, 'Bag', NLeaves, 'Tree', 'Type', 'classification', 'Learners', t);
+    yhat = predict(CMdl, TTe.Z);
     toc
-    err3(j) = mean(err_te);
+    
+    err3(j) = balancedErrorRate(TTe.y, yhat);
 end
-fprintf('\n%f\n', mean(err3));
+
+fprintf('\n%f +- %f\n', mean(err3), std(err3));
 saveFile(err3, 'results/binary/err3');
 
-%% 9.98%
+%% bootstrap aggregation2  0.925 +- 0.008 %
 %**********************************
 %            TEST 4
 %**********************************
 
-N = length(Tr.y);
-
 % Setup 
 NTrees = 400;
-
-Tr_ = Tr;
-Te_ = Te;
 
 for j = 1:1:numberOfExperiments
     setSeed(28111993*j);
 
     fprintf('%d ', j);
-    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
-        
-    idxCV = splitGetCV(K, length(TTr.y));
-    
-    % K-fold
-    for k=1:1:K
-        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
-        
-        BaggedEnsemble = TreeBagger(NTrees, TTTr.Z, TTTr.y);
-        yhat = str2double(predict(BaggedEnsemble, TTTe.Z));
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
 
-        err_te(k) = balancedErrorRate(TTTe.y, yhat);
-    end
-    err4(j) = mean(err_te);
+    tic
+    BaggedEnsemble = TreeBagger(NTrees, TTr.Z, TTr.y);
+    yhat = str2double(predict(BaggedEnsemble, TTe.Z));
+    toc
+    
+    err4(j) = balancedErrorRate(TTe.y, yhat);
 end
-fprintf('\n%f\n', mean(err4));
+fprintf('\n%f +- %f\n', mean(err4), std(err4));
 saveFile(err4, 'results/binary/err4');
 
-%% 8.59%
+%% AdaBoost Tree 7.992 +- 0.008%
 %**********************************
 %            TEST 5
 %**********************************
-
-N = length(Tr.y);
 
 % Setup 
 nbWeak = 1024;
 maxDepth = 4;
 pBoost=struct('nWeak',nbWeak,'pTree',struct('maxDepth',maxDepth));
 
-Tr_ = Tr;
-Te_ = Te;
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
+    
+    model = adaBoostTrain(TTr.nZ(TTr.y==1,:), TTr.nZ(TTr.y==2,:), pBoost);
+
+    yp = TTe.y(find(TTe.y == 1));
+    yn = TTe.y(find(TTe.y == 2));
+
+    fp = adaBoostApply(TTe.nZ(TTe.y==1, :), model);
+    fp = double(fp > 0);
+    fp = fp + ones(length(fp), 1);
+    
+    fn = adaBoostApply(TTe.nZ(TTe.y==2, :), model);
+    fn = double(fn > 0);
+    fn = fn + ones(length(fn), 1);
+
+    yhat = [fp; fn];
+    ytrue = [yp; yn];
+
+    err5(j) = balancedErrorRate(ytrue, yhat);
+end
+
+fprintf('\n%f +- %f\n', mean(err5), std(err5));
+saveFile(err5, 'results/binary/err5');
+
+%% Random forest 12.21 +- 0.010%
+%**********************************
+%            TEST 6
+%**********************************
+
+% Setup 
+maxDepth = 2*512;
+m = 256;
+F1 = 50;
+
+pTrain={'maxDepth',maxDepth,'M',m,'F1',F1,'minChild',5};
 
 for j = 1:1:numberOfExperiments
     setSeed(28111993*j);
 
     fprintf('%d ', j);
-    [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
-        
-    idxCV = splitGetCV(K, length(TTr.y));
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
+
+    tic
+    forest=forestTrain(TTr.Z, TTr.y, pTrain{:});
+    yhat = forestApply(single(full(TTe.Z)), forest);
+    toc
     
-    % K-fold
-    for k=1:1:K
-        [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
-
-        model = adaBoostTrain(TTTr.nZ(TTTr.y==1, :), TTTr.nZ(TTTr.y==2,:), pBoost);
-
-        yp = TTTe.y(find(TTTe.y == 1));
-        yn = TTTe.y(find(TTTe.y == 2));
-
-        fp = adaBoostApply(TTTe.nZ(TTTe.y==1, :), model);
-        fp = double(fp > 0);
-        fp = fp + ones(length(fp), 1);
-        fn = adaBoostApply(TTTe.nZ(TTTe.y==2, :), model);
-        fn = double(fn > 0);
-        fn = fn + ones(length(fn), 1);
-
-        yhat = [fp; fn];
-        ytrue = [yp; yn];
-
-        err_te(k) = balancedErrorRate(ytrue, yhat);
-    end
-    err5(j) = mean(err_te);
+    err6(j) = balancedErrorRate(TTe.y, yhat);
 end
-fprintf('\n%f\n', mean(err5));
-saveFile(err5, 'results/binary/err5');
+
+fprintf('\n%f +- %f\n', mean(err6), std(err6));
+saveFile(err6, 'results/binary/err6');
+
+%% Fernst 0.171 +- 0.13%
+%**********************************
+%            TEST 7
+%**********************************
+
+% Setup 
+s = 15;
+m = 4096;
+fernPrm=struct('S',s,'M',m,'thrr',[-1 1],'bayes',1);
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
+
+    tic    
+    [ferns]=fernsClfTrain(TTr.Z, TTr.y, fernPrm);
+    yhat = fernsClfApply(TTe.Z, ferns);        
+    toc
+    
+    err7(j) = balancedErrorRate(TTe.y, yhat);
+end
+
+fprintf('\n%f +- %f\n', mean(err7), std(err7));
+saveFile(err7, 'results/binary/err7');
+
+%% SVM TODO 75'
+%**********************************
+%            TEST 8
+%**********************************
+
+% Setup 
+t = templateSVM('Solver', 'SMO', 'KernelFunction', 'linear', 'IterationLimit', 1e6, 'KernelScale', 1, 'BoxConstraint', 1);      
+
+for j = 1:1:numberOfExperiments
+    setSeed(28111993*j);
+
+    fprintf('%d ', j);
+    [TTr, TTe] = splitProp(proportionOfTraining, Tr, false);
+
+    tic
+    Mdl = fitcecoc(TTr.Z, TTr.y, 'Learners', t, 'Coding', 'onevsall', 'Options', statset('UseParallel', 1));
+    CMdl = compact(discardSupportVectors(Mdl));
+    yhat = predict(CMdl, TTe.Z);
+    toc
+    
+    err8(j) = balancedErrorRate(TTe.y, yhat);
+end
+
+fprintf('\n%f +- %f\n', mean(err8), std(err8));
+saveFile(err8, 'results/binary/err8');
 
 %% Plot
 s = [1 numberOfExperiments];
