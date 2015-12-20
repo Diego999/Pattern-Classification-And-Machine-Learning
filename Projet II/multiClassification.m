@@ -118,7 +118,7 @@ end
 fprintf('\n%f +- %f\n', mean(err4), std(err4));
 saveFile(err4, 'results/multi/err4');
 
-%% SVM 8.71 TODO % 75'
+%% SVM 8.682 +- 0.008
 %**********************************
 %            TEST 5
 %**********************************
