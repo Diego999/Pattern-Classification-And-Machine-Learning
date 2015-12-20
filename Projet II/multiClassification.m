@@ -115,7 +115,7 @@ end
 fprintf('\n%f\n', mean(err3));
 saveFile(err3, 'results/multi/err3');
 
-%%  %
+%% 10.41%
 %**********************************
 %            TEST 4
 %**********************************
@@ -135,7 +135,7 @@ for j = 1:1:numberOfExperiments
     [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
         
     idxCV = splitGetCV(K, length(TTr.y));
-    
+    tic
     % K-fold
     for k=1:1:K
         [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
@@ -145,6 +145,7 @@ for j = 1:1:numberOfExperiments
 
         err_te(k) = balancedErrorRate(TTTe.y, yhat);
     end
+    toc
     err4(j) = mean(err_te);
 end
 fprintf('\n%f\n', mean(err4));
