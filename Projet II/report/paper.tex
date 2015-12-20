@@ -88,13 +88,15 @@ We have used the method \textit{fitcecoc} in matlab. We have used k-fold cross v
 
 To adapt support vector machine to a multi-class classifier, we have used \textit{One Versus All} method, which divides the problem in $4$ binary classifications. We train the data with all the classifiers and at the end, each classifier says if the data is positive to its class. If there are more than one classifier with the data sample considered as positive, we use the highest confidence to associate the class. Another possible method would have been to use \textit{One Versus One} which needs $6$ classifiers in our case, and is less sensitive to the imbalance but needs more computational resource, but it didn't give better results. 
 
-\subsection{Bootstrap Aggregation}
+\subsection{Bootstrap Aggregation (Bagging)}
 
-As we have seen in the lecture, decision trees are good because the training and the prediction is quite fast, even with many features or large dataset but have a high variance. The idea of decision trees, is to have a several questions where to answer yes/no and to move in the tree. At the end, the leaves give the corresponding class. To construct this list of questions, we divide recursively the space in a way to minimize the cost of impurity (depending of the threshold to find and the current feature). The depth of the tree is a parameter.
+As we have seen in the lecture, decision trees are good because the training and the prediction is quite fast, even with many features or large dataset but have a high variance and might overfit. The idea of decision trees, is to have a several questions where to answer yes/no and to move in the tree. At the end, the leaves give the corresponding class. To construct this list of questions, we divide recursively the space in a way to minimize the cost of impurity (depending of the threshold to find and the current feature). The depth of the tree is a parameter.
 
 The idea of bootstrap aggregation is to average several decision trees. It will help to reduce the variance and avoid overfitting. It generates $m$ new training sets of the same size, by sampling uniformly and with replacement the original training set. Then we have $m$ decision trees which will grows independently with their own generated training sets. Finally, to predict the class it takes the average over all the trees. In order to find those parameters $m$ and the maximum depth of the tree, we have also used k-fold cross validation and the best values are $m = 200$ and maximum depth of $512$ for the binary classification and for the multi-class case $m = 500$ and maximum depth also of $512$.
 
 \subsection{Random Forests}
+
+The idea of random forests is similar than with bagging in a sense that we train several trees and take the average predictions. Like bagging, each trees have trained on a subset of the dataset. However, there is another aspect in random forest that bagging doesn't have: for each split, instead of searching among the overall features, we search only among a random subset of features. The size of this subset is a parameter $m$ as well as the depth tree and the number of trees, like in bagging. Like bagging, random forests are useful because they help reducing the variance and the overfiting. But the more interesting ideas is to select only a subset of the features in the split process. 
 
 \subsection{Fernst}
 

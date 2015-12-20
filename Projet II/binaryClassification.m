@@ -44,7 +44,7 @@ end
 fprintf('\n%f\n', mean(err1));
 saveFile(err1, 'results/binary/err1');
 
-%% Neural Network 9.045 +- 0.009%
+%% Neural Network 0.0905 +- 0.009%
 %**********************************
 %            TEST 2
 %**********************************
@@ -72,7 +72,7 @@ end
 fprintf('\n%f +- %f\n', mean(err2), std(err2));
 saveFile(err2, 'results/binary/err2');
 
-%% bootstrap aggregation 9.42 +- 0.007%
+%% bootstrap aggregation 0.0942 +- 0.007%
 %**********************************
 %            TEST 3
 %**********************************
@@ -123,7 +123,7 @@ end
 fprintf('\n%f +- %f\n', mean(err4), std(err4));
 saveFile(err4, 'results/binary/err4');
 
-%% AdaBoost Tree 7.992 +- 0.008%
+%% AdaBoost Tree 0.799 +- 0.008%
 %**********************************
 %            TEST 5
 %**********************************
@@ -161,7 +161,7 @@ end
 fprintf('\n%f +- %f\n', mean(err5), std(err5));
 saveFile(err5, 'results/binary/err5');
 
-%% Random forest 12.21 +- 0.010%
+%% Random forest 0.122 +- 0.010%
 %**********************************
 %            TEST 6
 %**********************************
@@ -217,7 +217,7 @@ end
 fprintf('\n%f +- %f\n', mean(err7), std(err7));
 saveFile(err7, 'results/binary/err7');
 
-%% SVM TODO 75'
+%% SVM 0.886 +- 0.006
 %**********************************
 %            TEST 8
 %**********************************
@@ -253,9 +253,10 @@ err4 = openFile('results/binary/err4', s);
 err5 = openFile('results/binary/err5', s);
 err6 = openFile('results/binary/err6', s);
 err7 = openFile('results/binary/err7', s);
+err8 = openFile('results/binary/err8', s);
 
 figure;
-boxplot([err1' err2' err3' err4' err5' err6' err7']);
+boxplot([err1' err2' err3' err4' err5' err6' err7' err8']);
 h_legend = legend(findobj(gca,'Tag','Box'), ...
 '1 ', ...
 '2 ', ...
@@ -263,7 +264,8 @@ h_legend = legend(findobj(gca,'Tag','Box'), ...
 '4 ', ...
 '5 ', ...
 '6 ', ...
-'7 ');
+'7 ', ...
+'8 ');
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
 set(gca,'LineWidth',1.5);
