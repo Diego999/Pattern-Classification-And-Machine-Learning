@@ -44,32 +44,26 @@ if binaryClassification
     yTe(find(yTe == 4)) = 2;
 end
 
-    % Binary
-    % Default : 9.73% (nZ), 9.31% (Z)
-    % Linear : ~%
-    % RBF : ~%
-    % Poly^7 : ~%
-
-    % Multiclass
-    % Default : 9.73% (nZ), 9.7% (Z)
-    % Linear : ~27.11%
-    % RBF : ~26.88%
-    % Poly^7 : 26.65%
+    % Binary : 9.32% (Z)
     
-    t = templateSVM();%'Solver', 'ISDA', 'KernelFunction', 'rbf', 'BoxConstraint', Inf);   
+    % Multiclass : 9.05% (Z)
+    
+    t = templateSVM('Solver', 'SMO', 'KernelFunction', 'linear', 'IterationLimit', 1e6, 'KernelScale', 1, 'BoxConstraint', 1);   
       
     % Training using Z 
-    Mdl = fitcecoc(Tr.Z, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
+    tic
+    Mdl = fitcecoc(Tr.Z, yTr, 'Learners', t, 'Coding', 'onevsall', 'Options', statset('UseParallel', 1));
+    toc
     CMdl = compact(discardSupportVectors(Mdl));
     yhat = predict(CMdl, Te.Z);
     
     errZ = balancedErrorRate(yTe, yhat);
     fprintf('\nBER Testing error  Z: %.2f%%\n', errZ * 100);
     
-    % Training using nZ 
-    Mdl = fitcecoc(Tr.nZ, yTr, 'Learners', t, 'Options', statset('UseParallel', 1));
-    CMdl = compact(discardSupportVectors(Mdl));
-    yhat = predict(CMdl, Te.nZ);
-    
-    errnZ = balancedErrorRate(yTe, yhat);
-    fprintf('\nBER Testing error  nZ: %.2f%%\n', errnZ * 100);
+%     % Training using nZ 
+%     Mdl = fitcecoc(Tr.nZ, yTr, 'Learners', t, 'Coding', 'onevsall', 'Options', statset('UseParallel', 1));
+%     CMdl = compact(discardSupportVectors(Mdl));
+%     yhat = predict(CMdl, Te.nZ);
+%      
+%     errnZ = balancedErrorRate(yTe, yhat);
+%     fprintf('\nBER Testing error  nZ: %.2f%%\n', errnZ * 100);

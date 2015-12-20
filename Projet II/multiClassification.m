@@ -151,13 +151,13 @@ end
 fprintf('\n%f\n', mean(err4));
 saveFile(err4, 'results/multi/err4');
 
-%%  %
+%% 8.71%
 %**********************************
 %            TEST 5
 %**********************************
 
 % Setup 
-t = templateSVM();%'Solver', 'ISDA', 'KernelFunction', 'rbf', 'BoxConstraint', Inf);   
+t = templateSVM('Solver', 'SMO', 'KernelFunction', 'linear', 'IterationLimit', 1e6, 'KernelScale', 1, 'BoxConstraint', 1);      
 
 Tr_ = Tr;
 Te_ = Te;
@@ -169,23 +169,22 @@ for j = 1:1:numberOfExperiments
     [TTr, TTe] = splitProp(proportionOfTraining, Tr_, false);
         
     idxCV = splitGetCV(K, length(TTr.y));
-    
+      
     % K-fold
     for k=1:1:K
         [TTTr, TTTe] = splitGetTrTe(TTr, idxCV, k, false);
-        tic
-        Mdl = fitcecoc(TTTr.Z, TTTr.y, 'Learners', t, 'Options', statset('UseParallel', 1));
-        toc
+        Mdl = fitcecoc(TTTr.Z, TTTr.y, 'Learners', t, 'Coding', 'onevsall', 'Options', statset('UseParallel', 1));
         CMdl = compact(discardSupportVectors(Mdl));
         yhat = predict(CMdl, TTTe.Z);
     
         err_te(k) = balancedErrorRate(TTTe.y, yhat);
     end
-    err5(j) = mean(err_te);
+    
+    err5(j) = err_te;
 end
 
 fprintf('\n%f\n', mean(err5));
-saveFile(err5, 'results/multi/err4');
+saveFile(err5, 'results/multi/err5');
 
 %% Plot
 s = [1 numberOfExperiments];
@@ -193,13 +192,17 @@ s = [1 numberOfExperiments];
 err1 = openFile('results/multi/err1', s);
 err2 = openFile('results/multi/err2',s);
 err3 = openFile('results/multi/err3', s);
+err4 = openFile('results/multi/err4', s);
+err5 = openFile('results/multi/err5', s);
 
 figure;
-boxplot([err1' err2' err3']);
+boxplot([err1' err2' err3' err4' err5']);
 h_legend = legend(findobj(gca,'Tag','Box'), ...
 '1 ', ...
 '2 ', ...
-'3 ');
+'3 ', ...
+'4 ', ...
+'5 ');
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
 set(gca,'LineWidth',1.5);
