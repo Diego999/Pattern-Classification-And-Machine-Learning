@@ -10,10 +10,10 @@ y = train.y;
 X_cnn = train.X_cnn;
 X_hog = train.X_hog;
 
-y(find(y == 1)) = 1;
-y(find(y == 2)) = 1;
-y(find(y == 3)) = 1;
-y(find(y == 4)) = 2;
+% y(find(y == 1)) = 1;
+% y(find(y == 2)) = 1;
+% y(find(y == 3)) = 1;
+% y(find(y == 4)) = 2;
 
 %% Classes
 
@@ -46,10 +46,15 @@ corr_cnn = corr(double(X_cnn), double(y)); %[-0.2393;0.1795]
 %% Histogram
 
 f1 = figure;
-histogram(y);
+histogram(y, 'Normalization','probability');
 xlabel('Y');
 ylabel('Count');
-xlim([1 2]);
+xlim([1 4]); 
+set(gca,'fontsize', 18);
+legend('1', '2');
+hold off;
+% saveas(f2, 'plots/cluster/feature16.jpg');
+%print('./report/figures/distortionCNN.jpg','-djpeg','-noui');
 
 %% Histogram feature HOG (distribution)
 

@@ -217,7 +217,7 @@ end
 fprintf('\n%f +- %f\n', mean(err7), std(err7));
 saveFile(err7, 'results/binary/err7');
 
-%% SVM 0.886 +- 0.006
+%% SVM 0.0886 +- 0.006
 %**********************************
 %            TEST 8
 %**********************************
@@ -252,25 +252,26 @@ err3 = openFile('results/binary/err3', s);
 err4 = openFile('results/binary/err4', s);
 err5 = openFile('results/binary/err5', s);
 err6 = openFile('results/binary/err6', s);
-err7 = openFile('results/binary/err7', s);
+%err7 = openFile('results/binary/err7', s);
 err8 = openFile('results/binary/err8', s);
 
+
 figure;
-boxplot([err1' err2' err3' err4' err5' err6' err7' err8']);
+boxplot([err1' err2' err3' err4' err5' err6' err8']);
 h_legend = legend(findobj(gca,'Tag','Box'), ...
-'1 ', ...
-'2 ', ...
-'3 ', ...
-'4 ', ...
-'5 ', ...
-'6 ', ...
-'7 ', ...
-'8 ');
+'1 Baseline', ...
+'2 Neural networks', ...
+'3 Bagging1', ...
+'4 Bagging2', ...
+'5 AdaBoosting', ...
+'6 Random forests', ...
+'7 SVM');
 set(gca, 'XGrid','on')
 set(gca, 'YGrid','on')
 set(gca,'LineWidth',1.5);
-ylim([0 0.55])
-set(gca,'YTick',0:0.05:0.55)
+ylim([0 0.8])
+set(gca,'fontsize', 18);
+set(gca,'YTick',0:0.05:0.8)
 xlabel('Model');
 ylabel('BER');
-%print('../report/figures/models','-djpeg','-noui')
+print('./report/figures/binaryclassifications.jpg','-djpeg','-noui')
