@@ -39,7 +39,7 @@ The train-data for binary classification consists of $N = 6000$ images. As input
 Each input sample is a vector $\mathbf{x}_n$ with dimension $D = 42273$ ($5408$ for the HOG and $36865$ for the CNN) and is the concatenation of $\mathbf{x}_n^{hog}$ with $\mathbf{x}_n^{cnn}$
 The output ($\mathbf{y}$) represents the classification of the images. For the binary classification, the label $1$  represents a car, a horse or a plane and the label $2$ anything else. For the multi-class classification, the label $1$ represents a car, $2$2 a horse, $3$ a plane and $4$ anything else.
 
-We also have test-data of size $N=XXX$ without their corresponding output. Our goal is to produce predictions for those data, as well as an approximation of the test-error using \textit{Balanced Error Rate} (BER).
+We also have test-data of size $N=11453$ without their corresponding output. Our goal is to produce predictions for those data, as well as an approximation of the test-error using \textit{Balanced Error Rate} (BER).
 
 \subsection{Histogram of Oriented Gradients}
 
@@ -55,15 +55,28 @@ Those features are extracted from a convolutional network-based image features e
 
 \section{Data visualization and analysis}
 
-We first have plot the labels distribution for the binary and multi-class cases. For the binary case, we have $60.3\%$ for the label $1$ and $39.8\%$ for the second one. We have observed that there is a small imbalance between the classesl. For the multi-classes case, we obtain $16.07\%$, $19.37\%$, $24.87\%$ and $39.70\%$ for the labels $1$, $2$, $3$ and $4$. This time, the imbalance is more important, especially with the label $4$ and we do have to take care about it during the training.
+We first have plot the labels distribution for the binary and multi-class cases. For the binary case, we have $60.3\%$ for the label $1$ and $39.8\%$ for the second one. We have observed that there is a small imbalance between the classes. For the multi-classes case, we obtain $16.07\%$, $19.37\%$, $24.87\%$ and $39.70\%$ for the labels $1$, $2$, $3$ and $4$. This time, the imbalance is more important, especially with the label $4$ and we do have to take care about it during the training.
 
 We also wanted to analyze the distribution of our features, and have observed that for the features HOG, each of them has a has similar distribution as showed in Figure XXX. The values are essentially in the range $[0, 0.2]$. We are also interested about the correlation between the input and output variables. We have observed that the correlation is in the range $[-0.24 ;0.30]$, and so can conclude that features seem not to have a direct correlation between them. However, a combination of features can have a high correlation with the output but we couldn't find such combination. Finally, $\mathbf{X}_{hog}$ is rank-deficient with a rank of $3467$ instead of $5408$.
 
 For the features CNN, first we can see that it is a sparse matrix and most of the values for each data is $0$ (around $95.5\%$). This means that for each data, a small subset is able to describe the picture. Moreover, we can observe that we are faced to the problem of $D > N$ and the solution we have adopted is PCA which will describe during the next sections. The values are in mainly in the range $[0, 64.87]$. We also wanted to see the correlation of those features with the output and have found that they are in the range $[-0.24;0.18]$, which is similar to the HOG features. Finally,  $\mathbf{X}_{cnn}$ is rank-deficient with a rank of $5997$ instead of $36865$.
 
+\section{Evaluation methods}
+
+In order to evaluate our different models, we have split our data in two sets of $80\%$ and $20\%$ for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough to estimate correctly our models on the testing set. We learn only on the training set and then use the test set in order to estimate the error using the \textit{Balanced Error Rate}. This error compute the average percentage of misclassification per class. It allows us to avoid the case of the $90\%/10\%$ and having a good error. We have also used k-fold cross validation to tune the parameters up of our different models. We set $k=10$ because we have a lot of data, splitting them into $10$ folds seems reasonable ($4320$ data samples for the training set and $480$ for the testing set). We repeated the experiment $30$ times with different seeds in order to split the data in a unique random way for each trial and so try to have an unbiased estimation error. 
+
 \section{Techniques used}
 
-This section is a description of the technique we have used in the project. It describes mainly how it works, why we thought it could be useful in this project.
+This section is a description of the techniques we have used in the project. It describes mainly how it works, why we thought it could be useful in this project.
+
+\begin{figure}[!ht]
+\center
+\subfigure[Plot of the distortion $J$ to $M$ where $M = D$. The distortion decreases quickly.]{\includegraphics[width=2.7in]{figures/distortionHOG.jpg} \label{fig:distHOG}}
+\hfill
+\subfigure[Plot of the distortion $J$ to $M$ where $M = N$ because there are too many features and so, the distortion doesn't go to $0$ and decreases slowly.]{\includegraphics[width=2.7in]{figures/distortionCNN.jpg}\label{fig:distCNN}}
+\hfill
+\caption{}
+\end{figure}
 
 \subsection{Principal component analysis}
 
@@ -72,11 +85,12 @@ We have used an alternative proposed in [REF] which allows us to compute the sam
 
 The last parameter to set, is the parameter $M$ which defines the $M$ largest eigenvectors to take into consideration for our feature selection.We introduce a distortion measure $J = \frac{1}{N}\sum_{n=1}^{N}||x_n-\tilde{x_n}||^2$ which represents the mean squared distance between the original data sample and our approximation. Without going into the steps, the solution to the minimization of $J$ is $J = \sum_{i=M+1}^D \lambda_i$. 
 
-The Figure XX shows the plot of $J$ for the HOG features and the CNN features. For the CNN, we have tried several values for $M$ and have conclude that $M_{CNN} = 150$ was a good value allowing us to compute faster results without loosing too much accuracy. The corresponding distortion might be very high compared to the HOG features, but the range of the values are not the same, CNN has values going larger than $0.2$. We tried some bigger values but we didn't get major improvements in terms of error. For the HOG features, the distortion measure seems more nice, we did the same experiments and finally set $M_{HOG}$ = $500$. 
+
+The Figure \ref{fig:distHOG} shows the plot of $J$ for the HOG features and the CNN features. Figure \ref{fig:distCNN} shows the distortion of the CNN features, we have tried several values for $M$ and have conclude that $M_{CNN} = 150$ was a good value allowing us to compute faster results without loosing too much accuracy. The corresponding distortion might be very high compared to the HOG features, but the range of the values are not the same, CNN has values going larger than $0.2$. We tried some bigger values but we didn't get major improvements in terms of error. For the HOG features, the distortion measure seems more nice, we did the same experiments and finally set $M_{HOG}$ = $500$. 
 
 \subsection{Neural Networks}
 
-This is the multi-layer perceptron (MLP) we have seen in class. The neural networks used in this project comes from the given DeepLearning matlab toolbox. It uses batch sizes in order to use less memory (take the first $n$ data samples and works on them, then the next $n$ etc). We have let the default parameter ($100$). The number of epochs is simply the number of time where all the training data do a forward and a backward pass. We have put this value to $20$, in order to have a little more accuracy without loosing a lot of time, it was a good compromise because larger epochs don't mean especially better accuracy. the number of input is $M$ and output is either $2$ or $4$, depending of the type of classification (binary or multi-class). For the number of hidden layer, we have let $1$ because we didn't see improvement by adding some more. However, the number of neurons in the hidden layer has been tested and have found $1000$ for the binary classification and $700$ for the multi-class case. We also have to set up the learning rate : the optimal value we have found is $3$ for the binary case and $2$ for the multi-class one. By default, the activation function used is the \textit{tanh} one. We didn't see so much different using the \textit{sigmoid}. Finally, the algorithm uses stochastic gradient descent using a momentum of $0.5$, which might help to converge faster.
+This is the multi-layer perceptron (MLP) we have seen in class. The neural networks used in this project comes from the given DeepLearning matlab toolbox. It uses batch sizes in order to use less memory (take the first $n$ data samples and works on them, then the next $n$ etc). We have let the default parameter ($100$). The number of epochs is simply the number of time where all the training data do a forward and a backward pass. We have put this value to $20$, in order to have a little more accuracy without loosing a lot of time, it was a good compromise because larger epochs don't mean especially better accuracy. The number of input is $M$ and output is either $2$ or $4$, depending of the type of classification (binary or multi-class). For the number of hidden layer, we have let $1$ because we didn't see improvement by adding some more. However, the number of neurons in the hidden layer has been tested with k-fold cross validation and we have found $1000$ for the binary classification and $700$ for the multi-class case. We also have to set up the learning rate : the optimal value we have found is $3$ for the binary case and $2$ for the multi-class one. By default, the activation function used is the \textit{tanh} one. We didn't see so much different using the \textit{sigmoid}. Finally, the algorithm uses stochastic gradient descent using a momentum of $0.5$, which might help to converge faster.
 
 Neural networks are suitable for problems which might be difficult to describe in a mathematically manner and is robust to the noise, which is very useful in our case. However, we have to be careful with the weights initialization because neural networks are very sensitive to them, and especially with overfitting and computing the generalization error, this task is harder with neural networks.
 
@@ -92,17 +106,15 @@ To adapt support vector machine to a multi-class classifier, we have used \texti
 
 As we have seen in the lecture, decision trees are good because the training and the prediction is quite fast, even with many features or large dataset but have a high variance and might overfit. The idea of decision trees, is to have a several questions where to answer yes/no and to move in the tree. At the end, the leaves give the corresponding class. To construct this list of questions, we divide recursively the space in a way to minimize the cost of impurity (depending of the threshold to find and the current feature). The depth of the tree is a parameter.
 
-The idea of bootstrap aggregation is to average several decision trees. It will help to reduce the variance and avoid overfitting. It generates $m$ new training sets of the same size, by sampling uniformly and with replacement the original training set. Then we have $m$ decision trees which will grows independently with their own generated training sets. Finally, to predict the class it takes the average over all the trees. In order to find those parameters $m$ and the maximum depth of the tree, we have also used k-fold cross validation and the best values are $m = 200$ and maximum depth of $512$ for the binary classification and for the multi-class case $m = 500$ and maximum depth also of $512$.
+The idea of bootstrap aggregation is to average several decision trees. It will help to reduce the variance and avoid overfitting. It generates $m$ new training sets of the same size, by sampling uniformly and with replacement the original training set. Then we have $m$ decision trees which will grows independently with their own generated training sets. Finally, to predict the class it takes the average over all the trees. In order to find those parameters $m$ and the maximum depth of the tree, we have also used k-fold cross validation and the best values are $m = 200$ and maximum depth of $512$ for the binary classification and for the multi-class case $m = 500$ and maximum depth also of $512$. Having a high maximum depth might lead to overfit because we specialize to much the features split, but if it is too small, it might underfit because the features are not well split in order to identify classes. For the parameter $m$, it is better to have a higher number in order to have a large number of trees which can give a better accuracy of the prediction.
 
 \subsection{Random Forests}
 
-The idea of random forests is similar than with bagging in a sense that we train several trees and take the average predictions. Like bagging, each trees have trained on a subset of the dataset. However, there is another aspect in random forest that bagging doesn't have: for each split, instead of searching among the overall features, we search only among a random subset of features. The size of this subset is a parameter $m$ as well as the depth tree and the number of trees, like in bagging. Like bagging, random forests are useful because they help reducing the variance and the overfiting. But the more interesting ideas is to select only a subset of the features in the split process. 
+The idea of random forests is similar than with bagging in a sense that we train several trees and take the average predictions. Like bagging, each trees have trained on a subset of the dataset. However, there is another aspect in random forest that bagging doesn't have: for each split, instead of searching among the overall features, we search only among a random subset of features. The size of this subset is a parameter $m$ as well as the maximum depth tree and the number of trees, like in bagging. Like bagging, random forests are useful because they help reducing the variance and the overfiting. But the more interesting ideas is to select only a subset of the features in the split process. Moreover, it is efficient against imbalanced dataset.
+
+As in bagging trees, the number of trees and the maximum depth tree behaves in the same manner. The last parameter $m$ has an important impact because it is too small, the subset of features might not describe correctly the data, and if it is too high, this subset might be to high and might not represent well the data. We have to find a good compromise in order to have a certain number of features to describe the data. Still with k fold cross validation, we have found for the multi-class case a maximum depth of $1024$,  $64$ trees and a $m = 20$. For $m$, an heuristic could be the square root of the number of features, but it was less efficient than $20$ in our case. For the binary case, those parameters are $1024$, $256$ and $50$.
 
 \subsection{Fernst}
-
-\section{Evaluation methods}
-
-In order to evaluate our different models, we have split our data in two sets of $80\%$ and $20\%$ for the training and the test sets. We choose this percentage in order to have still enough data for the training set and also enough to estimate correctly our models on the testing set. We learn only on the training set and then use the test set in order to estimate the error using the \textit{Balanced Error Rate}. This error compute the average percentage of misclassification per class. It allows us to avoid the case of the $90\%/10\%$ and having a good error. We have also used k-fold cross validation to tune the parameters up of our different models. We set $k=10$ because we have a lot of data, splitting them into $10$ folds seems reasonable ($4320$ data samples for the training set and $480$ for the testing set). We repeated the experiment $30$ times with different seeds in order to split the data in a unique random way for each trial and so try to have an unbiased estimation error. 
 
 \section{Model comparison}
 
@@ -116,6 +128,13 @@ In order to evaluate our different models, we have split our data in two sets of
 
 \section{References}
 
+@misc{DymolaWeb,
+  title = "xxx Website",
+  author = "xxx",
+  howpublished = "\url{http://www.xxx.com}",
+  year = "cited July 2008"
+}
+
 @misc{IMM2012-06284,
     author       = "R. B. Palm",
     title        = "Prediction as a candidate for learning deep hierarchical models of data",
@@ -127,7 +146,5 @@ In order to evaluate our different models, we have split our data in two sets of
    title = {{P}iotr's {C}omputer {V}ision {M}atlab {T}oolbox ({PMT})}, 
    howpublished = {\url{http://vision.ucsd.edu/~pdollar/toolbox/doc/index.html}} 
 } 
-
-
 
 \end{document}

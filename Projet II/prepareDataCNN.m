@@ -30,8 +30,8 @@ function [Tr, Te] = PCA(Tr_, Te_, M)
     norm = repmat(norm, D, 1);
     U = X2' * V ./ norm;
     
-    %J = computeDistortionMatrix(l, N);
-    %displayDistortionMatrix(J);
+    J = computeDistortionMatrix(l, N);
+    displayDistortionMatrix(J);
     
     Tr.nZ = Tr.nX * U(:, 1:M);
     Te.nZ = Te.nX * U(:, 1:M);
@@ -51,7 +51,19 @@ end
 function [] = displayDistortionMatrix(J)
     figure('Name', 'Distortion Measure');
     plot(J, 'LineWidth', 4);
+    ylim([0 4e4]);
+    xlim([0 size(J,1)]);
     xlabel('M');
     ylabel('J');
     title('distortion J vs M');
+   
+    set(gca,'fontsize', 18);
+    set(gca,'LineWidth',2);
+    SP=1.17;
+    line([SP SP], [0 4e4],'Color',[0 0 0], 'LineWidth', 2);
+    legend('Distortion');
+    hold off;
+    % saveas(f2, 'plots/cluster/feature16.jpg');
+    print('./report/figures/distortionCNN.jpg','-djpeg','-noui');
+
 end

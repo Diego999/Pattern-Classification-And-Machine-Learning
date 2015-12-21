@@ -37,7 +37,17 @@ end
 function [] = displayDistortionMatrix(J)
     figure('Name', 'Distortion Measure');
     plot(J, 'LineWidth', 4);
+    ylim([0 5e3]);
+    xlim([0 N]);
     xlabel('M');
     ylabel('J');
     title('distortion J vs M');
+   
+    set(gca,'fontsize', 18);
+    set(gca,'LineWidth',2);
+    SP=1.17;
+    line([SP SP], [0 5e3],'Color',[0 0 0], 'LineWidth', 2);
+    legend('Distortion');
+    hold off;
+    print('./report/figures/distortionHOG.jpg','-djpeg','-noui');
 end

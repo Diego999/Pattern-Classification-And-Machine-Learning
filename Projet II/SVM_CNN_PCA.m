@@ -13,7 +13,7 @@ M = 200;
 %% Create data
 fprintf('Creating Train & Test sets\n');
 tic
-[Tr, Te] = createTrainingTestingCNN(train.X_cnn, train.y, ratio);
+[Tr, Te] = createTrainingTestingCNN(train.X_cnn, train.y, 1.0);
 toc
 
 %% Prepare data
