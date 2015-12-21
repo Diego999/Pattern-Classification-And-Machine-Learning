@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 function [err, predictions] = neuralNetworks(Xtr, ytr, Xte, yTe, inputSize, innerSize, numepochs, batchsize, learningRate, binary)
     if binary
         outputSize = 2;

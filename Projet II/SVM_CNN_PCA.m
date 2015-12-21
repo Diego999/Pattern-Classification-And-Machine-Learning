@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 %% Initialization
 clear all;
 close all;
@@ -8,7 +11,7 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 
 ratio = 0.8;
-M = 200;
+M = 150;
 
 %% Create data
 fprintf('Creating Train & Test sets\n');

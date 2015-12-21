@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 function [Tr, Te] = createTrainingTestingHOG(X, y, ratio)
 
     % Initialize Tr, Te

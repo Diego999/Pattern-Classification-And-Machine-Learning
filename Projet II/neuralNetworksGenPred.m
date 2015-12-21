@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 function [predictions] = neuralNetworksGenPred(Xtr, ytr, Xte, inputSize, innerSize, numepochs, batchsize, learningRate, binary)
     if binary
         outputSize = 2;

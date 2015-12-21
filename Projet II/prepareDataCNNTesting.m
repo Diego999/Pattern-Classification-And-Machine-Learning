@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 function[Te] = prepareDataCNNTesting(Te_, M)
     [Te] = PCA(Te_, M);
 end

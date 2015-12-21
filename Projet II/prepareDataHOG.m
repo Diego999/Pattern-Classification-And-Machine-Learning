@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 function[Tr, Te] = prepareDataHOG(Tr_, Te_, M)
     [Tr, Te] = PCA(Tr_, Te_, M);
 end

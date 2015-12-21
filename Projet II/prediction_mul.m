@@ -1,3 +1,6 @@
+% Written by Diego Antognini & Jason Racine, EPFL 2015
+% all rights reserved
+
 %% Initialization
 clear all;
 close all;
@@ -8,7 +11,6 @@ addpath(genpath('DeepLearnToolbox'));
 load train/train.mat;
 load test/test.mat;
 
-numberOfExperiments = 30;
 proportionOfTraining = 0.8;
 K = 10;
 M = 150;
