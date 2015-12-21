@@ -30,8 +30,8 @@ function [Tr, Te] = PCA(Tr_, Te_, M)
     norm = repmat(norm, D, 1);
     U = X2' * V ./ norm;
     
-    J = computeDistortionMatrix(l, N);
-    displayDistortionMatrix(J);
+    %J = computeDistortionMatrix(l, N);
+    %displayDistortionMatrix(J);
     
     Tr.nZ = Tr.nX * U(:, 1:M);
     Te.nZ = Te.nX * U(:, 1:M);

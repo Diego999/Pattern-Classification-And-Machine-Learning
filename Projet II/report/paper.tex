@@ -29,7 +29,7 @@ EPFL \\
 \maketitle
 
 \begin{abstract}
-This report provides a summary of the project two of the PCML class. The project consists of doing binary and multi-class classification on the same set of images. For both methods, we have observed that the given CNN features were more accurate than the HOG one. In binary classification, all methods were approximately equivalent except the Adaboosting and the SVM one. For the multi-class classification, neural networks and SVM were the best methods.
+This report provides a summary of the project two of the PCML class. The project consists of doing binary and multi-class classification on the same set of images. For both methods, we have observed that the given CNN features were more accurate than the HOG one. In binary classification, all methods were approximately equivalent except the Adaboosting and the SVM one, but we choose the SVM method as our final model. For the multi-class classification, neural networks and SVM were the best methods but neural networks has less variance in this case and is considered as our final model. The best way of improving our models would be to find a way to combine HOG features with the CNN one.
 
 \end{abstract}
 
@@ -146,7 +146,7 @@ Random forests is used for the sixth model. Surprisingly, we obtain worse result
 
 Our last model used the SVM as the one used for the multi-class classification. It works because the SVM OVA can be adapted easily to take into account only 1 binary classifier ($\frac{2*(2-1)}{2}=1$). Compared to the other methods, we can observe that it is quite stable and have a low variance. If the parameter $C$ is set optimally, we should have a good variance and a good bias. However, if it is too high, the variance should be small but the bias could be high. In the other side, if $C$ is small, the bias should be lower but we have fewer support vectors which leads to a higher variance. However, let's remind that we use the same as in the multi-class classifier, using a linear kernel due to the implementation of matlab. If we could have changed the kernel into a non-linear one, the decision boundary would be different and might surely reduce the error. However, we would be faced to $\gamma$ which might change the variance and the bias.
 
-Our final model will be the Adaboosting one, because we considered it has the smallest error, even if there are some outliers, those are still lower than others methods in general. 
+Our final model will be the SVM one, because we considered it has one of the smallest error, but it doesn't have any outliers and is more stable than the Adaboosting.
 
 We wanted to test some others models but we didn't get time to do it. First, we wanted to see if using a multi-class classifier which have a smallest error and then transform the prediction into a binary case would increase the accuracy.  We think that the error might be improved but in general, it should stay more or less the same. Another promising method we wanted to try is the \textit{fernst} one. It should outperforms other decision-based trees because they compute posteriors multiplicatively [REF]. We obtain good results with the Adaboosting method and think that fernst should produce better results.
 
@@ -171,33 +171,18 @@ The next model ($5$) is the SVM one using the OVA method. As we said earlier, it
 The last model uses random forests. As before, we obtain worse results than the other methods. It has greater bias than the other.
 We also think that the method has overfit when using k fold cross validation in order to find optimal parameters. The parameters to be changed could be the maximum depth tree because if it is too high, the split will be very specialized. We also think that the bias could be high and so, increasing the parameter $m$ could be worthwhile because first, we may need more features to classify a data sample in one of the four classes. Secondly, because the bias is surely higher than other method as well as the variance. More training samples should help to decrease the variance and to tune the parameters up.
 
-Our final model is neutal networks and not SVM. Their error is nearly the same, however, the variance of the neural networks is much lower than the one of SVM. Even if both have one outlier and surely have the same stability. 
+Our final model is neural networks and not SVM. Their error is nearly the same, however, the variance of the neural networks is much lower than the one of SVM. Even if both have one outlier and surely have the same stability. 
 
 Beside trying \textit{fernst} method as proposed in the binary case, we wanted to try to use several multi-class classifiers and then combine their results to see which data samples were more difficult and find a way to class them with more accuracy. One of the method we wanted to use was simply voting system in a similar manner as SVM OVA. We think that it could help to decrease the error.
 
 \section{Conclusion}
 
-We have seen that advanced machine learning methods are efficient to solve image classification problems. The errors obtained with binary classification and multi-class classification are closed and prove that the nature of the problem is similar. We have tried different methods and have remarked that the neural networks and the SVM models were better than the other in general. In both case, both produces good results. We really think that there is a way of improving SVM model by changing the kernel function because data are surely not separate linearly. At the end, we think that the best way of improving our binary and multi-class classifier would be to find a way to combine the HOG features with the CNN ones.
+We have seen that advanced machine learning methods are efficient to solve image classification problems. The errors obtained with binary classification and multi-class classification are closed and prove that the nature of the problem is similar. We have tried different methods and have remarked that SVM model was better than the other in general. In both case, it produces good results and has a small variance. We really think that there is a way of improving it by changing the kernel function because data are surely not separate linearly. At the end, we think that the best way of improving our binary and multi-class classifier would be to find a way to combine the HOG features with the CNN ones.
 
 \section{References}
 
-@misc{DymolaWeb,
-  title = "xxx Website",
-  author = "xxx",
-  howpublished = "\url{http://www.xxx.com}",
-  year = "cited July 2008"
-}
+[1]    IMM2012-06284, R. B. Palm, Prediction as a candidate for learning deep hierarchical models of data, 2012.
 
-@misc{IMM2012-06284,
-    author       = "R. B. Palm",
-    title        = "Prediction as a candidate for learning deep hierarchical models of data",
-    year         = "2012",
-}
-
-@misc{PMT,
-   author = {Piotr Doll\'ar}, 
-   title = {{P}iotr's {C}omputer {V}ision {M}atlab {T}oolbox ({PMT})}, 
-   howpublished = {\url{http://vision.ucsd.edu/~pdollar/toolbox/doc/index.html}} 
-} 
+[2]   Piotr Doll\'ar, {P}iotr's {C}omputer {V}ision {M}atlab {T}oolbox ({PMT}), \url{http://vision.ucsd.edu/~pdollar/toolbox/doc/index.html}. 
 
 \end{document}
