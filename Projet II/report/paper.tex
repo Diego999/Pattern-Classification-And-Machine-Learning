@@ -136,7 +136,7 @@ This section describes our models for the binary classification as well as the m
 \label{fig:bin_models}
 \end{figure}
 
-The Figure \ref{fig:bin_models} represents the BER error for each models. The first model used simply returns the label $1$ to all inputs, which will allow us to compare improvements with other models. It gives us an error of $0.5$, which is obvious because all the input are in the same class and the other has none of them. The second model uses neural networks with normalized data because we got better results and because it can avoid being stuck in a local minima and might speed the training. We have used it It clearly outperforms the baseline. We can see that it has a bit of variance but has a low bias. Increasing the number of hidden layer might accentuate the variance and diminish the bias.
+The Figure \ref{fig:bin_models} represents the BER error for each models. The first model used simply returns the label $1$ to all inputs, which will allow us to compare improvements with other models. It gives us an error of $0.5$, which is obvious because all the input are in the same class and the other has none of them. The second model uses neural networks with normalized data because we got better results and because it can avoid being stuck in a local minima and might speed the training. It clearly outperforms the baseline. We can see that it has a bit of variance but has a low bias. Increasing the number of hidden layer might accentuate the variance and diminish the bias. For all other models, we didn't get improvements using normalization.
 
 Our third and fourth model uses bootstrap aggregation with different implementations. They have similar performance than neural networks. In the first one, we can see that the variance is lower but there are some outliers. The other one has a bigger variance but is more robust to outliers. Let's remind than bagging averages trees and some trees might have big and small variance, which reduce variance in average. In general, it reduces the variance and increase slightly the bias. Compared to the neural network, the variance is better but the bias surely is worst.
 
@@ -144,9 +144,11 @@ The next model ($5$) is the boosting method. As in bagger, it reduces the varian
 
 Random forests is used for the sixth model. Surprisingly, we obtain worse results than the other methods. The k fold cross validation gave us better results when we were looking for the parameters. A possible cause of this effect is that it has overfit during the tuning process and so, gives worse performance in the real case. The parameter concerned should be the maximum depth which should be too high for our data because it specializes too much the features during the split. In theory, it should have better performance than the bagging and have less variances because we split only on a subset of features, however, the bias should be higher. Beside this, maybe the bias is too high and in this case, increasing the subset of feature might help to fix this.
 
-Our last model used the SVM. Compared to the other methods, we can observe that it is quite stable and have a low variance. If the parameter $C$ is set optimally, we should have a good variance and a good bias. However, if it is too high, the variance should be small but the bias could be high. In the other side, if $C$ is small, the bias should be lower but we have fewer support vectors which leads to a higher variance. However, let's remind that we use the same as in the multi-class classifier, using a linear kernel due to the implementation of matlab. If we could have changed the kernel into a non-linear one, the decision boundary would be different and might surely reduce the error. However, we would be faced to $\gamma$ which might change the variance and the bias.
+Our last model used the SVM as the one used for the multi-class classification. It works because the SVM OVA can be adapted easily to take into account only 1 binary classifier ($\frac{2*(2-1)}{2}=1$). Compared to the other methods, we can observe that it is quite stable and have a low variance. If the parameter $C$ is set optimally, we should have a good variance and a good bias. However, if it is too high, the variance should be small but the bias could be high. In the other side, if $C$ is small, the bias should be lower but we have fewer support vectors which leads to a higher variance. However, let's remind that we use the same as in the multi-class classifier, using a linear kernel due to the implementation of matlab. If we could have changed the kernel into a non-linear one, the decision boundary would be different and might surely reduce the error. However, we would be faced to $\gamma$ which might change the variance and the bias.
 
 Our final model will be the Adaboosting one, because we considered it has the smallest error, even if there are some outliers, those are still lower than others methods in general. 
+
+We wanted to test some others models but we didn't get time to do it. First, we wanted to see if using a multi-class classifier which have a smallest error and then transform the prediction into a binary case would increase the accuracy.  We think that the error might be improved but in general, it should stay more or less the same. Another promising method we wanted to try is the \textit{fernst} one. It should outperforms other decision-based trees because they compute posteriors multiplicatively [REF]. We obtain good results with the Adaboosting method and think that fernst should produce better results.
 
 \subsection{Multi-class classification}
 
@@ -154,12 +156,28 @@ Our final model will be the Adaboosting one, because we considered it has the sm
 \center
 \includegraphics[width=5in]{figures/multiclassifications.jpg} 
 \caption{Boxplot of our models for the multi-class classification, using the BER. Each model is represented with a box where we can see their mean and their standard deviation.}
-\label{fig:models}
+\label{fig:mul_models}
 \end{figure}
 
-\section{Feature transformation}
+The Figure \ref{fig:mul_models} represents the BER error for each models. A general observation we can see is that the error of the models are similarly to the binary classification, which might mean that they both misclassify a shared subset of misclassified data samples. 
+Another observation we might see is that in general, the variance is lower in the multi-class models. We think that the reason is that we classify explicit objects (car, horse, plane and others) without mixing them, which might be less noisy.
+
+The first model used simply returns the label $1$ to all inputs, which will allow us to compare improvements with other models. It gives us an error of $0.75$, which is obvious because all the input are in the same class and the others has none of them. The second model uses neural networks with normalized data as explained in the binary section. We can see that even if we have more label, neural networks are still efficient and has a low bias and a little bit of variance, because there is one outlier. Obviously, neural network are a lot more efficient than our baseline.
+
+Our third and fourth model uses bootstrap aggregation with different implementations. They are less good than neural networks. We think that the reason is because we have more labels, the set of splits to decide in which class is a data sample is more precised and so, a little bit less accurate. In the first one, we see that the variance is lower and there is no outlier comparing to the other bagger model. Those results compared to the binary classification are inverted, we might think that the implementation of those methods in matlab could be more efficient for a binary classification or multi-class classification depending of the method.
+
+The next model ($5$) is the SVM one using the OVA method. As we said earlier, it is several binary classifiers combined together. We obtain similar results than in the binary classification because the nature of the problem is very similar : the only difference is the number of labels. Moreover, it seems to have lower variance, even if there is one outlier. As highlighted before, changing the kernel function might lead to decrease the error and could be worthwhile to implement this version, however we didn't have time to do it.
+
+The last model uses random forests. As before, we obtain worse results than the other methods. It has greater bias than the other.
+We also think that the method has overfit when using k fold cross validation in order to find optimal parameters. The parameters to be changed could be the maximum depth tree because if it is too high, the split will be very specialized. We also think that the bias could be high and so, increasing the parameter $m$ could be worthwhile because first, we may need more features to classify a data sample in one of the four classes. Secondly, because the bias is surely higher than other method as well as the variance. More training samples should help to decrease the variance and to tune the parameters up.
+
+Our final model is neutal networks and not SVM. Their error is nearly the same, however, the variance of the neural networks is much lower than the one of SVM. Even if both have one outlier and surely have the same stability. 
+
+Beside trying \textit{fernst} method as proposed in the binary case, we wanted to try to use several multi-class classifiers and then combine their results to see which data samples were more difficult and find a way to class them with more accuracy. One of the method we wanted to use was simply voting system in a similar manner as SVM OVA. We think that it could help to decrease the error.
 
 \section{Conclusion}
+
+We have seen that advanced machine learning methods are efficient to solve image classification problems. The errors obtained with binary classification and multi-class classification are closed and prove that the nature of the problem is similar. We have tried different methods and have remarked that the neural networks and the SVM models were better than the other in general. In both case, both produces good results. We really think that there is a way of improving SVM model by changing the kernel function because data are surely not separate linearly. At the end, we think that the best way of improving our binary and multi-class classifier would be to find a way to combine the HOG features with the CNN ones.
 
 \section{References}
 
